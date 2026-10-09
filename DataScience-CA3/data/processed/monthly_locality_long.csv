@@ -1,0 +1,85 @@
+month,reliable,active_people,metric,value
+1999-01-01,No (fewer than 50 active people),13,Observed: P(friend-of-friend tie),0.0
+1999-02-01,No (fewer than 50 active people),3,Observed: P(friend-of-friend tie),0.0
+1999-03-01,No (fewer than 50 active people),6,Observed: P(friend-of-friend tie),0.0
+1999-04-01,No (fewer than 50 active people),3,Observed: P(friend-of-friend tie),0.0
+1999-05-01,No (fewer than 50 active people),14,Observed: P(friend-of-friend tie),0.41379
+1999-06-01,No (fewer than 50 active people),17,Observed: P(friend-of-friend tie),0.4186
+1999-07-01,No (fewer than 50 active people),18,Observed: P(friend-of-friend tie),0.40449
+1999-08-01,No (fewer than 50 active people),21,Observed: P(friend-of-friend tie),0.33051
+1999-09-01,No (fewer than 50 active people),23,Observed: P(friend-of-friend tie),0.3375
+1999-10-01,No (fewer than 50 active people),26,Observed: P(friend-of-friend tie),0.32967
+1999-11-01,No (fewer than 50 active people),21,Observed: P(friend-of-friend tie),0.33333
+1999-12-01,Yes,57,Observed: P(friend-of-friend tie),0.23587
+2000-01-01,Yes,65,Observed: P(friend-of-friend tie),0.26892
+2000-02-01,Yes,62,Observed: P(friend-of-friend tie),0.23923
+2000-03-01,Yes,73,Observed: P(friend-of-friend tie),0.23077
+2000-04-01,Yes,73,Observed: P(friend-of-friend tie),0.25962
+2000-05-01,Yes,73,Observed: P(friend-of-friend tie),0.23033
+2000-06-01,Yes,90,Observed: P(friend-of-friend tie),0.20884
+2000-07-01,Yes,92,Observed: P(friend-of-friend tie),0.24615
+2000-08-01,Yes,108,Observed: P(friend-of-friend tie),0.26902
+2000-09-01,Yes,106,Observed: P(friend-of-friend tie),0.27146
+2000-10-01,Yes,105,Observed: P(friend-of-friend tie),0.27932
+2000-11-01,Yes,120,Observed: P(friend-of-friend tie),0.30094
+2000-12-01,Yes,116,Observed: P(friend-of-friend tie),0.34532
+2001-01-01,Yes,122,Observed: P(friend-of-friend tie),0.27449
+2001-02-01,Yes,113,Observed: P(friend-of-friend tie),0.288
+2001-03-01,Yes,121,Observed: P(friend-of-friend tie),0.29713
+2001-04-01,Yes,127,Observed: P(friend-of-friend tie),0.33801
+2001-05-01,Yes,134,Observed: P(friend-of-friend tie),0.21765
+2001-06-01,Yes,128,Observed: P(friend-of-friend tie),0.2847
+2001-07-01,Yes,106,Observed: P(friend-of-friend tie),0.31109
+2001-08-01,Yes,130,Observed: P(friend-of-friend tie),0.27845
+2001-09-01,Yes,128,Observed: P(friend-of-friend tie),0.31081
+2001-10-01,Yes,133,Observed: P(friend-of-friend tie),0.30744
+2001-11-01,Yes,130,Observed: P(friend-of-friend tie),0.34051
+2001-12-01,Yes,115,Observed: P(friend-of-friend tie),0.29233
+2002-01-01,Yes,109,Observed: P(friend-of-friend tie),0.33741
+2002-02-01,Yes,99,Observed: P(friend-of-friend tie),0.20169
+2002-03-01,No (fewer than 50 active people),30,Observed: P(friend-of-friend tie),0.6746
+2002-04-01,No (fewer than 50 active people),6,Observed: P(friend-of-friend tie),0.0
+2002-05-01,No (fewer than 50 active people),17,Observed: P(friend-of-friend tie),0.2
+2002-06-01,No (fewer than 50 active people),7,Observed: P(friend-of-friend tie),0.54545
+1999-01-01,No (fewer than 50 active people),13,Expected at random: edge density,0.15385
+1999-02-01,No (fewer than 50 active people),3,Expected at random: edge density,0.66667
+1999-03-01,No (fewer than 50 active people),6,Expected at random: edge density,0.33333
+1999-04-01,No (fewer than 50 active people),3,Expected at random: edge density,0.66667
+1999-05-01,No (fewer than 50 active people),14,Expected at random: edge density,0.21978
+1999-06-01,No (fewer than 50 active people),17,Expected at random: edge density,0.13235
+1999-07-01,No (fewer than 50 active people),18,Expected at random: edge density,0.18301
+1999-08-01,No (fewer than 50 active people),21,Expected at random: edge density,0.14762
+1999-09-01,No (fewer than 50 active people),23,Expected at random: edge density,0.14625
+1999-10-01,No (fewer than 50 active people),26,Expected at random: edge density,0.12
+1999-11-01,No (fewer than 50 active people),21,Expected at random: edge density,0.13333
+1999-12-01,Yes,57,Expected at random: edge density,0.05075
+2000-01-01,Yes,65,Expected at random: edge density,0.04808
+2000-02-01,Yes,62,Expected at random: edge density,0.05817
+2000-03-01,Yes,73,Expected at random: edge density,0.04338
+2000-04-01,Yes,73,Expected at random: edge density,0.03729
+2000-05-01,Yes,73,Expected at random: edge density,0.04528
+2000-06-01,Yes,90,Expected at random: edge density,0.03795
+2000-07-01,Yes,92,Expected at random: edge density,0.04515
+2000-08-01,Yes,108,Expected at random: edge density,0.04811
+2000-09-01,Yes,106,Expected at random: edge density,0.04349
+2000-10-01,Yes,105,Expected at random: edge density,0.05018
+2000-11-01,Yes,120,Expected at random: edge density,0.04048
+2000-12-01,Yes,116,Expected at random: edge density,0.04303
+2001-01-01,Yes,122,Expected at random: edge density,0.04254
+2001-02-01,Yes,113,Expected at random: edge density,0.04425
+2001-03-01,Yes,121,Expected at random: edge density,0.04518
+2001-04-01,Yes,127,Expected at random: edge density,0.04862
+2001-05-01,Yes,134,Expected at random: edge density,0.04736
+2001-06-01,Yes,128,Expected at random: edge density,0.03752
+2001-07-01,Yes,106,Expected at random: edge density,0.04744
+2001-08-01,Yes,130,Expected at random: edge density,0.04735
+2001-09-01,Yes,128,Expected at random: edge density,0.04724
+2001-10-01,Yes,133,Expected at random: edge density,0.06607
+2001-11-01,Yes,130,Expected at random: edge density,0.05796
+2001-12-01,Yes,115,Expected at random: edge density,0.04653
+2002-01-01,Yes,109,Expected at random: edge density,0.05029
+2002-02-01,Yes,99,Expected at random: edge density,0.05339
+2002-03-01,No (fewer than 50 active people),30,Expected at random: edge density,0.14943
+2002-04-01,No (fewer than 50 active people),6,Expected at random: edge density,0.26667
+2002-05-01,No (fewer than 50 active people),17,Expected at random: edge density,0.14706
+2002-06-01,No (fewer than 50 active people),7,Expected at random: edge density,0.42857

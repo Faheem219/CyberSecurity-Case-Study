@@ -1,0 +1,403 @@
+{
+  "clock_check": {
+    "1999-09": 5.0,
+    "1999-10": 6.0,
+    "1999-12": 5.0,
+    "2000-01": 5.0,
+    "2000-02": 5.0,
+    "2000-03": 5.0,
+    "2000-04": 5.900000000000002,
+    "2000-05": 5.400000000000002,
+    "2000-06": 5.0,
+    "2000-07": 5.0,
+    "2000-08": 5.0,
+    "2000-09": 5.0,
+    "2000-10": 5.0,
+    "2000-11": 5.0,
+    "2000-12": 5.0,
+    "2001-01": 5.0,
+    "2001-02": 5.0,
+    "2001-03": 5.0,
+    "2001-04": 6.0,
+    "2001-05": 6.0,
+    "2001-06": 6.0,
+    "2001-07": 8.0,
+    "2001-08": 9.100000000000009,
+    "2001-09": 10.0,
+    "2001-10": 10.0,
+    "2001-11": 11.0,
+    "2001-12": 11.0,
+    "2002-01": 11.0,
+    "2002-02": 11.0,
+    "2002-03": 11.0
+  },
+  "source": "igraphdata::enron (JHU, Priebe et al. 2005) - Enron corpus released by FERC/DoJ",
+  "cleaning_log": [
+    [
+      "Raw sender-recipient records",
+      125409
+    ],
+    [
+      "Outside Jan 1999 - Jun 2002 removed (bogus 1979 stamps)",
+      125153
+    ],
+    [
+      "bcc rows removed (every one duplicates a cc row)",
+      103042
+    ],
+    [
+      "Self-addressed copies removed (after merging aliases)",
+      93401
+    ],
+    [
+      "Duplicate folder copies removed = unique deliveries",
+      34374
+    ]
+  ],
+  "addresses": 184,
+  "people": 149,
+  "active_people": 148,
+  "messages": 20074,
+  "deliveries": 34374,
+  "date_range": [
+    "1999-01-04",
+    "2002-06-21"
+  ],
+  "peak_month": {
+    "month": "2001-10-01",
+    "deliveries": 3215,
+    "messages": 1912,
+    "active_people": 133,
+    "ties": 580,
+    "density": 0.06607,
+    "p_closed": 0.30744,
+    "locality_ratio": 4.653,
+    "reciprocity": 0.4974,
+    "executive_share": 0.1972,
+    "reliable": "Yes"
+  },
+  "ties_undirected": 1788,
+  "directed_pairs": 2604,
+  "strong_ties": 816,
+  "weak_ties": 972,
+  "reciprocity": 0.6267,
+  "locality_whole": {
+    "nodes": 148,
+    "edges": 1788,
+    "possible_edges": 10878,
+    "triangles": 8136,
+    "wedges": 57886,
+    "p_closed": 0.4217,
+    "density": 0.1644,
+    "expected_small": 0.1642
+  },
+  "avg_shortest_path": 1.999,
+  "diameter": 4,
+  "girvan_newman": {
+    "graph": "strong ties",
+    "nodes": 143,
+    "edges": 816,
+    "best_modularity": 0.5212,
+    "n_parts_at_best": 30,
+    "communities_ge3": 7,
+    "leftovers": 32,
+    "leftovers_attached": 32,
+    "history_head": [
+      [
+        2,
+        0.0991
+      ],
+      [
+        3,
+        0.1006
+      ],
+      [
+        4,
+        0.1005
+      ],
+      [
+        5,
+        0.1001
+      ],
+      [
+        6,
+        0.0998
+      ],
+      [
+        7,
+        0.0997
+      ],
+      [
+        8,
+        0.2551
+      ],
+      [
+        9,
+        0.2552
+      ],
+      [
+        10,
+        0.2539
+      ],
+      [
+        11,
+        0.2538
+      ],
+      [
+        12,
+        0.2531
+      ],
+      [
+        13,
+        0.2531
+      ],
+      [
+        14,
+        0.2522
+      ],
+      [
+        15,
+        0.2519
+      ],
+      [
+        16,
+        0.252
+      ],
+      [
+        17,
+        0.2519
+      ],
+      [
+        18,
+        0.2518
+      ],
+      [
+        19,
+        0.2518
+      ],
+      [
+        20,
+        0.2517
+      ],
+      [
+        21,
+        0.2514
+      ],
+      [
+        22,
+        0.251
+      ],
+      [
+        23,
+        0.458
+      ],
+      [
+        24,
+        0.4651
+      ],
+      [
+        25,
+        0.4715
+      ],
+      [
+        26,
+        0.471
+      ]
+    ]
+  },
+  "louvain": {
+    "n": 8,
+    "modularity_weighted_full": 0.6297
+  },
+  "gn_vs_louvain": {
+    "ARI": 0.456,
+    "NMI": 0.622
+  },
+  "community_sizes": {
+    "C1 Leadership core": 59,
+    "C3 Trading & logistics desk": 25,
+    "C2 Staff cluster around DIR-01": 22,
+    "C4 Real-time trading desk": 17,
+    "C5 Gas pipeline & regulatory": 15,
+    "C6 Trading & logistics desk (TRD-02)": 7,
+    "C7 Staff cluster around UNK-12": 3
+  },
+  "top10_betweenness": [
+    {
+      "display_name": "Sally Beck",
+      "role_group": "Executive",
+      "community": "C1 Leadership core",
+      "betweenness": 0.10151,
+      "contacts": 81
+    },
+    {
+      "display_name": "UNK-13",
+      "role_group": "Unknown role",
+      "community": "C1 Leadership core",
+      "betweenness": 0.09633,
+      "contacts": 77
+    },
+    {
+      "display_name": "John Lavorato",
+      "role_group": "Executive",
+      "community": "C1 Leadership core",
+      "betweenness": 0.0922,
+      "contacts": 90
+    },
+    {
+      "display_name": "UNK-04",
+      "role_group": "Unknown role",
+      "community": "C3 Trading & logistics desk",
+      "betweenness": 0.06907,
+      "contacts": 59
+    },
+    {
+      "display_name": "Kenneth Lay",
+      "role_group": "Executive",
+      "community": "C1 Leadership core",
+      "betweenness": 0.04035,
+      "contacts": 62
+    },
+    {
+      "display_name": "Louise Kitchen",
+      "role_group": "Executive",
+      "community": "C1 Leadership core",
+      "betweenness": 0.02954,
+      "contacts": 64
+    },
+    {
+      "display_name": "EMP-01",
+      "role_group": "Employee / Specialist",
+      "community": "C1 Leadership core",
+      "betweenness": 0.0209,
+      "contacts": 38
+    },
+    {
+      "display_name": "VP-09",
+      "role_group": "Vice President",
+      "community": "C1 Leadership core",
+      "betweenness": 0.02052,
+      "contacts": 51
+    },
+    {
+      "display_name": "DIR-01",
+      "role_group": "Director / MD",
+      "community": "C2 Staff cluster around DIR-01",
+      "betweenness": 0.01936,
+      "contacts": 50
+    },
+    {
+      "display_name": "UNK-27",
+      "role_group": "Unknown role",
+      "community": "C3 Trading & logistics desk",
+      "betweenness": 0.01857,
+      "contacts": 25
+    }
+  ],
+  "role_group_counts": {
+    "Unknown role": 47,
+    "Employee / Specialist": 34,
+    "Vice President": 20,
+    "Director / MD": 14,
+    "Manager": 12,
+    "Trader": 11,
+    "Executive": 10
+  },
+  "direction_share": {
+    "Upward": 0.4049,
+    "Peer": 0.3186,
+    "Downward": 0.2765
+  },
+  "cross_community_share": 0.1791,
+  "recipient_type_share": {
+    "TO": 0.8297,
+    "CC": 0.1703
+  },
+  "periods": {
+    "1 Pre-crisis": {
+      "days": 953,
+      "deliveries": 22147,
+      "deliveries_per_week": 162.7,
+      "active_people": 145,
+      "nodes": 145,
+      "edges": 1278,
+      "possible_edges": 10440,
+      "triangles": 4291,
+      "wedges": 32585,
+      "p_closed": 0.3951,
+      "density": 0.1224,
+      "expected_small": 0.1222,
+      "avg_shortest_path": 2.195,
+      "executive_share_of_traffic": 0.168,
+      "broadcast_share": 0.0334,
+      "cross_community_share": 0.1858,
+      "betweenness_centralisation": 0.2282,
+      "executives_in_top5_brokers": 2,
+      "top_brokers": [
+        "John Lavorato (Executive)",
+        "UNK-04 (Unknown role)",
+        "VP-09 (Vice President)",
+        "Sally Beck (Executive)",
+        "UNK-03 (Unknown role)"
+      ]
+    },
+    "2 Crisis (Aug-Dec 2001)": {
+      "days": 110,
+      "deliveries": 8508,
+      "deliveries_per_week": 541.4,
+      "active_people": 138,
+      "nodes": 138,
+      "edges": 918,
+      "possible_edges": 9453,
+      "triangles": 2177,
+      "wedges": 17981,
+      "p_closed": 0.3632,
+      "density": 0.0971,
+      "expected_small": 0.0969,
+      "avg_shortest_path": 2.431,
+      "executive_share_of_traffic": 0.2206,
+      "broadcast_share": 0.0559,
+      "cross_community_share": 0.1517,
+      "betweenness_centralisation": 0.1904,
+      "executives_in_top5_brokers": 3,
+      "top_brokers": [
+        "Sally Beck (Executive)",
+        "Kenneth Lay (Executive)",
+        "Louise Kitchen (Executive)",
+        "UNK-03 (Unknown role)",
+        "EMP-01 (Employee / Specialist)"
+      ]
+    },
+    "3 Post-bankruptcy": {
+      "days": 202,
+      "deliveries": 3719,
+      "deliveries_per_week": 128.9,
+      "active_people": 128,
+      "nodes": 128,
+      "edges": 591,
+      "possible_edges": 8128,
+      "triangles": 913,
+      "wedges": 8387,
+      "p_closed": 0.3266,
+      "density": 0.0727,
+      "expected_small": 0.0725,
+      "avg_shortest_path": 2.692,
+      "executive_share_of_traffic": 0.2417,
+      "broadcast_share": 0.0491,
+      "cross_community_share": 0.2019,
+      "betweenness_centralisation": 0.3427,
+      "executives_in_top5_brokers": 2,
+      "top_brokers": [
+        "UNK-13 (Unknown role)",
+        "Louise Kitchen (Executive)",
+        "VP-16 (Vice President)",
+        "Stanley Horton (Executive)",
+        "VP-01 (Vice President)"
+      ]
+    }
+  },
+  "executive_traffic": {
+    "sent": 3700,
+    "received": 4042
+  }
+}
