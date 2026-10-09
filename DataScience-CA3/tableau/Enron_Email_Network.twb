@@ -1,0 +1,2737 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<workbook xmlns:user="http://www.tableausoftware.com/xml/user" original-version="26.1" source-build="0.0.0 (0000.0.0.0)" source-platform="win" version="26.1">
+  <document-format-change-manifest>
+    <ManifestByVersion/>
+  </document-format-change-manifest>
+  <preferences>
+    <preference name="ui.encoding.shelf.height" value="24"/>
+    <preference name="ui.shelf.height" value="26"/>
+  </preferences>
+  <datasources>
+    <datasource hasconnection="false" inline="true" name="Parameters" version="26.1">
+      <aliases enabled="yes"/>
+      <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
+        <calculation class="tableau" formula="&quot;Betweenness&quot;"/>
+        <members>
+          <member value="&quot;Betweenness&quot;"/>
+          <member value="&quot;PageRank&quot;"/>
+          <member value="&quot;Contacts&quot;"/>
+          <member value="&quot;Emails sent&quot;"/>
+        </members>
+      </column>
+    </datasource>
+    <datasource caption="Email deliveries" inline="true" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n" version="26.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection caption="deliveries" name="textscan.hqfcnbprd71u1vxkb5a7e3g5zs9k">
+            <connection class="textscan" directory="Data/enron" filename="deliveries.csv" password="" server=""/>
+          </named-connection>
+        </named-connections>
+        <relation connection="textscan.hqfcnbprd71u1vxkb5a7e3g5zs9k" name="deliveries.csv" table="[deliveries#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+            <column datatype="integer" name="delivery_id" ordinal="0"/>
+            <column datatype="integer" name="message_id" ordinal="1"/>
+            <column datatype="datetime" name="sent_at" ordinal="2"/>
+            <column datatype="string" name="sender" ordinal="3"/>
+            <column datatype="string" name="sender_role" ordinal="4"/>
+            <column datatype="string" name="sender_community" ordinal="5"/>
+            <column datatype="string" name="recipient" ordinal="6"/>
+            <column datatype="string" name="recipient_role" ordinal="7"/>
+            <column datatype="string" name="recipient_community" ordinal="8"/>
+            <column datatype="string" name="recipient_type" ordinal="9"/>
+            <column datatype="integer" name="n_recipients" ordinal="10"/>
+            <column datatype="string" name="period" ordinal="11"/>
+            <column datatype="string" name="direction" ordinal="12"/>
+            <column datatype="string" name="community_link" ordinal="13"/>
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class="capability">
+            <remote-name></remote-name>
+            <remote-type>0</remote-type>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias></remote-alias>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype="string" name="character-set">"UTF-8"</attribute>
+              <attribute datatype="string" name="collation">"en_US"</attribute>
+              <attribute datatype="string" name="field-delimiter">","</attribute>
+              <attribute datatype="string" name="header-row">"true"</attribute>
+              <attribute datatype="string" name="locale">"en_US"</attribute>
+              <attribute datatype="string" name="single-char">""</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>delivery_id</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[delivery_id]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>delivery_id</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>message_id</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[message_id]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>message_id</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>sent_at</remote-name>
+            <remote-type>135</remote-type>
+            <local-name>[sent_at]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>sent_at</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>datetime</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>sender</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[sender]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>sender</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>sender_role</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[sender_role]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>sender_role</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>sender_community</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[sender_community]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>sender_community</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>recipient</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[recipient]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>recipient</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>recipient_role</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[recipient_role]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>recipient_role</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>recipient_community</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[recipient_community]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>recipient_community</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>recipient_type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[recipient_type]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>recipient_type</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>n_recipients</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[n_recipients]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>n_recipients</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>period</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[period]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>period</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>direction</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[direction]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>direction</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>community_link</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[community_link]</local-name>
+            <parent-name>[deliveries.csv]</parent-name>
+            <remote-alias>community_link</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled="yes"/>
+      <column caption="deliveries.csv" datatype="table" name="[__tableau_internal_object_id__].[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]" role="measure" type="quantitative"/>
+      <column datatype="integer" name="[delivery_id]" role="dimension" type="ordinal" caption="Delivery ID"/>
+      <column datatype="integer" name="[message_id]" role="dimension" type="ordinal" caption="Message ID"/>
+      <column datatype="datetime" name="[sent_at]" role="dimension" type="ordinal" caption="Sent at"/>
+      <column datatype="string" name="[sender]" role="dimension" type="nominal" caption="Sender"/>
+      <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+      <column datatype="string" name="[sender_community]" role="dimension" type="nominal" caption="Sender community"/>
+      <column datatype="string" name="[recipient]" role="dimension" type="nominal" caption="Recipient"/>
+      <column datatype="string" name="[recipient_role]" role="dimension" type="nominal" caption="Recipient role"/>
+      <column datatype="string" name="[recipient_community]" role="dimension" type="nominal" caption="Recipient community"/>
+      <column datatype="string" name="[recipient_type]" role="dimension" type="nominal" caption="Recipient type"/>
+      <column datatype="integer" name="[n_recipients]" role="measure" type="quantitative" caption="Recipients in message"/>
+      <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+      <column datatype="string" name="[direction]" role="dimension" type="nominal" caption="Direction (by seniority)"/>
+      <column datatype="string" name="[community_link]" role="dimension" type="nominal" caption="Community link"/>
+      <column datatype="integer" name="[Calculation_1000000000000000001]" role="measure" type="quantitative" caption="Deliveries" default-format="n#,##0">
+        <calculation class="tableau" formula="1"/>
+      </column>
+      <column datatype="real" name="[Calculation_1000000000000000002]" role="measure" type="quantitative" caption="Cross-community share" default-format="p0.0%">
+        <calculation class="tableau" formula="SUM(IF [community_link] = &quot;Across communities&quot; THEN 1 ELSE 0 END) / SUM([Calculation_1000000000000000001])"/>
+      </column>
+      <layout dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
+      <style>
+        <style-rule element="mark">
+          <encoding attr="color" field="[none:period:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"1 Pre-crisis"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"2 Crisis (Aug-Dec 2001)"</bucket>
+            </map>
+            <map to="#8a909c">
+              <bucket>"3 Post-bankruptcy"</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <object-graph>
+        <objects>
+          <object caption="deliveries.csv" id="deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF">
+            <properties context="">
+              <relation connection="textscan.hqfcnbprd71u1vxkb5a7e3g5zs9k" name="deliveries.csv" table="[deliveries#csv]" type="table">
+                <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+                  <column datatype="integer" name="delivery_id" ordinal="0"/>
+                  <column datatype="integer" name="message_id" ordinal="1"/>
+                  <column datatype="datetime" name="sent_at" ordinal="2"/>
+                  <column datatype="string" name="sender" ordinal="3"/>
+                  <column datatype="string" name="sender_role" ordinal="4"/>
+                  <column datatype="string" name="sender_community" ordinal="5"/>
+                  <column datatype="string" name="recipient" ordinal="6"/>
+                  <column datatype="string" name="recipient_role" ordinal="7"/>
+                  <column datatype="string" name="recipient_community" ordinal="8"/>
+                  <column datatype="string" name="recipient_type" ordinal="9"/>
+                  <column datatype="integer" name="n_recipients" ordinal="10"/>
+                  <column datatype="string" name="period" ordinal="11"/>
+                  <column datatype="string" name="direction" ordinal="12"/>
+                  <column datatype="string" name="community_link" ordinal="13"/>
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+    <datasource caption="People (network metrics)" inline="true" name="federated.s2c8zq20erd9zeegb9aikl2nd62g" version="26.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection caption="employees" name="textscan.0y5cdhxdcnrfzxuffwtezutkxlg7">
+            <connection class="textscan" directory="Data/enron" filename="employees.csv" password="" server=""/>
+          </named-connection>
+        </named-connections>
+        <relation connection="textscan.0y5cdhxdcnrfzxuffwtezutkxlg7" name="employees.csv" table="[employees#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+            <column datatype="string" name="employee_key" ordinal="0"/>
+            <column datatype="string" name="display_name" ordinal="1"/>
+            <column datatype="string" name="named_officer" ordinal="2"/>
+            <column datatype="string" name="role_group" ordinal="3"/>
+            <column datatype="integer" name="role_rank" ordinal="4"/>
+            <column datatype="string" name="community" ordinal="5"/>
+            <column datatype="string" name="community_louvain" ordinal="6"/>
+            <column datatype="integer" name="emails_sent" ordinal="7"/>
+            <column datatype="integer" name="emails_received" ordinal="8"/>
+            <column datatype="integer" name="out_contacts" ordinal="9"/>
+            <column datatype="integer" name="in_contacts" ordinal="10"/>
+            <column datatype="integer" name="contacts" ordinal="11"/>
+            <column datatype="integer" name="strong_ties" ordinal="12"/>
+            <column datatype="integer" name="weak_ties" ordinal="13"/>
+            <column datatype="real" name="betweenness" ordinal="14"/>
+            <column datatype="real" name="pagerank" ordinal="15"/>
+            <column datatype="real" name="clustering" ordinal="16"/>
+            <column datatype="real" name="crisis_share" ordinal="17"/>
+            <column datatype="real" name="x" ordinal="18"/>
+            <column datatype="real" name="y" ordinal="19"/>
+            <column datatype="integer" name="rank_betweenness" ordinal="20"/>
+            <column datatype="integer" name="rank_pagerank" ordinal="21"/>
+            <column datatype="integer" name="rank_contacts" ordinal="22"/>
+            <column datatype="integer" name="rank_emails_sent" ordinal="23"/>
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class="capability">
+            <remote-name></remote-name>
+            <remote-type>0</remote-type>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias></remote-alias>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype="string" name="character-set">"UTF-8"</attribute>
+              <attribute datatype="string" name="collation">"en_US"</attribute>
+              <attribute datatype="string" name="field-delimiter">","</attribute>
+              <attribute datatype="string" name="header-row">"true"</attribute>
+              <attribute datatype="string" name="locale">"en_US"</attribute>
+              <attribute datatype="string" name="single-char">""</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>employee_key</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[employee_key]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>employee_key</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>display_name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[display_name]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>display_name</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>named_officer</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[named_officer]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>named_officer</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>role_group</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[role_group]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>role_group</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>role_rank</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[role_rank]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>role_rank</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>community</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[community]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>community</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>community_louvain</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[community_louvain]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>community_louvain</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>emails_sent</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[emails_sent]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>emails_sent</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>emails_received</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[emails_received]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>emails_received</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>out_contacts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[out_contacts]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>out_contacts</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>in_contacts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[in_contacts]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>in_contacts</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>contacts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[contacts]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>contacts</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>strong_ties</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[strong_ties]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>strong_ties</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>weak_ties</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[weak_ties]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>weak_ties</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>betweenness</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[betweenness]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>betweenness</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>pagerank</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[pagerank]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>pagerank</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>clustering</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[clustering]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>clustering</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>crisis_share</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[crisis_share]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>crisis_share</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>x</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[x]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>x</remote-alias>
+            <ordinal>18</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>y</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[y]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>y</remote-alias>
+            <ordinal>19</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>rank_betweenness</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[rank_betweenness]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>rank_betweenness</remote-alias>
+            <ordinal>20</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>rank_pagerank</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[rank_pagerank]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>rank_pagerank</remote-alias>
+            <ordinal>21</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>rank_contacts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[rank_contacts]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>rank_contacts</remote-alias>
+            <ordinal>22</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>rank_emails_sent</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[rank_emails_sent]</local-name>
+            <parent-name>[employees.csv]</parent-name>
+            <remote-alias>rank_emails_sent</remote-alias>
+            <ordinal>23</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled="yes"/>
+      <column caption="employees.csv" datatype="table" name="[__tableau_internal_object_id__].[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]" role="measure" type="quantitative"/>
+      <column datatype="string" name="[employee_key]" role="dimension" type="nominal" caption="Pseudonym key"/>
+      <column datatype="string" name="[display_name]" role="dimension" type="nominal" caption="Person"/>
+      <column datatype="string" name="[named_officer]" role="dimension" type="nominal" caption="Named officer"/>
+      <column datatype="string" name="[role_group]" role="dimension" type="nominal" caption="Role group"/>
+      <column datatype="integer" name="[role_rank]" role="dimension" type="ordinal" caption="Role rank"/>
+      <column datatype="string" name="[community]" role="dimension" type="nominal" caption="Community"/>
+      <column datatype="string" name="[community_louvain]" role="dimension" type="nominal" caption="Louvain community"/>
+      <column datatype="integer" name="[emails_sent]" role="measure" type="quantitative" caption="Emails sent"/>
+      <column datatype="integer" name="[emails_received]" role="measure" type="quantitative" caption="Emails received"/>
+      <column datatype="integer" name="[out_contacts]" role="measure" type="quantitative" caption="Out-contacts"/>
+      <column datatype="integer" name="[in_contacts]" role="measure" type="quantitative" caption="In-contacts"/>
+      <column datatype="integer" name="[contacts]" role="measure" type="quantitative" caption="Contacts (degree)"/>
+      <column datatype="integer" name="[strong_ties]" role="measure" type="quantitative" caption="Strong ties"/>
+      <column datatype="integer" name="[weak_ties]" role="measure" type="quantitative" caption="Weak ties"/>
+      <column datatype="real" name="[betweenness]" role="measure" type="quantitative" caption="Betweenness centrality"/>
+      <column datatype="real" name="[pagerank]" role="measure" type="quantitative" caption="PageRank"/>
+      <column datatype="real" name="[clustering]" role="measure" type="quantitative" caption="Clustering coefficient"/>
+      <column datatype="real" name="[crisis_share]" role="measure" type="quantitative" caption="Share of own email sent in crisis" default-format="p0%"/>
+      <column datatype="real" name="[x]" role="measure" type="quantitative" caption="x"/>
+      <column datatype="real" name="[y]" role="measure" type="quantitative" caption="y"/>
+      <column datatype="integer" name="[rank_betweenness]" role="measure" type="quantitative" caption="Rank: betweenness"/>
+      <column datatype="integer" name="[rank_pagerank]" role="measure" type="quantitative" caption="Rank: PageRank"/>
+      <column datatype="integer" name="[rank_contacts]" role="measure" type="quantitative" caption="Rank: contacts"/>
+      <column datatype="integer" name="[rank_emails_sent]" role="measure" type="quantitative" caption="Rank: emails sent"/>
+      <column datatype="real" name="[Calculation_2000000000000000001]" role="measure" type="quantitative" caption="Selected metric">
+        <calculation class="tableau" formula="CASE [Parameters].[Parameter 1] WHEN &quot;Betweenness&quot; THEN [betweenness] WHEN &quot;PageRank&quot; THEN [pagerank] WHEN &quot;Contacts&quot; THEN [contacts] WHEN &quot;Emails sent&quot; THEN [emails_sent] END"/>
+      </column>
+      <column datatype="integer" name="[Calculation_2000000000000000002]" role="measure" type="quantitative" caption="Selected rank">
+        <calculation class="tableau" formula="CASE [Parameters].[Parameter 1] WHEN &quot;Betweenness&quot; THEN [rank_betweenness] WHEN &quot;PageRank&quot; THEN [rank_pagerank] WHEN &quot;Contacts&quot; THEN [rank_contacts] WHEN &quot;Emails sent&quot; THEN [rank_emails_sent] END"/>
+      </column>
+      <layout dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
+      <style>
+        <style-rule element="mark">
+          <encoding attr="color" field="[none:community:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"C1 Leadership core"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"C2 Staff cluster around DIR-01"</bucket>
+            </map>
+            <map to="#1baf7a">
+              <bucket>"C3 Trading &amp; logistics desk"</bucket>
+            </map>
+            <map to="#eda100">
+              <bucket>"C4 Real-time trading desk"</bucket>
+            </map>
+            <map to="#e87ba4">
+              <bucket>"C5 Gas pipeline &amp; regulatory"</bucket>
+            </map>
+            <map to="#008300">
+              <bucket>"C6 Trading &amp; logistics desk (TRD-02)"</bucket>
+            </map>
+            <map to="#4a3aa7">
+              <bucket>"C7 Staff cluster around UNK-12"</bucket>
+            </map>
+          </encoding>
+          <encoding attr="color" field="[none:role_group:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"1 Executive"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"2 Vice President"</bucket>
+            </map>
+            <map to="#1baf7a">
+              <bucket>"3 Director / MD"</bucket>
+            </map>
+            <map to="#eda100">
+              <bucket>"4 Manager"</bucket>
+            </map>
+            <map to="#e87ba4">
+              <bucket>"5 Trader"</bucket>
+            </map>
+            <map to="#008300">
+              <bucket>"6 Employee / Specialist"</bucket>
+            </map>
+            <map to="#b9bec8">
+              <bucket>"7 Unknown role"</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <object-graph>
+        <objects>
+          <object caption="employees.csv" id="employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503">
+            <properties context="">
+              <relation connection="textscan.0y5cdhxdcnrfzxuffwtezutkxlg7" name="employees.csv" table="[employees#csv]" type="table">
+                <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+                  <column datatype="string" name="employee_key" ordinal="0"/>
+                  <column datatype="string" name="display_name" ordinal="1"/>
+                  <column datatype="string" name="named_officer" ordinal="2"/>
+                  <column datatype="string" name="role_group" ordinal="3"/>
+                  <column datatype="integer" name="role_rank" ordinal="4"/>
+                  <column datatype="string" name="community" ordinal="5"/>
+                  <column datatype="string" name="community_louvain" ordinal="6"/>
+                  <column datatype="integer" name="emails_sent" ordinal="7"/>
+                  <column datatype="integer" name="emails_received" ordinal="8"/>
+                  <column datatype="integer" name="out_contacts" ordinal="9"/>
+                  <column datatype="integer" name="in_contacts" ordinal="10"/>
+                  <column datatype="integer" name="contacts" ordinal="11"/>
+                  <column datatype="integer" name="strong_ties" ordinal="12"/>
+                  <column datatype="integer" name="weak_ties" ordinal="13"/>
+                  <column datatype="real" name="betweenness" ordinal="14"/>
+                  <column datatype="real" name="pagerank" ordinal="15"/>
+                  <column datatype="real" name="clustering" ordinal="16"/>
+                  <column datatype="real" name="crisis_share" ordinal="17"/>
+                  <column datatype="real" name="x" ordinal="18"/>
+                  <column datatype="real" name="y" ordinal="19"/>
+                  <column datatype="integer" name="rank_betweenness" ordinal="20"/>
+                  <column datatype="integer" name="rank_pagerank" ordinal="21"/>
+                  <column datatype="integer" name="rank_contacts" ordinal="22"/>
+                  <column datatype="integer" name="rank_emails_sent" ordinal="23"/>
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+    <datasource caption="Network paths (node-link layout)" inline="true" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1" version="26.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection caption="network_paths" name="textscan.r86lum8rs0we51exvlrvvgqdr69p">
+            <connection class="textscan" directory="Data/enron" filename="network_paths.csv" password="" server=""/>
+          </named-connection>
+        </named-connections>
+        <relation connection="textscan.r86lum8rs0we51exvlrvvgqdr69p" name="network_paths.csv" table="[network_paths#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+            <column datatype="string" name="path_id" ordinal="0"/>
+            <column datatype="integer" name="path_order" ordinal="1"/>
+            <column datatype="string" name="row_type" ordinal="2"/>
+            <column datatype="string" name="display_name" ordinal="3"/>
+            <column datatype="real" name="x" ordinal="4"/>
+            <column datatype="real" name="y" ordinal="5"/>
+            <column datatype="integer" name="tie_emails" ordinal="6"/>
+            <column datatype="string" name="tie_type" ordinal="7"/>
+            <column datatype="string" name="community_link" ordinal="8"/>
+            <column datatype="string" name="community" ordinal="9"/>
+            <column datatype="string" name="role_group" ordinal="10"/>
+            <column datatype="real" name="betweenness" ordinal="11"/>
+            <column datatype="integer" name="contacts" ordinal="12"/>
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class="capability">
+            <remote-name></remote-name>
+            <remote-type>0</remote-type>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias></remote-alias>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype="string" name="character-set">"UTF-8"</attribute>
+              <attribute datatype="string" name="collation">"en_US"</attribute>
+              <attribute datatype="string" name="field-delimiter">","</attribute>
+              <attribute datatype="string" name="header-row">"true"</attribute>
+              <attribute datatype="string" name="locale">"en_US"</attribute>
+              <attribute datatype="string" name="single-char">""</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>path_id</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[path_id]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>path_id</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>path_order</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[path_order]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>path_order</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>row_type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[row_type]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>row_type</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>display_name</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[display_name]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>display_name</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>x</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[x]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>x</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>y</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[y]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>y</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>tie_emails</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[tie_emails]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>tie_emails</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>tie_type</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[tie_type]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>tie_type</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>community_link</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[community_link]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>community_link</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>community</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[community]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>community</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>role_group</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[role_group]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>role_group</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>betweenness</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[betweenness]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>betweenness</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>contacts</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[contacts]</local-name>
+            <parent-name>[network_paths.csv]</parent-name>
+            <remote-alias>contacts</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled="yes"/>
+      <column caption="network_paths.csv" datatype="table" name="[__tableau_internal_object_id__].[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]" role="measure" type="quantitative"/>
+      <column datatype="string" name="[path_id]" role="dimension" type="nominal" caption="Path ID"/>
+      <column datatype="integer" name="[path_order]" role="dimension" type="ordinal" caption="Path order"/>
+      <column datatype="string" name="[row_type]" role="dimension" type="nominal" caption="Row type"/>
+      <column datatype="string" name="[display_name]" role="dimension" type="nominal" caption="Person"/>
+      <column datatype="real" name="[x]" role="measure" type="quantitative" caption="x"/>
+      <column datatype="real" name="[y]" role="measure" type="quantitative" caption="y"/>
+      <column datatype="integer" name="[tie_emails]" role="measure" type="quantitative" caption="Emails on tie"/>
+      <column datatype="string" name="[tie_type]" role="dimension" type="nominal" caption="Tie type"/>
+      <column datatype="string" name="[community_link]" role="dimension" type="nominal" caption="Community link"/>
+      <column datatype="string" name="[community]" role="dimension" type="nominal" caption="Community"/>
+      <column datatype="string" name="[role_group]" role="dimension" type="nominal" caption="Role group"/>
+      <column datatype="real" name="[betweenness]" role="measure" type="quantitative" caption="Betweenness centrality"/>
+      <column datatype="integer" name="[contacts]" role="measure" type="quantitative" caption="Contacts (degree)"/>
+      <column datatype="real" name="[Calculation_3000000000000000001]" role="measure" type="quantitative" caption="x (people layer)">
+        <calculation class="tableau" formula="[x]"/>
+      </column>
+      <layout dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
+      <style>
+        <style-rule element="mark">
+          <encoding attr="color" field="[none:community:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"C1 Leadership core"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"C2 Staff cluster around DIR-01"</bucket>
+            </map>
+            <map to="#1baf7a">
+              <bucket>"C3 Trading &amp; logistics desk"</bucket>
+            </map>
+            <map to="#eda100">
+              <bucket>"C4 Real-time trading desk"</bucket>
+            </map>
+            <map to="#e87ba4">
+              <bucket>"C5 Gas pipeline &amp; regulatory"</bucket>
+            </map>
+            <map to="#008300">
+              <bucket>"C6 Trading &amp; logistics desk (TRD-02)"</bucket>
+            </map>
+            <map to="#4a3aa7">
+              <bucket>"C7 Staff cluster around UNK-12"</bucket>
+            </map>
+          </encoding>
+          <encoding attr="color" field="[none:tie_type:nk]" type="palette">
+            <map to="#8f96a3">
+              <bucket>"Strong (two-way)"</bucket>
+            </map>
+            <map to="#d5d9e0">
+              <bucket>"Weak (one-way)"</bucket>
+            </map>
+            <map to="#ffffff">
+              <bucket>"None"</bucket>
+            </map>
+          </encoding>
+          <encoding attr="color" field="[none:role_group:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"1 Executive"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"2 Vice President"</bucket>
+            </map>
+            <map to="#1baf7a">
+              <bucket>"3 Director / MD"</bucket>
+            </map>
+            <map to="#eda100">
+              <bucket>"4 Manager"</bucket>
+            </map>
+            <map to="#e87ba4">
+              <bucket>"5 Trader"</bucket>
+            </map>
+            <map to="#008300">
+              <bucket>"6 Employee / Specialist"</bucket>
+            </map>
+            <map to="#b9bec8">
+              <bucket>"7 Unknown role"</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <object-graph>
+        <objects>
+          <object caption="network_paths.csv" id="network_paths.csv_91E02CD2B8621D0C05197F645668C5C4">
+            <properties context="">
+              <relation connection="textscan.r86lum8rs0we51exvlrvvgqdr69p" name="network_paths.csv" table="[network_paths#csv]" type="table">
+                <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+                  <column datatype="string" name="path_id" ordinal="0"/>
+                  <column datatype="integer" name="path_order" ordinal="1"/>
+                  <column datatype="string" name="row_type" ordinal="2"/>
+                  <column datatype="string" name="display_name" ordinal="3"/>
+                  <column datatype="real" name="x" ordinal="4"/>
+                  <column datatype="real" name="y" ordinal="5"/>
+                  <column datatype="integer" name="tie_emails" ordinal="6"/>
+                  <column datatype="string" name="tie_type" ordinal="7"/>
+                  <column datatype="string" name="community_link" ordinal="8"/>
+                  <column datatype="string" name="community" ordinal="9"/>
+                  <column datatype="string" name="role_group" ordinal="10"/>
+                  <column datatype="real" name="betweenness" ordinal="11"/>
+                  <column datatype="integer" name="contacts" ordinal="12"/>
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+    <datasource caption="Monthly locality test" inline="true" name="federated.syg3kmqzwfl18gnom9ynass9ukcu" version="26.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection caption="monthly_locality_long" name="textscan.yp2pbd8jvvsaakte39b6utx5lc4e">
+            <connection class="textscan" directory="Data/enron" filename="monthly_locality_long.csv" password="" server=""/>
+          </named-connection>
+        </named-connections>
+        <relation connection="textscan.yp2pbd8jvvsaakte39b6utx5lc4e" name="monthly_locality_long.csv" table="[monthly_locality_long#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+            <column datatype="date" name="month" ordinal="0"/>
+            <column datatype="string" name="reliable" ordinal="1"/>
+            <column datatype="integer" name="active_people" ordinal="2"/>
+            <column datatype="string" name="metric" ordinal="3"/>
+            <column datatype="real" name="value" ordinal="4"/>
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class="capability">
+            <remote-name></remote-name>
+            <remote-type>0</remote-type>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias></remote-alias>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype="string" name="character-set">"UTF-8"</attribute>
+              <attribute datatype="string" name="collation">"en_US"</attribute>
+              <attribute datatype="string" name="field-delimiter">","</attribute>
+              <attribute datatype="string" name="header-row">"true"</attribute>
+              <attribute datatype="string" name="locale">"en_US"</attribute>
+              <attribute datatype="string" name="single-char">""</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>month</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[month]</local-name>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias>month</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>reliable</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[reliable]</local-name>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias>reliable</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>active_people</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[active_people]</local-name>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias>active_people</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>metric</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[metric]</local-name>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias>metric</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>value</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[value]</local-name>
+            <parent-name>[monthly_locality_long.csv]</parent-name>
+            <remote-alias>value</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled="yes"/>
+      <column caption="monthly_locality_long.csv" datatype="table" name="[__tableau_internal_object_id__].[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]" role="measure" type="quantitative"/>
+      <column datatype="date" name="[month]" role="dimension" type="ordinal" caption="Month"/>
+      <column datatype="string" name="[reliable]" role="dimension" type="nominal" caption="Reliable month"/>
+      <column datatype="integer" name="[active_people]" role="measure" type="quantitative" caption="Active people"/>
+      <column datatype="string" name="[metric]" role="dimension" type="nominal" caption="Metric"/>
+      <column datatype="real" name="[value]" role="measure" type="quantitative" caption="Probability"/>
+      <layout dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
+      <style>
+        <style-rule element="mark">
+          <encoding attr="color" field="[none:metric:nk]" type="palette">
+            <map to="#2a78d6">
+              <bucket>"Observed: P(friend-of-friend tie)"</bucket>
+            </map>
+            <map to="#eb6834">
+              <bucket>"Expected at random: edge density"</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <object-graph>
+        <objects>
+          <object caption="monthly_locality_long.csv" id="monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811">
+            <properties context="">
+              <relation connection="textscan.yp2pbd8jvvsaakte39b6utx5lc4e" name="monthly_locality_long.csv" table="[monthly_locality_long#csv]" type="table">
+                <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+                  <column datatype="date" name="month" ordinal="0"/>
+                  <column datatype="string" name="reliable" ordinal="1"/>
+                  <column datatype="integer" name="active_people" ordinal="2"/>
+                  <column datatype="string" name="metric" ordinal="3"/>
+                  <column datatype="real" name="value" ordinal="4"/>
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+    <datasource caption="Key events" inline="true" name="federated.ym411v7tbvbkzaeec5rxw28rns4z" version="26.1">
+      <connection class="federated">
+        <named-connections>
+          <named-connection caption="events" name="textscan.rl43b99og703vpiecjyfc7ungo37">
+            <connection class="textscan" directory="Data/enron" filename="events.csv" password="" server=""/>
+          </named-connection>
+        </named-connections>
+        <relation connection="textscan.rl43b99og703vpiecjyfc7ungo37" name="events.csv" table="[events#csv]" type="table">
+          <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+            <column datatype="integer" name="event_no" ordinal="0"/>
+            <column datatype="date" name="date" ordinal="1"/>
+            <column datatype="string" name="event" ordinal="2"/>
+            <column datatype="string" name="category" ordinal="3"/>
+            <column datatype="string" name="date_label" ordinal="4"/>
+          </columns>
+        </relation>
+        <metadata-records>
+          <metadata-record class="capability">
+            <remote-name></remote-name>
+            <remote-type>0</remote-type>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias></remote-alias>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype="string" name="character-set">"UTF-8"</attribute>
+              <attribute datatype="string" name="collation">"en_US"</attribute>
+              <attribute datatype="string" name="field-delimiter">","</attribute>
+              <attribute datatype="string" name="header-row">"true"</attribute>
+              <attribute datatype="string" name="locale">"en_US"</attribute>
+              <attribute datatype="string" name="single-char">""</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>event_no</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[event_no]</local-name>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias>event_no</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>date</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[date]</local-name>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias>date</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <object-id>[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>event</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[event]</local-name>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias>event</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>category</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[category]</local-name>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias>category</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]</object-id>
+          </metadata-record>
+          <metadata-record class="column">
+            <remote-name>date_label</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[date_label]</local-name>
+            <parent-name>[events.csv]</parent-name>
+            <remote-alias>date_label</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag="0" name="LEN_RUS"/>
+            <object-id>[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]</object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled="yes"/>
+      <column caption="events.csv" datatype="table" name="[__tableau_internal_object_id__].[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]" role="measure" type="quantitative"/>
+      <column datatype="integer" name="[event_no]" role="dimension" type="ordinal" caption="#"/>
+      <column datatype="date" name="[date]" role="dimension" type="ordinal" caption="Date"/>
+      <column datatype="string" name="[event]" role="dimension" type="nominal" caption="Event"/>
+      <column datatype="string" name="[category]" role="dimension" type="nominal" caption="Category"/>
+      <column datatype="string" name="[date_label]" role="dimension" type="nominal" caption="When"/>
+      <layout dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
+      <style>
+        <style-rule element="mark"/>
+      </style>
+      <object-graph>
+        <objects>
+          <object caption="events.csv" id="events.csv_16908B0605F2645DFCB4C3A8D248CEF3">
+            <properties context="">
+              <relation connection="textscan.rl43b99og703vpiecjyfc7ungo37" name="events.csv" table="[events#csv]" type="table">
+                <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
+                  <column datatype="integer" name="event_no" ordinal="0"/>
+                  <column datatype="date" name="date" ordinal="1"/>
+                  <column datatype="string" name="event" ordinal="2"/>
+                  <column datatype="string" name="category" ordinal="3"/>
+                  <column datatype="string" name="date_label" ordinal="4"/>
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+  </datasources>
+  <actions>
+    <action caption="Highlight person" name="[Action1_CA4FD0A6957774F5D6BE8967E671146A]">
+      <activation auto-clear="true" type="on-select"/>
+      <source dashboard="2 Network" type="sheet"/>
+      <command command="tsc:brush">
+        <param name="field-captions" value="Person"/>
+        <param name="target" value="2 Network"/>
+      </command>
+    </action>
+    <action caption="Highlight period" name="[Action2_3C885FE3A60BA8CF40D6DCB4514197FD]">
+      <activation auto-clear="true" type="on-select"/>
+      <source dashboard="1 Overview" type="sheet"/>
+      <command command="tsc:brush">
+        <param name="field-captions" value="Period"/>
+        <param name="target" value="1 Overview"/>
+      </command>
+    </action>
+  </actions>
+  <worksheets>
+    <worksheet name="KPI Deliveries">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Deliveries</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="integer" name="[Calculation_1000000000000000001]" role="measure" type="quantitative" caption="Deliveries" default-format="n#,##0">
+              <calculation class="tableau" formula="1"/>
+            </column>
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Calculation_1000000000000000001]" derivation="Sum" name="[sum:Calculation_1000000000000000001:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" scope="cols" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Text"/>
+            <encodings>
+              <text column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]"/>
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]&gt;</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">deliveries (sender → recipient)</run>
+              </formatted-text>
+            </customized-label>
+          </pane>
+        </panes>
+        <rows/>
+        <cols/>
+      </table>
+      <simple-id uuid="{1DCC0AAB-392D-403E-6666-7D2F1BF5425E}"/>
+    </worksheet>
+    <worksheet name="KPI Messages">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Messages</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="integer" name="[message_id]" role="dimension" type="ordinal" caption="Message ID"/>
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column-instance column="[message_id]" derivation="CountD" name="[ctd:message_id:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" scope="cols" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Text"/>
+            <encodings>
+              <text column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:message_id:qk]"/>
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:message_id:qk]&gt;</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">unique messages</run>
+              </formatted-text>
+            </customized-label>
+          </pane>
+        </panes>
+        <rows/>
+        <cols/>
+      </table>
+      <simple-id uuid="{7FDCB1F9-8E96-A21C-BB74-BFBBD45FB6B4}"/>
+    </worksheet>
+    <worksheet name="KPI Senders">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Senders</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[sender]" role="dimension" type="nominal" caption="Sender"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column-instance column="[sender]" derivation="CountD" name="[ctd:sender:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" scope="cols" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Text"/>
+            <encodings>
+              <text column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:sender:qk]"/>
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:sender:qk]&gt;</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">active senders</run>
+              </formatted-text>
+            </customized-label>
+          </pane>
+        </panes>
+        <rows/>
+        <cols/>
+      </table>
+      <simple-id uuid="{528E6CFA-2BB4-4434-5F97-1718A9192399}"/>
+    </worksheet>
+    <worksheet name="KPI Cross-community">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Cross-community</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="integer" name="[Calculation_1000000000000000001]" role="measure" type="quantitative" caption="Deliveries" default-format="n#,##0">
+              <calculation class="tableau" formula="1"/>
+            </column>
+            <column datatype="real" name="[Calculation_1000000000000000002]" role="measure" type="quantitative" caption="Cross-community share" default-format="p0.0%">
+              <calculation class="tableau" formula="SUM(IF [community_link] = &quot;Across communities&quot; THEN 1 ELSE 0 END) / SUM([Calculation_1000000000000000001])"/>
+            </column>
+            <column datatype="string" name="[community_link]" role="dimension" type="nominal" caption="Community link"/>
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Calculation_1000000000000000002]" derivation="User" name="[usr:Calculation_1000000000000000002:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="worksheet">
+            <format attr="display-field-labels" scope="cols" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Text"/>
+            <encodings>
+              <text column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[usr:Calculation_1000000000000000002:qk]"/>
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[usr:Calculation_1000000000000000002:qk]&gt;</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">of email crosses communities</run>
+              </formatted-text>
+            </customized-label>
+          </pane>
+        </panes>
+        <rows/>
+        <cols/>
+      </table>
+      <simple-id uuid="{9CC8DAE0-47D2-5794-A0C6-301CB12DD235}"/>
+    </worksheet>
+    <worksheet name="Email Volume Timeline">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Weekly email deliveries, 1999-2002</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Colour = period. Volume more than triples in the crisis window (Aug-Dec 2001).</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="integer" name="[Calculation_1000000000000000001]" role="measure" type="quantitative" caption="Deliveries" default-format="n#,##0">
+              <calculation class="tableau" formula="1"/>
+            </column>
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column datatype="datetime" name="[sent_at]" role="dimension" type="ordinal" caption="Sent at"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Calculation_1000000000000000001]" derivation="Sum" name="[sum:Calculation_1000000000000000001:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[sent_at]" derivation="Week-Trunc" name="[twk:sent_at:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Area"/>
+            <encodings>
+              <color column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]</rows>
+        <cols>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[twk:sent_at:qk]</cols>
+      </table>
+      <simple-id uuid="{8A039866-B6C4-76A4-5B96-44667C5112A5}"/>
+    </worksheet>
+    <worksheet name="Communication Flow by Role">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Who emails whom, by seniority</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Rows = sender role, columns = recipient role; darker = more deliveries.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+            <column datatype="integer" name="[Calculation_1000000000000000001]" role="measure" type="quantitative" caption="Deliveries" default-format="n#,##0">
+              <calculation class="tableau" formula="1"/>
+            </column>
+            <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+            <column datatype="string" name="[recipient_role]" role="dimension" type="nominal" caption="Recipient role"/>
+            <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+            <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[recipient_role]" derivation="None" name="[none:recipient_role:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Calculation_1000000000000000001]" derivation="Sum" name="[sum:Calculation_1000000000000000001:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" filter-group="1">
+            <groupfilter function="level-members" level="[none:period:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <filter class="categorical" column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" filter-group="2">
+            <groupfilter function="level-members" level="[none:sender_role:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]</column>
+            <column>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Square"/>
+            <encodings>
+              <color column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]"/>
+              <text column="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]</rows>
+        <cols>[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:recipient_role:nk]</cols>
+      </table>
+      <simple-id uuid="{C5F7CC8A-DB8A-C13F-1CC8-1FD2103ADE7A}"/>
+    </worksheet>
+    <worksheet name="Key Events">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Key events in the Enron collapse</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Key events" name="federated.ym411v7tbvbkzaeec5rxw28rns4z"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.ym411v7tbvbkzaeec5rxw28rns4z">
+            <column datatype="string" name="[category]" role="dimension" type="nominal" caption="Category"/>
+            <column datatype="string" name="[date_label]" role="dimension" type="nominal" caption="When"/>
+            <column datatype="string" name="[event]" role="dimension" type="nominal" caption="Event"/>
+            <column datatype="integer" name="[event_no]" role="dimension" type="ordinal" caption="#"/>
+            <column-instance column="[category]" derivation="None" name="[none:category:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[date_label]" derivation="None" name="[none:date_label:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[event]" derivation="None" name="[none:event:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[event_no]" derivation="None" name="[none:event_no:ok]" pivot="key" type="ordinal"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Text"/>
+            <encodings>
+              <text column="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:category:nk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>(([federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event_no:ok] / [federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:date_label:nk]) / [federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event:nk])</rows>
+        <cols/>
+      </table>
+      <simple-id uuid="{F3EEA057-90AC-630E-BF5E-E9473BF120FE}"/>
+    </worksheet>
+    <worksheet name="Locality Test by Month">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Unit-5 locality test: is this a social network?</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Blue: P(y-z tie | x-y and x-z ties). Orange: edge density (what chance alone gives).</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Monthly locality test" name="federated.syg3kmqzwfl18gnom9ynass9ukcu"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.syg3kmqzwfl18gnom9ynass9ukcu">
+            <column datatype="string" name="[metric]" role="dimension" type="nominal" caption="Metric"/>
+            <column datatype="date" name="[month]" role="dimension" type="ordinal" caption="Month"/>
+            <column datatype="string" name="[reliable]" role="dimension" type="nominal" caption="Reliable month"/>
+            <column datatype="real" name="[value]" role="measure" type="quantitative" caption="Probability"/>
+            <column-instance column="[metric]" derivation="None" name="[none:metric:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[reliable]" derivation="None" name="[none:reliable:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[value]" derivation="Sum" name="[sum:value:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[month]" derivation="Month-Trunc" name="[tmn:month:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.syg3kmqzwfl18gnom9ynass9ukcu].[none:reliable:nk]">
+            <groupfilter function="member" level="[none:reliable:nk]" member="&quot;Yes&quot;" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.syg3kmqzwfl18gnom9ynass9ukcu].[none:reliable:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Line"/>
+            <encodings>
+              <color column="[federated.syg3kmqzwfl18gnom9ynass9ukcu].[none:metric:nk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.syg3kmqzwfl18gnom9ynass9ukcu].[sum:value:qk]</rows>
+        <cols>[federated.syg3kmqzwfl18gnom9ynass9ukcu].[tmn:month:qk]</cols>
+      </table>
+      <simple-id uuid="{4809866A-2F3D-4AA3-973E-A5EAF2A62A4D}"/>
+    </worksheet>
+    <worksheet name="Network Graph">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Strong-tie email network (Girvan-Newman communities)</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Node = person (size = betweenness, colour = community); line = two-way email tie.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
+            <column datatype="real" name="[Calculation_3000000000000000001]" role="measure" type="quantitative" caption="x (people layer)">
+              <calculation class="tableau" formula="[x]"/>
+            </column>
+            <column datatype="real" name="[betweenness]" role="measure" type="quantitative" caption="Betweenness centrality"/>
+            <column datatype="string" name="[community]" role="dimension" type="nominal" caption="Community"/>
+            <column datatype="integer" name="[contacts]" role="measure" type="quantitative" caption="Contacts (degree)"/>
+            <column datatype="string" name="[display_name]" role="dimension" type="nominal" caption="Person"/>
+            <column datatype="string" name="[path_id]" role="dimension" type="nominal" caption="Path ID"/>
+            <column datatype="integer" name="[path_order]" role="dimension" type="ordinal" caption="Path order"/>
+            <column datatype="string" name="[role_group]" role="dimension" type="nominal" caption="Role group"/>
+            <column datatype="string" name="[tie_type]" role="dimension" type="nominal" caption="Tie type"/>
+            <column datatype="real" name="[x]" role="measure" type="quantitative" caption="x"/>
+            <column datatype="real" name="[y]" role="measure" type="quantitative" caption="y"/>
+            <column-instance column="[Calculation_3000000000000000001]" derivation="Avg" name="[avg:Calculation_3000000000000000001:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[betweenness]" derivation="Avg" name="[avg:betweenness:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[contacts]" derivation="Avg" name="[avg:contacts:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[x]" derivation="Avg" name="[avg:x:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[y]" derivation="Avg" name="[avg:y:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[path_id]" derivation="None" name="[none:path_id:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[path_order]" derivation="None" name="[none:path_order:ok]" pivot="key" type="ordinal"/>
+            <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[tie_type]" derivation="None" name="[none:tie_type:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <filter class="categorical" column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:tie_type:nk]">
+            <groupfilter function="union" user:ui-domain="database" user:ui-enumeration="inclusive" user:ui-marker="enumerate">
+              <groupfilter function="member" level="[none:tie_type:nk]" member="&quot;Strong (two-way)&quot;"/>
+              <groupfilter function="member" level="[none:tie_type:nk]" member="&quot;None&quot;"/>
+            </groupfilter>
+          </filter>
+          <filter class="categorical" column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]">
+            <groupfilter function="level-members" level="[none:community:nk]" user:ui-enumeration="all" user:ui-marker="enumerate"/>
+          </filter>
+          <slices>
+            <column>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:tie_type:nk]</column>
+            <column>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="axis">
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]" field-type="quantitative" fold="true" scope="cols" synchronized="true" type="space"/>
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="cols" type="space"/>
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="rows" type="space"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" scope="cols" value="false"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]" scope="cols" value="false"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" scope="rows" value="false"/>
+          </style-rule>
+          <style-rule element="gridline">
+            <format attr="line-visibility" value="off"/>
+          </style-rule>
+          <style-rule element="zeroline">
+            <format attr="line-visibility" value="off"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Automatic"/>
+          </pane>
+          <pane selection-relaxation-option="selection-relaxation-allow" id="1" x-axis-name="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Line"/>
+            <encodings>
+              <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:tie_type:nk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:path_id:nk]"/>
+              <path column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:path_order:ok]"/>
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="size" value="0.2"/>
+              </style-rule>
+            </style>
+          </pane>
+          <pane selection-relaxation-option="selection-relaxation-allow" id="2" x-axis-name="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Circle"/>
+            <encodings>
+              <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
+              <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
+              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:role_group:nk]"/>
+              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:contacts:qk]"/>
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-transparency" value="235"/>
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
+        <cols>([federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk] + [federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk])</cols>
+      </table>
+      <simple-id uuid="{B0F85362-D5A7-7D38-0D09-A76F36C99D1D}"/>
+    </worksheet>
+    <worksheet name="Top People">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Top 15 people by the selected metric</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Parameters" name="Parameters"/>
+            <datasource caption="People (network metrics)" name="federated.s2c8zq20erd9zeegb9aikl2nd62g"/>
+          </datasources>
+          <datasource-dependencies datasource="Parameters">
+            <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
+              <calculation class="tableau" formula="&quot;Betweenness&quot;"/>
+              <members>
+                <member value="&quot;Betweenness&quot;"/>
+                <member value="&quot;PageRank&quot;"/>
+                <member value="&quot;Contacts&quot;"/>
+                <member value="&quot;Emails sent&quot;"/>
+              </members>
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource="federated.s2c8zq20erd9zeegb9aikl2nd62g">
+            <column datatype="real" name="[Calculation_2000000000000000001]" role="measure" type="quantitative" caption="Selected metric">
+              <calculation class="tableau" formula="CASE [Parameters].[Parameter 1] WHEN &quot;Betweenness&quot; THEN [betweenness] WHEN &quot;PageRank&quot; THEN [pagerank] WHEN &quot;Contacts&quot; THEN [contacts] WHEN &quot;Emails sent&quot; THEN [emails_sent] END"/>
+            </column>
+            <column datatype="integer" name="[Calculation_2000000000000000002]" role="measure" type="quantitative" caption="Selected rank">
+              <calculation class="tableau" formula="CASE [Parameters].[Parameter 1] WHEN &quot;Betweenness&quot; THEN [rank_betweenness] WHEN &quot;PageRank&quot; THEN [rank_pagerank] WHEN &quot;Contacts&quot; THEN [rank_contacts] WHEN &quot;Emails sent&quot; THEN [rank_emails_sent] END"/>
+            </column>
+            <column datatype="real" name="[betweenness]" role="measure" type="quantitative" caption="Betweenness centrality"/>
+            <column datatype="integer" name="[contacts]" role="measure" type="quantitative" caption="Contacts (degree)"/>
+            <column datatype="string" name="[display_name]" role="dimension" type="nominal" caption="Person"/>
+            <column datatype="integer" name="[emails_sent]" role="measure" type="quantitative" caption="Emails sent"/>
+            <column datatype="real" name="[pagerank]" role="measure" type="quantitative" caption="PageRank"/>
+            <column datatype="integer" name="[rank_betweenness]" role="measure" type="quantitative" caption="Rank: betweenness"/>
+            <column datatype="integer" name="[rank_contacts]" role="measure" type="quantitative" caption="Rank: contacts"/>
+            <column datatype="integer" name="[rank_emails_sent]" role="measure" type="quantitative" caption="Rank: emails sent"/>
+            <column datatype="integer" name="[rank_pagerank]" role="measure" type="quantitative" caption="Rank: PageRank"/>
+            <column datatype="string" name="[role_group]" role="dimension" type="nominal" caption="Role group"/>
+            <column-instance column="[Calculation_2000000000000000002]" derivation="None" name="[none:Calculation_2000000000000000002:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Calculation_2000000000000000001]" derivation="Sum" name="[sum:Calculation_2000000000000000001:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <filter class="quantitative" column="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:Calculation_2000000000000000002:qk]" included-values="in-range">
+            <min>1</min>
+            <max>15</max>
+          </filter>
+          <computed-sort column="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:display_name:nk]" direction="DESC" using="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[sum:Calculation_2000000000000000001:qk]"/>
+          <slices>
+            <column>[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:Calculation_2000000000000000002:qk]</column>
+          </slices>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Bar"/>
+            <encodings>
+              <color column="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:role_group:nk]"/>
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true"/>
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:display_name:nk]</rows>
+        <cols>[federated.s2c8zq20erd9zeegb9aikl2nd62g].[sum:Calculation_2000000000000000001:qk]</cols>
+      </table>
+      <simple-id uuid="{F6BAC113-C302-ACBC-8917-1AFFC4699970}"/>
+    </worksheet>
+    <worksheet name="Community Composition">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">Who is in each community</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">People per Girvan-Newman community, coloured by role group.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="People (network metrics)" name="federated.s2c8zq20erd9zeegb9aikl2nd62g"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.s2c8zq20erd9zeegb9aikl2nd62g">
+            <column datatype="string" name="[community]" role="dimension" type="nominal" caption="Community"/>
+            <column datatype="string" name="[employee_key]" role="dimension" type="nominal" caption="Pseudonym key"/>
+            <column datatype="string" name="[role_group]" role="dimension" type="nominal" caption="Role group"/>
+            <column-instance column="[employee_key]" derivation="Count" name="[cnt:employee_key:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Bar"/>
+            <encodings>
+              <color column="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:role_group:nk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:community:nk]</rows>
+        <cols>[federated.s2c8zq20erd9zeegb9aikl2nd62g].[cnt:employee_key:qk]</cols>
+      </table>
+      <simple-id uuid="{B2B13150-978E-8453-729D-D364F5634B1A}"/>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="1 Overview">
+      <style/>
+      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300" sizing-mode="fixed"/>
+      <datasources>
+        <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+      </datasources>
+      <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
+        <column datatype="string" name="[period]" role="dimension" type="nominal" caption="Period"/>
+        <column datatype="string" name="[sender_role]" role="dimension" type="nominal" caption="Sender role"/>
+        <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
+        <column-instance column="[sender_role]" derivation="None" name="[none:sender_role:nk]" pivot="key" type="nominal"/>
+      </datasource-dependencies>
+      <zones>
+        <zone h="100000" id="2" type-v2="layout-basic" w="100000" x="0" y="0">
+          <zone h="100000" id="3" w="100000" x="0" y="0" param="vert" type-v2="layout-flow">
+            <zone h="8049" id="4" w="100000" x="0" y="0" type-v2="text">
+              <formatted-text>
+                <run bold="true" fontcolor="#111418" fontsize="17">Enron's email network, 1999-2002: how communication changed as the company collapsed</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">34,374 de-duplicated deliveries among 148 employees (Enron corpus, FERC/DoJ release). Junior staff are pseudonymised; only metadata (who-whom-when) is used.</run>
+              </formatted-text>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="4"/>
+              </zone-style>
+            </zone>
+            <zone h="12683" id="5" w="100000" x="0" y="8049" param="horz" type-v2="layout-flow">
+              <zone h="12683" id="6" w="25000" x="0" y="8049" name="KPI Deliveries">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="12683" id="7" w="25000" x="25000" y="8049" name="KPI Messages">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="12683" id="8" w="25000" x="50000" y="8049" name="KPI Senders">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="12683" id="9" w="25000" x="75000" y="8049" name="KPI Cross-community">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="0"/>
+              </zone-style>
+            </zone>
+            <zone h="79268" id="10" w="100000" x="0" y="20732" param="horz" type-v2="layout-flow">
+              <zone h="79268" id="11" w="76923" x="0" y="20732" param="vert" type-v2="layout-flow">
+                <zone h="40244" id="12" w="76923" x="0" y="20732" name="Email Volume Timeline">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="39024" id="13" w="76923" x="0" y="60976" param="horz" type-v2="layout-flow">
+                  <zone h="39024" id="14" w="38462" x="0" y="60976" name="Communication Flow by Role">
+                    <zone-style>
+                      <format attr="border-color" value="#000000"/>
+                      <format attr="border-style" value="none"/>
+                      <format attr="border-width" value="0"/>
+                      <format attr="margin" value="4"/>
+                    </zone-style>
+                  </zone>
+                  <zone h="39024" id="15" w="38462" x="38462" y="60976" name="Locality Test by Month">
+                    <zone-style>
+                      <format attr="border-color" value="#000000"/>
+                      <format attr="border-style" value="none"/>
+                      <format attr="border-width" value="0"/>
+                      <format attr="margin" value="4"/>
+                    </zone-style>
+                  </zone>
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="0"/>
+                  </zone-style>
+                </zone>
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="0"/>
+                </zone-style>
+              </zone>
+              <zone h="79268" id="16" w="23077" x="76923" y="20732" param="vert" type-v2="layout-flow">
+                <zone h="7805" id="17" w="23077" x="76923" y="20732" mode="checkdropdown" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type-v2="filter">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="7805" id="18" w="23077" x="76923" y="28537" mode="checkdropdown" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" type-v2="filter">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="11220" id="19" w="23077" x="76923" y="36341" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type-v2="color">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="52439" id="20" w="23077" x="76923" y="47561" name="Key Events">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="0"/>
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="0"/>
+              </zone-style>
+            </zone>
+            <zone-style>
+              <format attr="border-color" value="#000000"/>
+              <format attr="border-style" value="none"/>
+              <format attr="border-width" value="0"/>
+              <format attr="margin" value="0"/>
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+      <simple-id uuid="{5F526DD7-8DF0-970A-3E74-B72ECA40B120}"/>
+    </dashboard>
+    <dashboard name="2 Network">
+      <style/>
+      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300" sizing-mode="fixed"/>
+      <datasources>
+        <datasource caption="Parameters" name="Parameters"/>
+        <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
+      </datasources>
+      <datasource-dependencies datasource="Parameters">
+        <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
+          <calculation class="tableau" formula="&quot;Betweenness&quot;"/>
+          <members>
+            <member value="&quot;Betweenness&quot;"/>
+            <member value="&quot;PageRank&quot;"/>
+            <member value="&quot;Contacts&quot;"/>
+            <member value="&quot;Emails sent&quot;"/>
+          </members>
+        </column>
+      </datasource-dependencies>
+      <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
+        <column datatype="string" name="[community]" role="dimension" type="nominal" caption="Community"/>
+        <column datatype="string" name="[tie_type]" role="dimension" type="nominal" caption="Tie type"/>
+        <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+        <column-instance column="[tie_type]" derivation="None" name="[none:tie_type:nk]" pivot="key" type="nominal"/>
+      </datasource-dependencies>
+      <zones>
+        <zone h="100000" id="2" type-v2="layout-basic" w="100000" x="0" y="0">
+          <zone h="100000" id="3" w="100000" x="0" y="0" param="vert" type-v2="layout-flow">
+            <zone h="8049" id="4" w="100000" x="0" y="0" type-v2="text">
+              <formatted-text>
+                <run bold="true" fontcolor="#111418" fontsize="17">Who holds the network together? Communities and brokers</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">Girvan-Newman communities on two-way (strong) ties; brokers = high betweenness. Click a bar to highlight that person in the graph.</run>
+              </formatted-text>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="4"/>
+              </zone-style>
+            </zone>
+            <zone h="86341" id="5" w="100000" x="0" y="8049" param="horz" type-v2="layout-flow">
+              <zone h="86341" id="6" w="63846" x="0" y="8049" param="vert" type-v2="layout-flow">
+                <zone h="86341" id="7" w="63846" x="0" y="8049" name="Network Graph">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="0"/>
+                </zone-style>
+              </zone>
+              <zone h="86341" id="8" w="36154" x="63846" y="8049" param="vert" type-v2="layout-flow">
+                <zone h="7317" id="9" w="36154" x="63846" y="8049" param="horz" type-v2="layout-flow">
+                  <zone h="7317" id="10" w="12051" x="63846" y="8049" mode="compact" param="[Parameters].[Parameter 1]" type-v2="paramctrl">
+                    <zone-style>
+                      <format attr="border-color" value="#000000"/>
+                      <format attr="border-style" value="none"/>
+                      <format attr="border-width" value="0"/>
+                      <format attr="margin" value="4"/>
+                    </zone-style>
+                  </zone>
+                  <zone h="7317" id="11" w="12051" x="75897" y="8049" mode="checkdropdown" name="Network Graph" param="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]" type-v2="filter">
+                    <zone-style>
+                      <format attr="border-color" value="#000000"/>
+                      <format attr="border-style" value="none"/>
+                      <format attr="border-width" value="0"/>
+                      <format attr="margin" value="4"/>
+                    </zone-style>
+                  </zone>
+                  <zone h="7317" id="12" w="12051" x="87949" y="8049" mode="checkdropdown" name="Network Graph" param="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:tie_type:nk]" type-v2="filter">
+                    <zone-style>
+                      <format attr="border-color" value="#000000"/>
+                      <format attr="border-style" value="none"/>
+                      <format attr="border-width" value="0"/>
+                      <format attr="margin" value="4"/>
+                    </zone-style>
+                  </zone>
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="0"/>
+                  </zone-style>
+                </zone>
+                <zone h="48780" id="13" w="36154" x="63846" y="15366" name="Top People">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="30244" id="14" w="36154" x="63846" y="64146" name="Community Composition">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="0"/>
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="0"/>
+              </zone-style>
+            </zone>
+            <zone h="5610" id="15" w="100000" x="0" y="94390" name="Network Graph" param="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]" type-v2="color" pane-specification-id="2">
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="4"/>
+              </zone-style>
+            </zone>
+            <zone-style>
+              <format attr="border-color" value="#000000"/>
+              <format attr="border-style" value="none"/>
+              <format attr="border-width" value="0"/>
+              <format attr="margin" value="0"/>
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+      <simple-id uuid="{A5878913-E4AD-00DF-AB8E-C129335A9A38}"/>
+    </dashboard>
+  </dashboards>
+  <windows source-height="30">
+    <window class="dashboard" name="1 Overview" maximized="true">
+      <viewpoints>
+        <viewpoint name="KPI Deliveries"/>
+        <viewpoint name="KPI Messages"/>
+        <viewpoint name="KPI Senders"/>
+        <viewpoint name="KPI Cross-community"/>
+        <viewpoint name="Email Volume Timeline"/>
+        <viewpoint name="Communication Flow by Role"/>
+        <viewpoint name="Key Events"/>
+        <viewpoint name="Locality Test by Month"/>
+      </viewpoints>
+      <active id="-1"/>
+      <simple-id uuid="{44718263-3597-2B82-A7FC-3F0BFEEFF49E}"/>
+    </window>
+    <window class="dashboard" name="2 Network">
+      <viewpoints>
+        <viewpoint name="Network Graph"/>
+        <viewpoint name="Top People"/>
+        <viewpoint name="Community Composition"/>
+      </viewpoints>
+      <active id="-1"/>
+      <simple-id uuid="{E1C08C8F-F7E3-0B8D-BB24-B4DBC91753E7}"/>
+    </window>
+    <window class="worksheet" name="KPI Deliveries">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{32F934D9-5A07-8809-D6C9-422F1B1EFC5F}"/>
+    </window>
+    <window class="worksheet" name="KPI Messages">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{9F99ADA5-50B1-19EC-05EC-DD65C8064A0C}"/>
+    </window>
+    <window class="worksheet" name="KPI Senders">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{ED951010-7A05-CDE5-353A-A48176C4D02C}"/>
+    </window>
+    <window class="worksheet" name="KPI Cross-community">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{F9E9509D-C055-D442-0844-D31B9CE90F51}"/>
+    </window>
+    <window class="worksheet" name="Email Volume Timeline">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{CCE7ECD6-8FB2-F1A0-2129-36162FD5ABE9}"/>
+    </window>
+    <window class="worksheet" name="Communication Flow by Role">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{6EF533FC-0ACC-EA49-B9F9-DC0E25AC5D44}"/>
+    </window>
+    <window class="worksheet" name="Key Events">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{C5CEDD98-A8E3-5FD1-F2A1-D24D07084E73}"/>
+    </window>
+    <window class="worksheet" name="Locality Test by Month">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{A41AB2E3-E70D-E919-3A49-47EBE16A8129}"/>
+    </window>
+    <window class="worksheet" name="Network Graph">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{D5D6E503-1306-83EF-F259-914D39DBEDE3}"/>
+    </window>
+    <window class="worksheet" name="Top People">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{56181BF3-997D-FEB1-1300-112783FE566D}"/>
+    </window>
+    <window class="worksheet" name="Community Composition">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{48BADB70-B280-2A75-CA68-31CAB094968C}"/>
+    </window>
+  </windows>
+  <explain-data enabled-for-viewer="true" extreme-values-enabled-for-all="true">
+    <explanation-types>
+      <explanation-type type="number-of-records" enabled="true"/>
+      <explanation-type type="average-of-records" enabled="true"/>
+      <explanation-type type="extreme-values" enabled="true"/>
+      <explanation-type type="distribution-of-records" enabled="true"/>
+      <explanation-type type="aggregated-dimensions" enabled="true"/>
+      <explanation-type type="unvisualized-measures" enabled="true"/>
+      <explanation-type type="null-value" enabled="true"/>
+    </explanation-types>
+  </explain-data>
+</workbook>

@@ -221,3 +221,7 @@ spoken numbers are hand-written — update them if results change).
 - 2026-10-04: G04.docx built and checked (11 pages).
 - 2026-10-04: G04_Presentation.html (17 slides) built + visually checked; G04_Presentation_Script.md written and balanced.
   All deliverables done; only the USER TODO items remain.
+
+## 10. Second task in this repo (separate)
+- 2026-10-09: **Data Science CA-3** (Tableau dashboard on the Enron email network, 2 members, guided by Dr. Deepak Dharrao)
+  lives in `DataScience-CA3/`. Its own handoff file is `DataScience-CA3/CLAUDE.md` — read that for anything CA-3.
