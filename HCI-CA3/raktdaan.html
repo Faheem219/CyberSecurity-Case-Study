@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF6F1">
+<title>Raktdaan · Blood Donation App</title>
+<!--
+  Raktdaan — Blood donation & blood bank app (UI prototype)
+  Built with plain HTML + CSS only. No JavaScript.
+
+  How it works
+  - Each app screen is a <section class="screen" id="...">.
+  - Only the screen named in the URL hash (#home, #find ...) is shown, using the CSS :target selector.
+  - Buttons, tabs and back arrows are ordinary <a href="#screen-id"> links.
+  - Selectable things (blood groups, time slots, answers) are real radio buttons / checkboxes
+    styled with the CSS :has() and :checked selectors.
+  - Open "#all" to see every screen side by side.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   1. DESIGN TOKENS  (same names as the Figma variables)
+   ========================================================= */
+:root {
+  /* Backgrounds */
+  --bg-canvas:   #FBF6F1;
+  --bg-surface:  #FFFFFF;
+  --bg-sunken:   #F3EAE3;
+  --bg-blush:    #FBE8E2;
+  --bg-wine:     #4A1D24;
+  /* Text */
+  --text-primary:   #2A1E1C;
+  --text-secondary: #6B5A55;
+  --text-tertiary:  #9A8983;
+  --text-on-brand:  #FFFFFF;
+  --text-brand:     #A82E28;
+  /* Borders */
+  --border-subtle: #EADFD6;
+  --border-strong: #D5C4B9;
+  /* Brand */
+  --brand:         #C2362F;
+  --brand-pressed: #9E2A23;
+  --brand-soft:    #F6D3CB;
+  /* Accents */
+  --sage:          #3E7B5B;
+  --sage-soft:     #E1EEE5;
+  --turmeric:      #B7791A;
+  --turmeric-soft: #FBEED3;
+  --peach:         #F2C1AB;
+  --plum:          #7A3346;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-soft:   0 4px 16px rgba(92, 41, 28, .08);
+  --shadow-raised: 0 10px 28px -4px rgba(92, 41, 28, .14);
+
+  /* Type families */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body:    "Figtree", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background: #EFE5DC;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* =========================================================
+   3. TEXT STYLES  (same as Figma text styles)
+   ========================================================= */
+.t-display   { font: 600 34px/40px var(--font-display); letter-spacing: -0.01em; }
+.t-headline  { font: 600 26px/32px var(--font-display); letter-spacing: -0.005em; }
+.t-title-l   { font: 600 20px/26px var(--font-display); }
+.t-numeral   { font: 700 40px/44px var(--font-display); letter-spacing: -0.01em; }
+.t-title     { font: 600 17px/24px var(--font-body); }
+.t-body-l    { font: 400 16px/24px var(--font-body); }
+.t-body      { font: 400 14px/20px var(--font-body); }
+.t-body-strong { font: 600 14px/20px var(--font-body); }
+.t-label     { font: 600 15px/20px var(--font-body); }
+.t-caption   { font: 500 12px/16px var(--font-body); }
+.t-overline  { font: 700 11px/14px var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
+
+/* Text colours */
+.c-secondary { color: var(--text-secondary); }
+.c-tertiary  { color: var(--text-tertiary); }
+.c-brand     { color: var(--text-brand); }
+.c-red       { color: var(--brand); }
+.c-white     { color: var(--text-on-brand); }
+.c-sage      { color: var(--sage); }
+.c-turmeric  { color: var(--turmeric); }
+.c-peach     { color: var(--peach); }
+.center      { text-align: center; }
+
+/* =========================================================
+   4. LAYOUT HELPERS
+   ========================================================= */
+.row  { display: flex; align-items: center; }
+.col  { display: flex; flex-direction: column; }
+.between { justify-content: space-between; }
+.top  { align-items: flex-start; }
+.wrap { flex-wrap: wrap; }
+.grow { flex: 1 1 0; min-width: 0; }
+.spacer { flex: 1 1 auto; }
+.gap-2 { gap: 2px; }   .gap-4 { gap: 4px; }   .gap-6 { gap: 6px; }   .gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; } .gap-12 { gap: 12px; } .gap-14 { gap: 14px; } .gap-16 { gap: 16px; }
+.gap-18 { gap: 18px; } .gap-20 { gap: 20px; } .gap-22 { gap: 22px; } .gap-24 { gap: 24px; }
+.px-24 { padding-left: 24px; padding-right: 24px; }
+.sr { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Icons: <svg class="i"><use href="#i-name"/></svg> */
+.i { width: 24px; height: 24px; fill: currentColor; flex: none; }
+.i-14 { width: 14px; height: 14px; } .i-16 { width: 16px; height: 16px; }
+.i-18 { width: 18px; height: 18px; } .i-20 { width: 20px; height: 20px; }
+.i-22 { width: 22px; height: 22px; } .i-26 { width: 26px; height: 26px; }
+
+/* Round icon holder */
+.circle { display: inline-grid; place-items: center; flex: none; border-radius: 50%;
+  width: var(--s, 44px); height: var(--s, 44px); }
+.square { border-radius: 14px; }
+.bg-surface { background: var(--bg-surface); }
+.bg-sunken  { background: var(--bg-sunken); }
+.bg-blush   { background: var(--bg-blush); }
+.bg-brand   { background: var(--brand); color: var(--text-on-brand); }
+.bg-ink     { background: var(--text-primary); color: var(--text-on-brand); }
+.bg-sage-soft { background: var(--sage-soft); color: var(--sage); }
+.bg-turmeric-soft { background: var(--turmeric-soft); color: var(--turmeric); }
+.outlined   { box-shadow: inset 0 0 0 1px var(--border-subtle); }
+
+/* Photos (real photos from Google's open-source "Reply" sample app, Apache 2.0) */
+.photo { display: block; flex: none; border-radius: 50%; background: var(--bg-sunken) center / cover no-repeat;
+  width: var(--s, 44px); height: var(--s, 44px); }
+.ph-av3 { background-image: url(data:image/jpeg;base64,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); }
+.ph-av0 { background-image: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCACAAIADASIAAhEBAxEB/8QAHAAAAAcBAQAAAAAAAAAAAAAAAAECAwUGBwQI/8QAPBAAAQMDAQUFBwMCBAcAAAAAAQIDBAAFESEGEhMxQQcjUWFxFCIygZGhsTNCwRVDCCRi8DRSU3Oi0fH/xAAZAQACAwEAAAAAAAAAAAAAAAAAAwEEBQL/xAAkEQACAgICAgEFAQAAAAAAAAAAAQIDERIEIRMxURQiMkFhcf/aAAwDAQACEQMRAD8A9ELT3i/U0sJoz8a/U0KgAAUeKFKoATS8UAKMCggLFDFLxQqQE4oYFKoUAIwKLApzFDFADe7ScCnKFADRTnpSCmn1CiwKAEr/AFFepoUFjvF+ppVQSClYoJpSaABihR4rK+0DtcjWV52Bs/HTcrg2d1x5R7ho+GRqo+Q086AUXL0anR15Yum023txBdkXqcyCSOHG7lA+QH81zQNq9v7cR7PtFMcIVjhyt14E/MHSud4/I36eR6woVhWyvbotmW3C24tyIudPbYgJQPNbfh5jPpW4QZcedEalwn25EZ1O+260rfQoeINd7CnFx9jtCjoYoIE0KViiI0oAbJAptTo8aNaSqmuCaAOgj31+tACgfjPrR1BIrFHRUM0AVDtCuCy1GskR9TL9wSpbzrZwtthGArHgSSE/WqfbdlLbEQjcYR7mOnhT9/ncftGvOVZERiPGT5aFw/ddSkZ5S289KzeVa9tTU41WIZOd63MBGjLePDFcE62xlJ99kZ8hg1KOuuq0Gnmaj7spxpvJIqluXIxKJttYIs2AvDSA6ASlXnXR/hp2mdg32ZslNWeA8lUmGD+1xH6gHqNfUGnrk6st46EdayyHcHtnO0K13A90YstpwkHmgnXPqgn61o8SxtNFPmVL2e26FDTocjoaFXjLE0KVQVQAhQolAUqioAbPxr9TQoH9RXqaFQAdGrlRUrXHu86nIGH3uZDt+1m1k2e4tDf9QDYCRvlRDTfIVyQ+0jZpQDMe4o4v/TcbKD96VtmZNyLt4tEVtxx9XFWAASNAg7uTjOEDyrLLjbb1d7slKbUyy0E5C3XgSo+Bwka+grJsUbJORtVqUYpM2WRtXHSyHW1NlB1zVOu3abbG3+EuNMlOE4DbDWlTuzmx7DtlxKK0Hd+HPI+tU+5bF5uS+AstMNAk7rYWvPjg6H51Xr1b+4syXWIkg3tO5cGwXrI5GYIyTxQtafUVWO0uCl2BEuLGrZBbUQNR1FdVq2Tuk+Q2Lncnn+GokuIZS2QOgBxmrjdrGz/RhBeG+2ojn4g5qzGca5dCLIOUcM3jZZ0v7N2pZIKzDZKtc68MVJ1j3Y3Nfc2juI45XClRwEMcgw40cEY6ZB+1bFWhVZvHJk31OqWrCpNKpNNEgzRUTjiUDJNNofbc5EVzkCLt83iuuhZxhRH3qQL6QgnNZ5dLg9ClyOD/AMy/zXENoJZaKVnU9aR5cex8KXPtGiRrm04+U72oNSQUFDTkaxpdwfYPGQs5zk+dWOFth/lcEL38VMbV+yZUuL6I2Nw48iRCWkBCVENgjTHlSZMOFC7yOyhya6dxseZ6eVQ94uglSytlpbazknB6ny+9MR2+MkmW8Q4tJQkBRCx5isiyLU8GzW8rYuMVlLEEoecRvge8c6A1X5bRiyBOYdQtjOHEnXPmKp72yF2TEMeLfJyGlnPfqDi8fPWuO27Gf0mU3JcnzpJTqd57fQT5ip0XydJ47NIelQ0tbzeAT1qo36dn3UKGqueelJk3CLNYWY6sLbVuKAPWo5lSVXKEHMLQXkt46HUVNUXt2cWJYyaN2U2t5q9PPspIjJSXHXD+9xQwAPzWs1w2e0wrLDMW2sBmOFFe6CTqfWuveGcZrWpr8ccGLybvLPYXTMlRS0SKezTEz9E01iSiXi+yC44ygYwcZqCZvsm3r+IuZ8TTt1OJ74/1VXrkrvR61TU25F5QWpM7UqKZbp/1H8moFDpKAa7drbglyXISjmHFj7moOAXXEAYJqbK37JpmksEqtQcZx1pqH7u+M0SWX8foufSlMx5OdGXMelL0lgY7InO82Q8VI+Pw8a432Tdno4YmOQ3EZ71OMp+tSEiFOcV3bLh+VcNzhP23hzXG3EIJ71OP/Ol3VP8AIdVbHOpGrbstuHCut8vQk9TwwvPnyqGmtWe5yUNWqdenMc3VO8MfQCrXIudpLO+4GXCRoXP4qEk3m1NrCWw2CT+zQDzNKUn8F3ydCJCYVnjNx4Odwe+pSlEkk8zrUfaLul/aiAVnEaK6H3SRoEoOSTVav169tnezwdQeavHz9Kt+xloaah7y0la3sEk6b4PL0zg48ACs6AZtUceUmV5NT6R6OZ2oiPtoU26FhY3wfEHUVxz7+iOFu72g1xXnnaHbSTaNs0COtbsZtpKH2c4Qc66D9pwQfmAeVaBapre1EAPWl1DoOjiScLbPgRVm6qyv/DKxBSaNAjbbwwjekOhsdM0b+29tcbKUSEFeOQNUuRstJfbCS2PCot/ZaREdR3ZJ8qhZwRiLZNypYlSXHkclHNQN1V3oqaj2yapCE8EgYrkumz85SwW2iQfGlqp5GuyOMF3kWK3mS6pbaMlwk59aZdt0CK4FBLYxUU/b56pj54zmOKvGvmaC7PJdGHFrWPM01xkyqmix8SBwhq3SmZEAI+Juq2ixqA1/NOJs3jj60aSJ2RYETLelfxIqr7SzY82ThhxpcaMCh8DUpWdzGfkfvTd+aYs1mlz5CkBEdsrAJ5noPmao3Yy65cdl7rJlL4jkm5Or1Gf2BP8ABrtcfeLUh3Gmt0yv9oezMdLbsuC4Ix54Bwg/Ks2ZtM94gF0nOp8APP8A3roOtattnemWZa1NojPWtt5TEouKUXHHEae5jTTPM8ykHTJqoWjb3g7Rtx7dbTOhOYHCYbPGzz9wnrz5jHXGgpVfHnB4b6L07a31+yQ2R2TMQLVMSlbqz3gWgkDBxuEDU4OAQNSs8PBG+av8pxm2W+Q++oIbaStbinMH1zjRWoAONFLAbR3aTjpiezSI3GgqBaGEqA7rhlA5HX3MDlr3aMlJ4jmKqPanJDNnbipbyJDwSSUbgRgZ5eOMAJ/tg4IDizWnXFLpEzarjlGWLU7KefkOKWtx11bii4crJJzknqak7JdplplNy4MhyM+2chxs4x69MVxJG6AMUhcdiUBx08QDXU07Uxf6bXs32zyOEgXSNHmoGhdYPDX9OR+1XSFt9Zbu6jhuhpZ5tve4R/FeaGS23hlnCAgcgMYp8OkYwdaVLiwn/CVNo9a/1yKlAKBkeIonb/G6pP0ry7bdo7nbf+EmutgdAcj6VZofadcGW8TY0aUPThr+o/8AVVpcKS9M7U0egnnP8y7p/cP5pSXPKud51JlO/wDcP5oe0IT4VyLOzPlUPtLtJbNnIXHuLuFq/TZRqtw+Q/mqpt12jRbE05Et3Dk3PGMc0NevifKsKut2lXSY7JnSHHpDnNxR/HgPKnV1N9sCa2/21nX9El6RhqI2DwWEHRA8/E+dWzsekos3Z607KOFuNPSxnrg5P5FZDfiTbUMoGVuqArcbdaI4sNjiPDcQ3lrGuu+2Rj7Gu7emkh/G/JGV2GYzb7Q45dYzs927cR1MVGpAWeflmrR2bWcQIjixGQ2t7TOc4TqvGc5HJA5c85qT25tMC1tOG2x0CYIoZUkjVDe+cHHpg/8AypLs3u6ntnGPblj2lteHg4nByFgn6gEY864iuy5QkrGjtFocZuDs23O+zkJ3PdTkEANKwUkYOAF6HIzjwrNO0W4uTb60w4EAQmggpSSsIUvU6nUnlqdTWuTHzFiu760ANBSHOgACGweuP7Z6fmvP8yQqXLfkvKPEecLhz50yvuQvm25+1CNDrg0SiloFRPIcvGhk7vLpTKyXHg0AQPjUfHwFWCgORwUoysYWvU08pzXHLzptZAHh8qQpWR09f99KkBzfyPH0pqQ+G0LUf2D70gqxp46A+BqPkuhTWXOqtAOtQ3gD/9k=); }
+.ph-av4 { background-image: url(data:image/jpeg;base64,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); }
+.ph-av7 { background-image: url(data:image/jpeg;base64,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); }
+.ring-white { box-shadow: 0 0 0 4px var(--bg-surface); }
+.initials { display: grid; place-items: center; border-radius: 50%; flex: none;
+  width: var(--s, 44px); height: var(--s, 44px); font: 600 14px/20px var(--font-body); }
+
+/* =========================================================
+   5. COMPONENTS
+   ========================================================= */
+
+/* Button */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: var(--radius-pill); font: 600 15px/20px var(--font-body); white-space: nowrap;
+  cursor: pointer; transition: background-color .15s, transform .1s; }
+.btn:active { transform: scale(.98); }
+.btn--lg { height: 56px; padding: 0 28px; }
+.btn--md { height: 44px; padding: 0 20px; font-size: 14px; }
+.btn--primary { background: var(--brand); color: var(--text-on-brand); }
+.btn--primary:hover { background: var(--brand-pressed); }
+.btn--secondary { background: var(--bg-blush); color: var(--text-brand); }
+.btn--outline { color: var(--text-primary); box-shadow: inset 0 0 0 1.5px var(--border-strong); }
+.btn--outline:hover { background: var(--bg-surface); }
+.btn--block { width: 100%; }
+
+/* Status tag */
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px;
+  font: 500 12px/16px var(--font-body); white-space: nowrap; width: max-content; }
+.tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tag--urgent  { background: var(--bg-blush); color: var(--text-brand); }
+.tag--ready   { background: var(--sage-soft); color: var(--sage); }
+.tag--soon    { background: var(--turmeric-soft); color: var(--turmeric); }
+.tag--neutral { background: var(--bg-sunken); color: var(--text-secondary); }
+
+/* Card */
+.card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 22px; }
+.divided > * + * { border-top: 1px solid var(--border-subtle); }
+
+/* Input field */
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field > label { font: 600 14px/20px var(--font-body); color: var(--text-secondary); }
+.input { width: 100%; height: 56px; padding: 0 16px; border-radius: 14px; background: var(--bg-surface);
+  border: 1px solid var(--border-subtle); font: 400 16px/24px var(--font-body); color: var(--text-primary); }
+.input::placeholder { color: var(--text-tertiary); }
+.input:focus, .input.is-focus { outline: none; border: 1.5px solid var(--text-primary); }
+
+/* Filter chip (checkbox) */
+.filter-chip { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: var(--radius-pill);
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle);
+  font: 600 14px/20px var(--font-body); color: var(--text-secondary); white-space: nowrap; cursor: pointer; }
+.filter-chip:has(input:checked) { background: var(--text-primary); color: var(--text-on-brand); box-shadow: none; }
+
+/* Android status bar & gesture bar */
+.statusbar { display: flex; align-items: center; justify-content: space-between; height: 32px; padding: 0 24px;
+  font: 600 14px/20px var(--font-body); flex: none; }
+.statusbar .sys { width: 58px; height: 16px; }
+.statusbar--dark { color: var(--text-on-brand); }
+.gesture { height: 24px; display: grid; place-items: center; flex: none; }
+.gesture::before { content: ""; width: 108px; height: 4px; border-radius: 2px; background: rgba(42, 30, 28, .45); }
+.gesture--dark::before { background: rgba(255, 255, 255, .5); }
+
+/* Top app bar */
+.appbar { display: flex; align-items: center; gap: 4px; height: 64px; padding: 0 12px; flex: none; }
+.appbar h1 { flex: 1; }
+.icon-btn { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; flex: none; }
+.icon-btn:hover { background: var(--bg-sunken); }
+
+/* Bottom navigation */
+.bottom-nav { display: flex; justify-content: space-between; height: 80px; padding: 10px 8px 12px; flex: none;
+  background: var(--bg-surface); border-top: 1px solid var(--border-subtle); }
+.nav-item { width: 76px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font: 500 12px/16px var(--font-body); color: var(--text-secondary); }
+.nav-ind { display: grid; place-items: center; width: 56px; height: 32px; border-radius: var(--radius-pill); }
+.nav-item.is-active { color: var(--text-primary); }
+.nav-item.is-active .nav-ind { background: var(--bg-blush); color: var(--brand); }
+.nav-item--request { color: var(--text-brand); }
+.nav-item--request .nav-ind { background: var(--brand); color: var(--text-on-brand); border-radius: 14px; }
+
+/* Sticky action bar above the gesture area */
+.action-bar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; flex: none;
+  background: var(--bg-surface); border-top: 1px solid var(--border-subtle); }
+
+/* Blood group chip (radio) */
+.bg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.bg-chip { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  height: 76px; border-radius: 20px; background: var(--bg-surface); box-shadow: inset 0 0 0 1.5px var(--border-subtle); cursor: pointer; }
+.bg-chip b { font: 600 20px/26px var(--font-display); }
+.bg-chip small { font: 500 12px/16px var(--font-body); color: var(--text-tertiary); }
+.bg-chip .when-on { display: none; }
+.bg-chip:has(input:checked) { background: var(--brand); color: var(--text-on-brand); box-shadow: none; }
+.bg-chip:has(input:checked) small { color: var(--text-on-brand); }
+.bg-chip:has(input:checked) .when-off { display: none; }
+.bg-chip:has(input:checked) .when-on { display: inline; }
+.bg-chip:has(input:focus-visible), .option:has(input:focus-visible), .slot:has(input:focus-visible),
+.day:has(input:focus-visible), .seg:has(input:focus-visible), .urg:has(input:focus-visible),
+.grp:has(input:focus-visible) { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+
+/* =========================================================
+   6. PROTOTYPE VIEWER (desktop) — the phone frame and side menu
+   ========================================================= */
+.viewer { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+.menu { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border-strong);
+  background: var(--bg-canvas); display: flex; flex-direction: column; gap: 22px; }
+.menu-brand { display: flex; align-items: center; gap: 10px; }
+.menu-brand .i { color: var(--brand); }
+.menu h2 { font: 600 13px/18px var(--font-body); color: var(--text-tertiary); margin-bottom: 6px; }
+.menu ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.menu li a { display: block; padding: 6px 10px; border-radius: 10px; font: 500 14px/20px var(--font-body); color: var(--text-secondary); }
+.menu li a:hover { background: var(--bg-sunken); color: var(--text-primary); }
+.menu-note { margin-top: auto; font: 400 13px/19px var(--font-body); color: var(--text-tertiary); }
+.all-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 12px;
+  background: var(--text-primary); color: var(--text-on-brand); font: 600 14px/20px var(--font-body); width: max-content; }
+
+.stage { display: flex; justify-content: center; align-items: flex-start; padding: 32px; }
+.screen { display: none; }
+.screen-label { display: none; font: 600 15px/20px var(--font-body); color: var(--text-secondary); margin: 0 0 12px 6px; }
+
+/* Show the screen named in the URL (#signin, #home …). Show Welcome when nothing is chosen. */
+.screen:target { display: block; }
+.stage:not(:has(.screen:target)):not(:has(#all:target)) #welcome { display: block; }
+
+/* "#all" overview: every screen in a grid */
+.stage:has(#all:target) { flex-wrap: wrap; gap: 48px 40px; zoom: .55; padding: 56px; }
+.stage:has(#all:target) .screen { display: block; }
+.stage:has(#all:target) .screen-label { display: block; font-size: 22px; line-height: 28px; }
+
+/* Highlight the current screen in the side menu */
+body:has(#welcome:target) .menu a[href="#welcome"],
+body:has(#signin:target) .menu a[href="#signin"],
+body:has(#otp:target) .menu a[href="#otp"],
+body:has(#bloodgroup:target) .menu a[href="#bloodgroup"],
+body:has(#home:target) .menu a[href="#home"],
+body:has(#find:target) .menu a[href="#find"],
+body:has(#centre:target) .menu a[href="#centre"],
+body:has(#eligibility:target) .menu a[href="#eligibility"],
+body:has(#slot:target) .menu a[href="#slot"],
+body:has(#booked:target) .menu a[href="#booked"],
+body:has(#request:target) .menu a[href="#request"],
+body:has(#matching:target) .menu a[href="#matching"],
+body:has(#tracking:target) .menu a[href="#tracking"],
+body:has(#donorcard:target) .menu a[href="#donorcard"],
+body:has(#impact:target) .menu a[href="#impact"],
+body:not(:has(.screen:target)):not(:has(#all:target)) .menu a[href="#welcome"] {
+  background: var(--bg-sunken); color: var(--text-primary); font-weight: 600;
+}
+
+/* The phone */
+.phone { position: relative; width: 412px; height: 917px; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg-canvas); border-radius: 40px; box-shadow: 0 0 0 10px #2A1E1C, 0 30px 60px -20px rgba(42, 30, 28, .45); }
+.phone--wine { background: var(--bg-wine); }
+.content { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.content::-webkit-scrollbar { display: none; }
+.content > :not(.spacer) { flex-shrink: 0; }   /* let long screens scroll instead of squashing */
+.pad { padding: 8px 24px 16px; }
+
+/* Fit the phone on shorter laptop screens */
+@media (max-height: 1000px) { .stage:not(:has(#all:target)) .phone { zoom: .9; } }
+@media (max-height: 900px)  { .stage:not(:has(#all:target)) .phone { zoom: .8; } }
+@media (max-height: 800px)  { .stage:not(:has(#all:target)) .phone { zoom: .7; } }
+@media (max-width: 900px) { .viewer { grid-template-columns: 1fr; } .menu { display: none; } }
+
+/* On a real phone: the page *is* the app */
+@media (max-width: 480px) {
+  body { background: var(--bg-canvas); }
+  .stage { padding: 0; }
+  .stage .phone { zoom: 1 !important; width: 100vw; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: none;
+    padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .statusbar, .gesture { display: none; }
+}
+
+/* =========================================================
+   7. SCREEN-SPECIFIC STYLES
+   ========================================================= */
+
+/* 1.1 Welcome — hero illustration */
+.hero { position: relative; width: 100%; aspect-ratio: 364 / 372; flex: none; }
+.hero > * { position: absolute; }
+.arch-outer { left: 9.9%; top: 3.8%; width: 80.2%; height: 94.6%; background: var(--bg-blush);
+  border-radius: 50% 50% 12% 12% / 41.5% 41.5% 10% 10%; }
+.arch-inner { left: 23.1%; top: 25.8%; width: 53.8%; height: 67.2%; background: var(--brand-soft);
+  border-radius: 50% 50% 12% 12% / 39% 39% 9.6% 9.6%; }
+.hero-drop { left: 31.9%; top: 33.9%; width: 36.3%; height: auto; aspect-ratio: 1; fill: var(--brand); }
+.hero-drop-label { left: 50%; top: 54.8%; transform: translate(-50%, -50%); display: flex; flex-direction: column;
+  align-items: center; color: var(--text-on-brand); }
+.hero-drop-label .t-caption { margin-top: -4px; }
+.hero .photo { border: 4px solid var(--bg-surface); height: auto; aspect-ratio: 1; }
+.f-1 { left: 1.1%;  top: 15.6%; width: 26.4%; }
+.f-2 { left: 74.7%; top: 6.5%;  width: 22%; }
+.f-3 { left: 72%;   top: 60.8%; width: 24.2%; }
+.f-4 { left: 5.5%;  top: 67.2%; width: 18.7%; }
+.float-chip { display: flex; align-items: center; background: var(--bg-surface); border-radius: var(--radius-pill); white-space: nowrap; }
+.chip-need { left: 24.2%; top: 85.5%; gap: 8px; padding: 10px 14px 10px 12px; box-shadow: var(--shadow-raised); }
+.chip-impact { left: 33%; top: 10.8%; gap: 6px; padding: 7px 12px 7px 10px; box-shadow: var(--shadow-soft); }
+.pager { display: flex; gap: 6px; }
+.pager span { width: 6px; height: 6px; border-radius: 3px; background: var(--border-strong); }
+.pager span:first-child { width: 22px; background: var(--brand); }
+
+/* 1.2 Sign in */
+.country { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 12px 0 14px; border-radius: 14px;
+  background: var(--bg-surface); border: 1px solid var(--border-subtle); flex: none; }
+.flag { width: 22px; height: 15px; border-radius: 3px; display: block; }
+.check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.check-box { width: 22px; height: 22px; border-radius: 7px; flex: none; display: grid; place-items: center;
+  box-shadow: inset 0 0 0 1.5px var(--border-strong); color: transparent; }
+.check:has(input:checked) .check-box { background: var(--brand); box-shadow: none; color: var(--text-on-brand); }
+.note { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; }
+.note--sage { background: var(--sage-soft); color: var(--sage); }
+.note--turmeric { background: var(--turmeric-soft); align-items: flex-start; }
+.note--blush { background: var(--bg-blush); color: var(--text-brand); padding: 10px 14px; border-radius: 14px; }
+
+/* 1.3 OTP */
+.otp { display: flex; gap: 10px; }
+.otp input { width: 52px; height: 62px; text-align: center; border-radius: 14px; background: var(--bg-surface);
+  border: 1px solid var(--border-subtle); font: 600 20px/26px var(--font-display); caret-color: var(--brand); }
+.otp input:not(:placeholder-shown) { background: var(--bg-blush); border-color: var(--brand-soft); }
+.otp input:focus, .otp input.is-focus { outline: none; border: 1.5px solid var(--text-primary); }
+.otp:focus-within input.is-focus:not(:focus) { border: 1px solid var(--border-subtle); }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 10px 8px 8px; background: var(--bg-sunken); flex: none; }
+.key { height: 50px; border-radius: 12px; background: var(--bg-surface); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; font: 500 24px/26px var(--font-body); }
+.key small { font: 500 12px/14px var(--font-body); color: var(--text-tertiary); }
+.key--plain { background: transparent; font-size: 22px; }
+
+/* 1.4 Blood group */
+.progress { display: flex; gap: 6px; }
+.progress span { flex: 1; height: 4px; border-radius: 2px; background: var(--border-subtle); }
+.progress .on { background: var(--brand); }
+.dashed-row { display: flex; align-items: center; gap: 12px; padding: 14px 12px 14px 16px; border-radius: 16px;
+  border: 1px dashed var(--border-strong); cursor: pointer; }
+.dashed-row:has(input:checked) { border: 1.5px solid var(--brand); background: var(--bg-blush); }
+
+/* 2.1 Home */
+.bell { position: relative; box-shadow: inset 0 0 0 1px var(--border-subtle); }
+.bell::after { content: ""; position: absolute; top: 8px; right: 6px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--brand); box-shadow: 0 0 0 2px var(--bg-surface); }
+.elig { position: relative; height: 200px; border-radius: 28px; background: var(--bg-wine); overflow: hidden; color: var(--text-on-brand); }
+.elig-glow { position: absolute; width: 260px; height: 260px; right: -96px; top: -60px; border-radius: 50%; background: var(--plum); opacity: .6; }
+.elig-ring { position: absolute; right: 20px; top: 26px; width: 112px; height: 112px; border-radius: 50%; border: 8px solid var(--peach);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--peach); }
+.elig-text { position: absolute; left: 22px; top: 22px; width: 196px; display: flex; flex-direction: column; gap: 6px; }
+.elig-text .t-caption { opacity: .72; }
+.elig-actions { position: absolute; left: 22px; top: 140px; display: flex; align-items: center; gap: 16px; }
+.btn--white { height: 40px; padding: 0 18px; background: var(--bg-surface); color: var(--bg-wine); font: 600 14px/20px var(--font-body); }
+.h-scroll { display: flex; gap: 12px; padding: 0 24px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 24px; scrollbar-width: none; }
+.h-scroll::-webkit-scrollbar { display: none; }
+.req-card { flex: none; width: 284px; padding: 16px; display: flex; flex-direction: column; gap: 14px; scroll-snap-align: start; }
+.grp-box { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--bg-blush);
+  color: var(--text-brand); font: 600 20px/26px var(--font-display); flex: none; }
+.impact-strip { display: flex; align-items: center; gap: 14px; padding: 14px 14px 14px 16px; border-radius: 20px; background: var(--bg-blush); }
+.faces { display: flex; }
+.faces .photo { box-shadow: 0 0 0 2px var(--bg-surface); }
+.faces .photo + .photo { margin-left: -12px; }
+.date-box { width: 64px; height: 72px; border-radius: 14px; background: var(--bg-sunken); flex: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.date-box .t-overline { color: var(--text-brand); }
+
+/* 2.2 Find (map) */
+.map { position: relative; flex: 1 1 auto; background: var(--bg-sunken); overflow: hidden; }
+.map-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-park { fill: var(--sage-soft); }
+.map-river { stroke: #D3E3E4; fill: none; stroke-linecap: round; }
+.map-road { stroke: #FFFFFF; fill: none; }
+.map-label { position: absolute; font: 500 12px/16px var(--font-body); color: var(--text-tertiary); white-space: nowrap; }
+.pin { position: absolute; display: flex; align-items: center; gap: 6px; padding: 6px 12px 6px 8px; border-radius: var(--radius-pill);
+  background: var(--bg-surface); color: var(--brand); box-shadow: var(--shadow-soft); font: 600 14px/20px var(--font-body); }
+.pin span { color: var(--text-primary); }
+.pin--on { background: var(--brand); color: var(--text-on-brand); }
+.pin--on span { color: var(--text-on-brand); }
+.me { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: rgba(42, 30, 28, .12); display: grid; place-items: center; }
+.me::after { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--text-primary); box-shadow: 0 0 0 3px var(--bg-surface); }
+.search { position: absolute; left: 16px; right: 16px; top: 12px; height: 52px; display: flex; align-items: center; gap: 12px;
+  padding: 0 8px 0 16px; border-radius: 16px; background: var(--bg-surface); box-shadow: var(--shadow-raised); color: var(--text-secondary); }
+.search input { flex: 1; min-width: 0; border: 0; background: transparent; font: 400 16px/24px var(--font-body); color: var(--text-primary); }
+.search input:focus { outline: none; }
+.search input::placeholder { color: var(--text-tertiary); }
+.filters { position: absolute; left: 0; right: 0; top: 76px; display: flex; gap: 8px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.fab { position: absolute; right: 16px; top: 396px; box-shadow: var(--shadow-soft); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 340px; display: flex; flex-direction: column;
+  padding: 10px 20px 0; border-radius: 28px 28px 0 0; background: var(--bg-surface); box-shadow: 0 -8px 28px -6px rgba(92, 41, 28, .16); }
+.handle { width: 40px; height: 4px; border-radius: 2px; background: var(--border-strong); align-self: center; flex: none; }
+.sheet-list { overflow-y: auto; scrollbar-width: none; }
+.list-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; }
+.sheet-list .list-row + .list-row { border-top: 1px solid var(--border-subtle); }
+
+/* 2.3 Centre details */
+.map-head { position: relative; height: 210px; flex: none; background: var(--bg-sunken); overflow: hidden; }
+.map-head .pin { left: 50%; top: 70px; transform: translateX(-50%); box-shadow: var(--shadow-raised); }
+.float-btn { position: absolute; top: 12px; box-shadow: var(--shadow-soft); }
+.sheet-panel { margin-top: -28px; position: relative; border-radius: 28px 28px 0 0; background: var(--bg-canvas); padding: 24px; }
+.quick { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 0; border-radius: 14px;
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font: 600 14px/20px var(--font-body); }
+.stock { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.stock div { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 16px; }
+.stock b { font: 600 20px/26px var(--font-display); }
+.stock small { font: 500 12px/16px var(--font-body); color: var(--text-secondary); }
+.s-ok  { background: var(--sage-soft); color: var(--sage); }
+.s-low { background: var(--turmeric-soft); color: var(--turmeric); }
+.s-out { background: var(--bg-blush); color: var(--text-brand); }
+.s-mine { box-shadow: inset 0 0 0 1.5px var(--sage); }
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.legend > span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.hours { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid var(--border-subtle); }
+
+/* 2.4 Eligibility */
+.option { display: flex; align-items: center; gap: 14px; height: 64px; padding: 0 18px; border-radius: 18px; cursor: pointer;
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); font: 600 15px/20px var(--font-body); }
+.radio { width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--border-strong); display: grid; place-items: center; flex: none; }
+.radio::after { content: ""; width: 12px; height: 12px; border-radius: 50%; }
+.option:has(input:checked) { background: var(--bg-blush); box-shadow: inset 0 0 0 1.5px var(--brand); color: var(--text-brand); }
+.option:has(input:checked) .radio { box-shadow: inset 0 0 0 1.5px var(--brand); }
+.option:has(input:checked) .radio::after { background: var(--brand); }
+details.why summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  color: var(--text-brand); font: 600 14px/20px var(--font-body); }
+details.why summary::-webkit-details-marker { display: none; }
+details.why p { margin-top: 8px; }
+.so-far { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 16px; background: var(--bg-sunken); }
+
+/* 3.1 Choose a slot */
+.segmented { display: flex; gap: 4px; padding: 4px; border-radius: 16px; background: var(--bg-sunken); }
+.seg { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 0; border-radius: 12px; cursor: pointer;
+  color: var(--text-secondary); }
+.seg:has(input:checked) { background: var(--bg-surface); box-shadow: var(--shadow-soft); color: var(--text-primary); }
+.days { display: flex; gap: 8px; }
+.day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; border-radius: 18px; cursor: pointer;
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); }
+.day small { font: 500 12px/16px var(--font-body); color: var(--text-secondary); }
+.day b { font: 600 20px/26px var(--font-display); }
+.day i { width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+.day i.few { background: var(--turmeric); }
+.day:has(input:checked) { background: var(--brand); color: var(--text-on-brand); box-shadow: none; }
+.day:has(input:checked) small { color: var(--text-on-brand); }
+.day:has(input:checked) i { background: var(--text-on-brand); }
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.slot { height: 46px; border-radius: 14px; display: grid; place-items: center; cursor: pointer; font: 600 14px/20px var(--font-body);
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); }
+.slot:has(input:checked) { background: var(--text-primary); color: var(--text-on-brand); box-shadow: none; }
+.slot:has(input:disabled) { background: var(--bg-sunken); color: var(--text-tertiary); text-decoration: line-through; box-shadow: none; cursor: not-allowed; }
+
+/* 3.2 Booking confirmed */
+.success { position: relative; width: 160px; height: 104px; flex: none; }
+.success > * { position: absolute; }
+.success .halo { left: 32px; top: 4px; width: 96px; height: 96px; border-radius: 50%; background: var(--sage-soft); }
+.success .tick { left: 52px; top: 24px; width: 56px; height: 56px; color: var(--sage); }
+.confetti { border-radius: 50%; }
+.ticket { border-radius: 24px; background: var(--bg-surface); box-shadow: var(--shadow-raised); overflow: hidden; }
+.perforation { position: relative; height: 20px; }
+.perforation::before { content: ""; position: absolute; left: 22px; right: 22px; top: 9px; border-top: 1.5px dashed var(--border-strong); }
+.perforation span { position: absolute; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--bg-canvas); }
+.qr { width: 84px; height: 84px; flex: none; fill: var(--text-primary); }
+.todo { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 16px; background: var(--bg-sunken); color: var(--brand); }
+.todo .t-body-strong { color: var(--text-primary); }
+
+/* 4.1 Request blood */
+.grp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.grp { height: 44px; border-radius: 14px; display: grid; place-items: center; cursor: pointer; font: 600 17px/24px var(--font-body);
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); }
+.grp:has(input:checked) { background: var(--brand); color: var(--text-on-brand); box-shadow: none; }
+.stepper { display: flex; align-items: center; gap: 16px; }
+.urg { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 16px; cursor: pointer;
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); color: var(--text-secondary); }
+.urg .t-body-strong { color: var(--text-primary); }
+.urg:has(input:checked) { background: var(--bg-blush); box-shadow: inset 0 0 0 1.5px var(--brand); color: var(--brand); }
+.urg:has(input:checked) .t-body-strong { color: var(--text-brand); }
+
+/* 4.2 Matching donors */
+.radar { position: relative; height: 330px; flex: none; overflow: hidden; color: var(--text-on-brand); }
+.radar > * { position: absolute; }
+.radar-ring { left: 50%; top: 176px; transform: translate(-50%, -50%); border-radius: 50%; }
+.r1 { width: 300px; height: 300px; background: rgba(242, 193, 171, .04); border: 1px solid rgba(242, 193, 171, .25); }
+.r2 { width: 224px; height: 224px; background: rgba(242, 193, 171, .064); border: 1px solid rgba(242, 193, 171, .31); }
+.r3 { width: 148px; height: 148px; background: rgba(242, 193, 171, .096); border: 1px solid rgba(242, 193, 171, .39); }
+.radar-hosp { left: calc(50% - 26px); top: 150px; --s: 52px; box-shadow: 0 0 0 4px rgba(242, 193, 171, .6); }
+.radar .photo { --s: 40px; box-shadow: 0 0 0 3px var(--sage); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(242, 193, 171, .55); }
+.radar-top { left: 0; right: 0; top: 0; height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 20px 0 12px; }
+.live { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 10px; border-radius: var(--radius-pill);
+  background: var(--sage); font: 500 12px/16px var(--font-body); }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+.results { margin-top: -28px; position: relative; flex: 1 0 auto; display: flex; flex-direction: column; gap: 18px; padding: 24px;
+  border-radius: 28px 28px 0 0; background: var(--bg-canvas); }
+.funnel { display: flex; gap: 4px; }
+.funnel span { height: 8px; border-radius: 4px; }
+.donor { display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; }
+
+/* 4.3 Tracking */
+.bar2 { display: flex; gap: 6px; }
+.bar2 span { flex: 1; height: 8px; border-radius: 4px; background: var(--border-subtle); }
+.bar2 .done { background: var(--sage); }
+.timeline { display: flex; flex-direction: column; }
+.step { display: flex; gap: 14px; }
+.rail { width: 36px; flex: none; display: flex; flex-direction: column; align-items: center; }
+.rail::after { content: ""; flex: 1; width: 2px; background: var(--border-subtle); }
+.step:last-child .rail::after { display: none; }
+.step--done .rail::after { background: var(--sage); }
+.step--done .circle { background: var(--sage-soft); color: var(--sage); }
+.step--now .circle { background: var(--brand); color: var(--text-on-brand); box-shadow: 0 0 0 4px var(--brand-soft); }
+.step--todo .circle { background: var(--bg-sunken); color: var(--text-tertiary); }
+.step-text { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 6px 0 20px; }
+.step--now .step-text { gap: 6px; }
+
+/* 5.1 Donor card */
+.donor-card { position: relative; height: 224px; border-radius: 28px; background: var(--bg-wine); color: var(--text-on-brand);
+  overflow: hidden; box-shadow: var(--shadow-raised); flex: none; }
+.donor-card > * { position: absolute; }
+.watermark { right: -46px; top: -20px; width: 220px; height: 220px; fill: var(--plum); opacity: .7; }
+.dc-top { left: 22px; top: 22px; display: flex; align-items: center; gap: 8px; }
+.dc-top .t-caption { opacity: .85; }
+.verified { right: 22px; top: 20px; display: flex; align-items: center; gap: 4px; padding: 4px 10px 4px 8px; border-radius: var(--radius-pill);
+  background: var(--sage); font: 500 12px/16px var(--font-body); }
+.dc-group { left: 20px; top: 56px; font: 700 64px/64px var(--font-display); letter-spacing: -0.02em; }
+.dc-name { left: 22px; top: 132px; display: flex; flex-direction: column; gap: 2px; }
+.dc-name .t-caption { opacity: .7; letter-spacing: .02em; }
+.dc-foot { left: 22px; top: 186px; display: flex; gap: 16px; color: var(--peach); }
+.dc-qr { right: 22px; bottom: 22px; padding: 8px; border-radius: 14px; background: var(--bg-surface); line-height: 0; }
+.kv { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+
+/* 5.2 Impact */
+.impact-hero { display: flex; flex-direction: column; gap: 6px; padding: 20px 22px; border-radius: 28px; background: var(--bg-blush); }
+.big-num { font: 700 72px/72px var(--font-display); letter-spacing: -0.03em; color: var(--brand); }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px 6px 8px; border-radius: var(--radius-pill);
+  background: var(--bg-surface); font: 500 12px/16px var(--font-body); }
+.pill .i { color: var(--brand); }
+.journey { position: relative; display: flex; justify-content: space-between; }
+.journey::before { content: ""; position: absolute; left: 32px; right: 32px; top: 15px; height: 3px; border-radius: 2px; background: var(--sage); }
+.journey > div { position: relative; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.wine-note { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 18px; background: var(--bg-wine); color: var(--text-on-brand); }
+.badges { display: flex; gap: 10px; }
+.badge { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 0; border-radius: 18px;
+  background: var(--bg-surface); box-shadow: inset 0 0 0 1px var(--border-subtle); text-align: center; }
+.badge--locked { box-shadow: none; border: 1px dashed var(--border-strong); color: var(--text-tertiary); }
+.hist { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+.hist-date { width: 56px; height: 52px; border-radius: 14px; background: var(--bg-sunken); flex: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+</style>
+</head>
+<body>
+
+<!-- Icon sprite (Phosphor Icons, MIT licence). Use: <svg class="i"><use href="#i-drop"/></svg> -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow-left" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 256 256"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"/></symbol>
+  <symbol id="i-calendar-blank" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></symbol>
+  <symbol id="i-caret-down" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+  <symbol id="i-caret-right" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+  <symbol id="i-chat-circle-dots" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 256 256"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol>
+  <symbol id="i-check-circle-fill" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></symbol>
+  <symbol id="i-crosshair-simple" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,191.63V184a8,8,0,0,0-16,0v31.63A88.13,88.13,0,0,1,40.37,136H72a8,8,0,0,0,0-16H40.37A88.13,88.13,0,0,1,120,40.37V72a8,8,0,0,0,16,0V40.37A88.13,88.13,0,0,1,215.63,120H184a8,8,0,0,0,0,16h31.63A88.13,88.13,0,0,1,136,215.63Z"/></symbol>
+  <symbol id="i-dots-three-vertical" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM128,72a12,12,0,1,0-12-12A12,12,0,0,0,128,72Zm0,112a12,12,0,1,0,12,12A12,12,0,0,0,128,184Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM128,216a72.08,72.08,0,0,1-72-72c0-57.23,55.47-105,72-118,16.53,13,72,60.75,72,118A72.08,72.08,0,0,1,128,216Zm55.89-62.66a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol>
+  <symbol id="i-drop-fill" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Zm9.85,105.59a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol>
+  <symbol id="i-drop-half" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75ZM200,144a70.57,70.57,0,0,1-.46,8H136V136h63.64Q200,140,200,144ZM183.39,88H136V72h36.89A175.85,175.85,0,0,1,183.39,88ZM136,200h37.19A71.67,71.67,0,0,1,136,215.54Zm0-16V168h59.87a72,72,0,0,1-8,16Zm0-64V104h55.39a116.84,116.84,0,0,1,5.45,16Zm23.89-64H136V32.6A257.22,257.22,0,0,1,159.89,56ZM56,144c0-50,42.26-92.71,64-111.4V215.54A72.08,72.08,0,0,1,56,144Z"/></symbol>
+  <symbol id="i-fork-knife" viewBox="0 0 256 256"><path d="M72,88V40a8,8,0,0,1,16,0V88a8,8,0,0,1-16,0ZM216,40V224a8,8,0,0,1-16,0V176H152a8,8,0,0,1-8-8,268.75,268.75,0,0,1,7.22-56.88c9.78-40.49,28.32-67.63,53.63-78.47A8,8,0,0,1,216,40ZM200,53.9c-32.17,24.57-38.47,84.42-39.7,106.1H200ZM119.89,38.69a8,8,0,1,0-15.78,2.63L112,88.63a32,32,0,0,1-64,0l7.88-47.31a8,8,0,1,0-15.78-2.63l-8,48A8.17,8.17,0,0,0,32,88a48.07,48.07,0,0,0,40,47.32V224a8,8,0,0,0,16,0V135.32A48.07,48.07,0,0,0,128,88a8.17,8.17,0,0,0-.11-1.31Z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"/></symbol>
+  <symbol id="i-hand-heart" viewBox="0 0 256 256"><path d="M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM119.46,48A31.15,31.15,0,0,1,148.6,67a8,8,0,0,0,14.8,0,31.15,31.15,0,0,1,29.14-19C209.59,48,224,62.65,224,80c0,19.51-15.79,41.58-45.66,63.9l-11.09,2.55A28,28,0,0,0,140,112H100.68C92.05,100.36,88,90.12,88,80,88,62.65,102.41,48,119.46,48ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z"/></symbol>
+  <symbol id="i-heart-fill" viewBox="0 0 256 256"><path d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 256 256"><path d="M248,208h-8V128a16,16,0,0,0-16-16H168V48a16,16,0,0,0-16-16H56A16,16,0,0,0,40,48V208H32a8,8,0,0,0,0,16H248a8,8,0,0,0,0-16Zm-24-80v80H168V128ZM56,48h96V208H136V160a8,8,0,0,0-8-8H80a8,8,0,0,0-8,8v48H56Zm64,160H88V168h32ZM72,96a8,8,0,0,1,8-8H96V72a8,8,0,0,1,16,0V88h16a8,8,0,0,1,0,16H112v16a8,8,0,0,1-16,0V104H80A8,8,0,0,1,72,96Z"/></symbol>
+  <symbol id="i-house" viewBox="0 0 256 256"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z"/></symbol>
+  <symbol id="i-house-fill" viewBox="0 0 256 256"><path d="M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z"/></symbol>
+  <symbol id="i-identification-card" viewBox="0 0 256 256"><path d="M200,112a8,8,0,0,1-8,8H152a8,8,0,0,1,0-16h40A8,8,0,0,1,200,112Zm-8,24H152a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm40-80V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Zm-80.26-34a8,8,0,1,1-15.5,4c-2.63-10.26-13.06-18-24.25-18s-21.61,7.74-24.25,18a8,8,0,1,1-15.5-4,39.84,39.84,0,0,1,17.19-23.34,32,32,0,1,1,45.12,0A39.76,39.76,0,0,1,135.75,166ZM96,136a16,16,0,1,0-16-16A16,16,0,0,0,96,136Z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></symbol>
+  <symbol id="i-lightning-fill" viewBox="0 0 256 256"><path d="M213.85,125.46l-112,120a8,8,0,0,1-13.69-7l14.66-73.33L45.19,143.49a8,8,0,0,1-3-13l112-120a8,8,0,0,1,13.69,7L153.18,90.9l57.63,21.61a8,8,0,0,1,3,12.95Z"/></symbol>
+  <symbol id="i-magnifying-glass" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 256 256"><path d="M128,64a40,40,0,1,0,40,40A40,40,0,0,0,128,64Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,128Zm0-112a88.1,88.1,0,0,0-88,88c0,31.4,14.51,64.68,42,96.25a254.19,254.19,0,0,0,41.45,38.3,8,8,0,0,0,9.18,0A254.19,254.19,0,0,0,174,200.25c27.45-31.57,42-64.85,42-96.25A88.1,88.1,0,0,0,128,16Zm0,206c-16.53-13-72-60.75-72-118a72,72,0,0,1,144,0C200,161.23,144.53,209,128,222Z"/></symbol>
+  <symbol id="i-map-pin-fill" viewBox="0 0 256 256"><path d="M128,16a88.1,88.1,0,0,0-88,88c0,75.3,80,132.17,83.41,134.55a8,8,0,0,0,9.18,0C136,236.17,216,179.3,216,104A88.1,88.1,0,0,0,128,16Zm0,56a32,32,0,1,1-32,32A32,32,0,0,1,128,72Z"/></symbol>
+  <symbol id="i-medal" viewBox="0 0 256 256"><path d="M216,96A88,88,0,1,0,72,163.83V240a8,8,0,0,0,11.58,7.16L128,225l44.43,22.21A8.07,8.07,0,0,0,176,248a8,8,0,0,0,8-8V163.83A87.85,87.85,0,0,0,216,96ZM56,96a72,72,0,1,1,72,72A72.08,72.08,0,0,1,56,96ZM168,227.06l-36.43-18.21a8,8,0,0,0-7.16,0L88,227.06V174.37a87.89,87.89,0,0,0,80,0ZM128,152A56,56,0,1,0,72,96,56.06,56.06,0,0,0,128,152Zm0-96A40,40,0,1,1,88,96,40,40,0,0,1,128,56Z"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z"/></symbol>
+  <symbol id="i-navigation-arrow" viewBox="0 0 256 256"><path d="M237.33,106.21,61.41,41l-.16-.05A16,16,0,0,0,40.9,61.25a1,1,0,0,0,.05.16l65.26,175.92A15.77,15.77,0,0,0,121.28,248h.3a15.77,15.77,0,0,0,15-11.29l.06-.2,21.84-78,78-21.84.2-.06a16,16,0,0,0,.62-30.38ZM149.84,144.3a8,8,0,0,0-5.54,5.54L121.3,232l-.06-.17L56,56l175.82,65.22.16.06Z"/></symbol>
+  <symbol id="i-paper-plane-tilt" viewBox="0 0 256 256"><path d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"/></symbol>
+  <symbol id="i-person-simple-walk" viewBox="0 0 256 256"><path d="M152,80a32,32,0,1,0-32-32A32,32,0,0,0,152,80Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,152,32Zm64,112a8,8,0,0,1-8,8c-35.31,0-52.95-17.81-67.12-32.12-2.74-2.77-5.36-5.4-8-7.84l-13.43,30.88,37.2,26.57A8,8,0,0,1,160,176v56a8,8,0,0,1-16,0V180.12l-31.07-22.2L79.34,235.19A8,8,0,0,1,72,240a7.84,7.84,0,0,1-3.19-.67,8,8,0,0,1-4.15-10.52l54.08-124.37c-9.31-1.65-20.92,1.2-34.7,8.58a163.88,163.88,0,0,0-30.57,21.77,8,8,0,0,1-10.95-11.66c2.5-2.35,61.69-57.23,98.72-25.08,3.83,3.32,7.48,7,11,10.57C166.19,122.7,179.36,136,208,136A8,8,0,0,1,216,144Z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 256 256"><path d="M222.37,158.46l-47.11-21.11-.13-.06a16,16,0,0,0-15.17,1.4,8.12,8.12,0,0,0-.75.56L134.87,160c-15.42-7.49-31.34-23.29-38.83-38.51l20.78-24.71c.2-.25.39-.5.57-.77a16,16,0,0,0,1.32-15.06l0-.12L97.54,33.64a16,16,0,0,0-16.62-9.52A56.26,56.26,0,0,0,32,80c0,79.4,64.6,144,144,144a56.26,56.26,0,0,0,55.88-48.92A16,16,0,0,0,222.37,158.46ZM176,208A128.14,128.14,0,0,1,48,80,40.2,40.2,0,0,1,82.87,40a.61.61,0,0,0,0,.12l21,47L83.2,111.86a6.13,6.13,0,0,0-.57.77,16,16,0,0,0-1,15.7c9.06,18.53,27.73,37.06,46.46,46.11a16,16,0,0,0,15.75-1.14,8.44,8.44,0,0,0,.74-.56L168.89,152l47,21.05h0s.08,0,.11,0A40.21,40.21,0,0,1,176,208Z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></symbol>
+  <symbol id="i-share-network" viewBox="0 0 256 256"><path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/></symbol>
+  <symbol id="i-shield-check" viewBox="0 0 256 256"><path d="M208,40H48A16,16,0,0,0,32,56v56c0,52.72,25.52,84.67,46.93,102.19,23.06,18.86,46,25.26,47,25.53a8,8,0,0,0,4.2,0c1-.27,23.91-6.67,47-25.53C198.48,196.67,224,164.72,224,112V56A16,16,0,0,0,208,40Zm0,72c0,37.07-13.66,67.16-40.6,89.42A129.3,129.3,0,0,1,128,223.62a128.25,128.25,0,0,1-38.92-21.81C61.82,179.51,48,149.3,48,112l0-56,160,0ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"/></symbol>
+  <symbol id="i-siren" viewBox="0 0 256 256"><path d="M120,16V8a8,8,0,0,1,16,0v8a8,8,0,0,1-16,0Zm80,32a8,8,0,0,0,5.66-2.34l8-8a8,8,0,0,0-11.32-11.32l-8,8A8,8,0,0,0,200,48ZM50.34,45.66A8,8,0,0,0,61.66,34.34l-8-8A8,8,0,0,0,42.34,37.66Zm87,26.45a8,8,0,1,0-2.64,15.78C153.67,91.08,168,108.32,168,128a8,8,0,0,0,16,0C184,100.6,163.93,76.57,137.32,72.11ZM232,176v24a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V176a16,16,0,0,1,16-16V128a88,88,0,0,1,88.67-88c48.15.36,87.33,40.29,87.33,89v31A16,16,0,0,1,232,176ZM56,160H200V129c0-40-32.05-72.71-71.45-73H128a72,72,0,0,0-72,72Zm160,40V176H40v24H216Z"/></symbol>
+  <symbol id="i-sliders-horizontal" viewBox="0 0 256 256"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></symbol>
+  <symbol id="i-star-fill" viewBox="0 0 256 256"><path d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 256 256"><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/></symbol>
+  <symbol id="i-user-fill" viewBox="0 0 256 256"><path d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+  <symbol id="i-sys" viewBox="0 0 58 16"><path d="M8 13.5 1 5.2a10.5 10.5 0 0 1 14 0Z" fill="currentColor"/><path d="M33 2v12H21Z" fill="currentColor"/><rect x="38.75" y="3.75" width="16.5" height="8.5" rx="2.25" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="41" y="6" width="10" height="4" rx="1" fill="currentColor"/><rect x="56" y="6" width="1.5" height="4" rx=".75" fill="currentColor"/></symbol>
+</svg>
+
+<div class="viewer">
+
+  <!-- ============ Side menu (desktop only) ============ -->
+  <nav class="menu" aria-label="Screens">
+    <div class="menu-brand"><svg class="i i-26" aria-hidden="true"><use href="#i-drop-fill"/></svg><span class="t-title-l">Raktdaan</span></div>
+    <p class="t-body c-secondary">Blood donation &amp; blood bank app — clickable UI prototype in plain HTML + CSS.</p>
+    <a class="all-link" href="#all">View all 15 screens</a>
+    <div><h2>Onboarding</h2><ul>
+      <li><a href="#welcome">1.1 Welcome</a></li><li><a href="#signin">1.2 Sign in</a></li>
+      <li><a href="#otp">1.3 Verify OTP</a></li><li><a href="#bloodgroup">1.4 Blood group</a></li></ul></div>
+    <div><h2>Home &amp; discover</h2><ul>
+      <li><a href="#home">2.1 Home</a></li><li><a href="#find">2.2 Find blood centres</a></li>
+      <li><a href="#centre">2.3 Centre details</a></li><li><a href="#eligibility">2.4 Eligibility check</a></li></ul></div>
+    <div><h2>Book a donation</h2><ul>
+      <li><a href="#slot">3.1 Choose a slot</a></li><li><a href="#booked">3.2 Booking confirmed</a></li></ul></div>
+    <div><h2>Emergency request</h2><ul>
+      <li><a href="#request">4.1 Request blood</a></li><li><a href="#matching">4.2 Matching donors</a></li>
+      <li><a href="#tracking">4.3 Request tracking</a></li></ul></div>
+    <div><h2>Donor card &amp; impact</h2><ul>
+      <li><a href="#donorcard">5.1 Donor card</a></li><li><a href="#impact">5.2 Your impact</a></li></ul></div>
+    <p class="menu-note">Tap buttons, tabs and back arrows inside the phone to move through the app, just like the Figma prototype.</p>
+  </nav>
+
+  <!-- ============ Stage: one phone at a time ============ -->
+  <main class="stage">
+    <span id="all"></span>
+
+    <!-- =====================================================
+         1.1 WELCOME
+         ===================================================== -->
+    <section class="screen" id="welcome" aria-label="Welcome">
+      <p class="screen-label">1.1 Welcome</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content pad gap-20">
+          <div class="row between">
+            <div class="row gap-8"><svg class="i c-red" aria-hidden="true"><use href="#i-drop-fill"/></svg><span class="t-title-l">Raktdaan</span></div>
+            <a href="#home" class="t-body-strong c-secondary">Skip</a>
+          </div>
+
+          <div class="hero" aria-hidden="true">
+            <div class="arch-outer"></div>
+            <div class="arch-inner"></div>
+            <svg class="hero-drop" viewBox="0 0 256 256"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Z"/></svg>
+            <div class="hero-drop-label"><span class="t-numeral">3</span><span class="t-caption">lives</span></div>
+            <span class="photo ph-av3 f-1"></span>
+            <span class="photo ph-av0 f-2"></span>
+            <span class="photo ph-av7 f-3"></span>
+            <span class="photo ph-av4 f-4"></span>
+            <div class="float-chip chip-need">
+              <span class="circle bg-blush c-red" style="--s:28px"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg></span>
+              <div class="col"><span class="t-body-strong">B+ needed nearby</span><span class="t-caption c-secondary">Sahyadri Hospital · 2.4 km</span></div>
+            </div>
+            <div class="float-chip chip-impact"><svg class="i i-14 c-red" aria-hidden="true"><use href="#i-heart-fill"/></svg><span class="t-caption">18 lives helped</span></div>
+          </div>
+
+          <div class="col gap-12">
+            <h1 class="t-display">Be the reason someone gets a tomorrow.</h1>
+            <p class="t-body-l c-secondary">Find blood centres near you, book a slot in seconds and answer urgent requests from hospitals in your city.</p>
+          </div>
+          <div class="pager" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="spacer"></div>
+          <div class="col gap-14" style="align-items:center">
+            <a href="#signin" class="btn btn--primary btn--lg btn--block">Get started</a>
+            <p class="t-body c-secondary">Already a donor? <a href="#signin" class="t-body-strong c-brand">Sign in</a></p>
+          </div>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         1.2 SIGN IN — MOBILE NUMBER
+         ===================================================== -->
+    <section class="screen" id="signin" aria-label="Sign in">
+      <p class="screen-label">1.2 Sign in — mobile number</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#welcome" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a></header>
+        <div class="content pad gap-24">
+          <div class="col gap-10">
+            <p class="t-overline c-brand">Step 1 of 3</p>
+            <h1 class="t-headline">What’s your mobile number?</h1>
+            <p class="t-body-l c-secondary">We’ll text you a 6-digit code. Your number stays private — a hospital sees it only when you accept their request.</p>
+          </div>
+          <div class="field">
+            <label for="phone">Mobile number</label>
+            <div class="row gap-10">
+              <div class="country">
+                <svg class="flag" viewBox="0 0 22 15" aria-label="India"><rect width="22" height="5" fill="#FF9933"/><rect y="5" width="22" height="5" fill="#fff"/><rect y="10" width="22" height="5" fill="#138808"/><circle cx="11" cy="7.5" r="1.8" fill="none" stroke="#000080" stroke-width=".7"/></svg>
+                <span class="t-body-l">+91</span><svg class="i i-16 c-secondary" aria-hidden="true"><use href="#i-caret-down"/></svg>
+              </div>
+              <input id="phone" class="input is-focus grow" type="tel" inputmode="numeric" value="98765 43210" autocomplete="tel-national">
+            </div>
+          </div>
+          <label class="check">
+            <input class="sr" type="checkbox" checked>
+            <span class="check-box"><svg class="i i-14" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <span class="t-body c-secondary">Alert me when someone nearby needs my blood group. You can pause alerts anytime.</span>
+          </label>
+          <div class="note note--sage"><svg class="i" aria-hidden="true"><use href="#i-shield-check"/></svg><span class="t-body">Every donor is verified by phone, so hospitals can trust each response.</span></div>
+          <div class="spacer"></div>
+          <div class="col gap-14">
+            <p class="t-caption c-tertiary center">By continuing you agree to our Terms and Privacy Policy.</p>
+            <a href="#otp" class="btn btn--primary btn--lg btn--block">Send code</a>
+          </div>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         1.3 VERIFY OTP
+         ===================================================== -->
+    <section class="screen" id="otp" aria-label="Verify OTP">
+      <p class="screen-label">1.3 Verify OTP</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#signin" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a></header>
+        <div class="content pad gap-24">
+          <div class="col gap-10">
+            <p class="t-overline c-brand">Step 1 of 3</p>
+            <h1 class="t-headline">Enter the 6-digit code</h1>
+            <p class="t-body-l c-secondary">Sent to +91 98765 43210 <a href="#signin" class="c-brand">Change</a></p>
+          </div>
+          <div class="otp" role="group" aria-label="One-time code">
+            <input inputmode="numeric" maxlength="1" placeholder=" " value="4" aria-label="Digit 1">
+            <input inputmode="numeric" maxlength="1" placeholder=" " value="8" aria-label="Digit 2">
+            <input inputmode="numeric" maxlength="1" placeholder=" " value="2" aria-label="Digit 3">
+            <input inputmode="numeric" maxlength="1" placeholder=" " value="7" aria-label="Digit 4">
+            <input inputmode="numeric" maxlength="1" placeholder=" " class="is-focus" aria-label="Digit 5">
+            <input inputmode="numeric" maxlength="1" placeholder=" " aria-label="Digit 6">
+          </div>
+          <p class="row gap-8 t-body c-secondary"><svg class="i i-18" aria-hidden="true"><use href="#i-clock"/></svg>Resend code in 0:24</p>
+          <div class="spacer"></div>
+          <a href="#bloodgroup" class="btn btn--primary btn--lg btn--block">Verify &amp; continue</a>
+        </div>
+        <div class="keypad" aria-hidden="true">
+          <span class="key">1<small>&nbsp;</small></span><span class="key">2<small>ABC</small></span><span class="key">3<small>DEF</small></span>
+          <span class="key">4<small>GHI</small></span><span class="key">5<small>JKL</small></span><span class="key">6<small>MNO</small></span>
+          <span class="key">7<small>PQRS</small></span><span class="key">8<small>TUV</small></span><span class="key">9<small>WXYZ</small></span>
+          <span class="key key--plain"></span><span class="key">0<small>+</small></span><span class="key key--plain">⌫</span>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         1.4 YOUR BLOOD GROUP
+         ===================================================== -->
+    <section class="screen" id="bloodgroup" aria-label="Your blood group">
+      <p class="screen-label">1.4 Your blood group</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#otp" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a></header>
+        <div class="content pad gap-24">
+          <div class="progress" aria-label="Step 2 of 3"><span class="on"></span><span class="on"></span><span></span></div>
+          <div class="col gap-10">
+            <p class="t-overline c-brand">Step 2 of 3</p>
+            <h1 class="t-headline">What’s your blood group?</h1>
+            <p class="t-body-l c-secondary">We’ll only alert you when your blood type can help a patient.</p>
+          </div>
+          <fieldset class="bg-grid" style="border:0;padding:0;margin:0">
+            <legend class="sr">Blood group</legend>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="A+"><b>A+</b><small><span class="when-off">Positive</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="A−"><b>A−</b><small><span class="when-off">Negative</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="B+" checked><b>B+</b><small><span class="when-off">Positive</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="B−"><b>B−</b><small><span class="when-off">Negative</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="O+"><b>O+</b><small><span class="when-off">Positive</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="O−"><b>O−</b><small><span class="when-off">Negative</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="AB+"><b>AB+</b><small><span class="when-off">Positive</span><span class="when-on">Selected</span></small></label>
+            <label class="bg-chip"><input class="sr" type="radio" name="my-group" value="AB−"><b>AB−</b><small><span class="when-off">Negative</span><span class="when-on">Selected</span></small></label>
+          </fieldset>
+          <label class="dashed-row">
+            <input class="sr" type="radio" name="my-group" value="unknown">
+            <svg class="i i-22 c-secondary" aria-hidden="true"><use href="#i-info"/></svg>
+            <span class="col gap-2 grow"><span class="t-body-strong">I don’t know my blood group</span><span class="t-caption c-secondary">No problem — we’ll add it after your first donation test.</span></span>
+            <svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg>
+          </label>
+          <div class="note note--turmeric">
+            <svg class="i i-22 c-turmeric" aria-hidden="true"><use href="#i-drop-half"/></svg>
+            <div class="col gap-2"><span class="t-body-strong c-turmeric">Did you know?</span><span class="t-body c-secondary">B+ is the most common blood group in India — roughly 1 in 3 people have it.</span></div>
+          </div>
+          <div class="spacer"></div>
+          <a href="#home" class="btn btn--primary btn--lg btn--block">Continue</a>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         2.1 HOME
+         ===================================================== -->
+    <section class="screen" id="home" aria-label="Home">
+      <p class="screen-label">2.1 Home</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content gap-24" style="padding:8px 0 24px">
+          <div class="row between px-24">
+            <div class="col gap-4">
+              <p class="row gap-4 t-body-strong c-secondary"><svg class="i i-16 c-red" aria-hidden="true"><use href="#i-map-pin-fill"/></svg>Kothrud, Pune<svg class="i i-14" aria-hidden="true"><use href="#i-caret-down"/></svg></p>
+              <h1 class="t-headline">Good morning, Aarav</h1>
+            </div>
+            <div class="row gap-10">
+              <a href="#tracking" class="circle bg-surface bell" aria-label="Notifications"><svg class="i i-22" aria-hidden="true"><use href="#i-bell"/></svg></a>
+              <a href="#impact" class="photo ph-av4" aria-label="Your profile"></a>
+            </div>
+          </div>
+
+          <div class="px-24">
+            <div class="elig">
+              <div class="elig-glow"></div>
+              <div class="elig-ring"><svg class="i i-26" aria-hidden="true"><use href="#i-drop-fill"/></svg><span class="t-caption">Ready</span></div>
+              <div class="elig-text">
+                <p class="t-overline c-peach">Your next donation</p>
+                <h2 class="t-title-l">You’re ready to donate again</h2>
+                <p class="t-caption">Last donated 12 Jun · 120 days ago</p>
+              </div>
+              <div class="elig-actions">
+                <a href="#slot" class="btn btn--white">Book a slot</a>
+                <a href="#find" class="t-body-strong c-peach">Find a camp</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col gap-2 px-24">
+            <div class="row between"><h2 class="t-title-l">Urgent near you</h2><a href="#find" class="t-body-strong c-brand">See all</a></div>
+            <p class="t-caption c-secondary">Requests your B+ blood can help with</p>
+          </div>
+          <div class="h-scroll">
+            <article class="card req-card">
+              <div class="row between"><span class="tag tag--urgent">Critical</span><span class="t-caption c-tertiary">12 min ago</span></div>
+              <div class="row gap-12"><span class="grp-box">B+</span>
+                <div class="col gap-2"><h3 class="t-body-strong">2 units for Meera K.</h3><span class="t-caption c-secondary">Sahyadri Hospital, Deccan</span></div></div>
+              <div class="row gap-14 t-caption c-secondary">
+                <span class="row gap-4"><svg class="i i-16" aria-hidden="true"><use href="#i-map-pin"/></svg>2.4 km</span><span class="row gap-4"><svg class="i i-16" aria-hidden="true"><use href="#i-clock"/></svg>Needed by 6 PM</span></div>
+              <div class="row gap-10"><a href="#eligibility" class="btn btn--primary btn--md grow">I can donate</a><a href="#tracking" class="circle bg-sunken" aria-label="Call"><svg class="i i-20" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+            </article>
+            <article class="card req-card">
+              <div class="row between"><span class="tag tag--soon">Within 24 hrs</span><span class="t-caption c-tertiary">40 min ago</span></div>
+              <div class="row gap-12"><span class="grp-box">AB+</span>
+                <div class="col gap-2"><h3 class="t-body-strong">1 unit for Rahul P.</h3><span class="t-caption c-secondary">Ruby Hall Clinic</span></div></div>
+              <div class="row gap-14 t-caption c-secondary">
+                <span class="row gap-4"><svg class="i i-16" aria-hidden="true"><use href="#i-map-pin"/></svg>3.8 km</span><span class="row gap-4"><svg class="i i-16" aria-hidden="true"><use href="#i-clock"/></svg>Tomorrow, 10 AM</span></div>
+              <div class="row gap-10"><a href="#eligibility" class="btn btn--primary btn--md grow">I can donate</a><a href="#tracking" class="circle bg-sunken" aria-label="Call"><svg class="i i-20" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+            </article>
+          </div>
+
+          <div class="px-24">
+            <a href="#impact" class="impact-strip">
+              <span class="faces"><span class="photo ph-av3" style="--s:34px"></span><span class="photo ph-av0" style="--s:34px"></span><span class="photo ph-av7" style="--s:34px"></span></span>
+              <span class="t-body-strong c-brand grow">Your 6 donations may have helped up to 18 people.</span>
+              <svg class="i i-18 c-brand" aria-hidden="true"><use href="#i-caret-right"/></svg>
+            </a>
+          </div>
+
+          <div class="col gap-12 px-24">
+            <h2 class="t-title-l">Camps this week</h2>
+            <a href="#slot" class="card row gap-14" style="padding:12px 16px 12px 12px;border-radius:20px">
+              <span class="date-box"><span class="t-overline">Sat</span><span class="t-headline">17</span><span class="t-caption c-secondary">Oct</span></span>
+              <span class="col gap-4 grow"><span class="t-body-strong">MIT College blood drive</span><span class="t-caption c-secondary">Kothrud · 9 AM – 2 PM</span><span class="tag tag--neutral">Free health check</span></span>
+            </a>
+          </div>
+        </div>
+        <nav class="bottom-nav" aria-label="Main">
+          <a href="#home" class="nav-item is-active" aria-current="page"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-house-fill"/></svg></span>Home</a>
+          <a href="#find" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-map-pin"/></svg></span>Find</a>
+          <a href="#request" class="nav-item nav-item--request"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-drop-fill"/></svg></span>Request</a>
+          <a href="#donorcard" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-identification-card"/></svg></span>Donor card</a>
+          <a href="#impact" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-user"/></svg></span>Profile</a>
+        </nav>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         2.2 FIND BLOOD CENTRES (MAP)
+         ===================================================== -->
+    <section class="screen" id="find" aria-label="Find blood centres">
+      <p class="screen-label">2.2 Find blood centres (map)</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="map">
+          <svg class="map-art" viewBox="0 0 412 781" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+            <rect class="map-park" x="250" y="150" width="150" height="110" rx="26"/>
+            <rect class="map-park" x="-20" y="330" width="130" height="90" rx="24"/>
+            <rect class="map-park" x="280" y="420" width="120" height="70" rx="20"/>
+            <path class="map-river" stroke-width="30" d="M-20 520 C 80 470, 140 560, 230 500 S 360 430, 440 470"/>
+            <path class="map-road" stroke-width="12" d="M-10 250 L 430 210 M140 -10 L 190 800"/>
+            <path class="map-road" stroke-width="6" d="M-10 120 L 430 160 M60 -10 L 20 800 M320 -10 L 350 800 M-10 380 L 430 330"/>
+            <path class="map-road" stroke-width="5" d="M240 -10 C 230 200, 280 300, 250 800"/>
+            <path class="map-road" stroke-width="8" d="M-10 640 L 430 610"/>
+          </svg>
+          <span class="map-label" style="left:24px;top:238px;transform:rotate(5deg)">Karve Road</span>
+          <span class="map-label" style="left:150px;top:330px;transform:rotate(-86deg)">FC Road</span>
+
+          <a href="#centre" class="pin pin--on" style="left:47.6%;top:268px"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg><span>B+ 31</span></a>
+          <a href="#centre" class="pin" style="left:9.7%;top:300px"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg><span>B+ 12</span></a>
+          <a href="#centre" class="pin" style="left:69.4%;top:348px"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg><span>B+ 4</span></a>
+          <a href="#centre" class="pin" style="left:72.8%;top:180px"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg><span>B+ 9</span></a>
+          <span class="me" style="left:148px;top:362px" aria-label="You are here"></span>
+
+          <label class="search"><svg class="i i-20" aria-hidden="true"><use href="#i-magnifying-glass"/></svg><input type="search" placeholder="Search centres or hospitals" aria-label="Search centres or hospitals">
+            <span class="circle bg-sunken square" style="--s:38px;border-radius:12px"><svg class="i i-20" aria-hidden="true"><use href="#i-sliders-horizontal"/></svg></span></label>
+          <div class="filters">
+            <label class="filter-chip"><input class="sr" type="checkbox" checked>Open now</label>
+            <label class="filter-chip"><input class="sr" type="checkbox" checked>Has B+</label>
+            <label class="filter-chip"><input class="sr" type="checkbox">Govt. run</label>
+            <label class="filter-chip"><input class="sr" type="checkbox">Within 5 km</label>
+          </div>
+          <button class="circle bg-surface fab" style="--s:48px" aria-label="Show my location"><svg class="i i-22" aria-hidden="true"><use href="#i-crosshair-simple"/></svg></button>
+
+          <div class="sheet">
+            <span class="handle"></span>
+            <div class="row between" style="padding:12px 0 4px"><h1 class="t-title-l">14 centres near you</h1><span class="row gap-4 t-body-strong c-secondary">Nearest<svg class="i i-14" aria-hidden="true"><use href="#i-caret-down"/></svg></span></div>
+            <div class="sheet-list">
+              <a href="#centre" class="list-row"><span class="circle bg-blush square c-red" style="--s:48px"><svg class="i" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+                <span class="col gap-4 grow"><span class="t-body-strong">Sahyadri Blood Centre</span><span class="t-caption c-secondary">Deccan · 2.4 km · Open till 8 PM</span><span class="tag tag--ready">B+ available · 31 units</span></span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+              <a href="#centre" class="list-row"><span class="circle bg-blush square c-red" style="--s:48px"><svg class="i" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+                <span class="col gap-4 grow"><span class="t-body-strong">Deenanath Mangeshkar Blood Bank</span><span class="t-caption c-secondary">Erandwane · 3.1 km · Open 24 hrs</span><span class="tag tag--ready">B+ available · 12 units</span></span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+              <a href="#centre" class="list-row"><span class="circle bg-blush square c-red" style="--s:48px"><svg class="i" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+                <span class="col gap-4 grow"><span class="t-body-strong">KEM Hospital Blood Bank</span><span class="t-caption c-secondary">Rasta Peth · 5.6 km · Open till 6 PM</span><span class="tag tag--soon">B+ low · 4 units</span></span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+            </div>
+          </div>
+        </div>
+        <nav class="bottom-nav" aria-label="Main">
+          <a href="#home" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-house"/></svg></span>Home</a>
+          <a href="#find" class="nav-item is-active" aria-current="page"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-map-pin-fill"/></svg></span>Find</a>
+          <a href="#request" class="nav-item nav-item--request"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-drop-fill"/></svg></span>Request</a>
+          <a href="#donorcard" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-identification-card"/></svg></span>Donor card</a>
+          <a href="#impact" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-user"/></svg></span>Profile</a>
+        </nav>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         2.3 CENTRE DETAILS
+         ===================================================== -->
+    <section class="screen" id="centre" aria-label="Centre details">
+      <p class="screen-label">2.3 Centre details</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content">
+          <div class="map-head">
+            <svg class="map-art" viewBox="0 0 412 210" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect class="map-park" x="270" y="20" width="160" height="90" rx="24"/>
+              <path class="map-river" stroke-width="26" d="M-20 170 C 90 130, 160 200, 260 150 S 380 120, 440 140"/>
+              <path class="map-road" stroke-width="12" d="M-10 70 L 430 40 M200 -10 L 230 220"/>
+              <path class="map-road" stroke-width="6" d="M80 -10 L 60 220 M-10 120 L 430 100"/>
+            </svg>
+            <span class="pin pin--on"><svg class="i i-16" aria-hidden="true"><use href="#i-drop-fill"/></svg><span>You’re 2.4 km away</span></span>
+            <a href="#find" class="circle bg-surface float-btn" style="left:16px" aria-label="Back"><svg class="i i-22" aria-hidden="true"><use href="#i-arrow-left"/></svg></a>
+            <a href="#centre" class="circle bg-surface float-btn" style="right:16px" aria-label="Share"><svg class="i i-20" aria-hidden="true"><use href="#i-share-network"/></svg></a>
+          </div>
+          <div class="sheet-panel col gap-20">
+            <div class="col gap-6">
+              <h1 class="t-headline">Sahyadri Blood Centre</h1>
+              <p class="t-body c-secondary">Deccan Gymkhana, Pune 411004</p>
+              <div class="row gap-8" style="padding-top:6px"><span class="tag tag--ready">Open · till 8 PM</span><span class="tag tag--neutral">Govt. licensed</span></div>
+            </div>
+            <div class="row gap-12">
+              <a href="#centre" class="quick"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg>Call</a>
+              <a href="#find" class="quick"><svg class="i i-18" aria-hidden="true"><use href="#i-navigation-arrow"/></svg>Directions</a>
+              <a href="#centre" class="quick"><svg class="i i-18" aria-hidden="true"><use href="#i-share-network"/></svg>Share</a>
+            </div>
+            <div class="col gap-2"><h2 class="t-title-l">Blood available now</h2><p class="t-caption c-secondary">Updated 10 min ago · synced with e-RaktKosh</p></div>
+            <div class="stock">
+              <div class="s-ok"><b>A+</b><small>24 units</small></div>
+              <div class="s-low"><b>A−</b><small>3 units</small></div>
+              <div class="s-ok s-mine"><b>B+</b><small>31 units</small></div>
+              <div class="s-out"><b>B−</b><small>None</small></div>
+              <div class="s-ok"><b>O+</b><small>18 units</small></div>
+              <div class="s-low"><b>O−</b><small>2 units</small></div>
+              <div class="s-ok"><b>AB+</b><small>9 units</small></div>
+              <div class="s-low"><b>AB−</b><small>1 unit</small></div>
+            </div>
+            <div class="row gap-16 legend t-caption c-secondary">
+              <span class="c-sage"><span class="c-secondary">Available</span></span>
+              <span class="c-turmeric"><span class="c-secondary">Low</span></span>
+              <span class="c-brand"><span class="c-secondary">Out of stock</span></span>
+            </div>
+            <div class="hours"><svg class="i i-20 c-secondary" aria-hidden="true"><use href="#i-clock"/></svg><div class="col gap-2"><span class="t-body-strong">Mon – Sat · 8 AM – 8 PM</span><span class="t-body c-secondary">Sunday · 9 AM – 1 PM</span></div></div>
+          </div>
+        </div>
+        <div class="action-bar">
+          <div class="col"><span class="t-caption c-secondary">Next free slot</span><span class="t-body-strong">Today, 4:30 PM</span></div>
+          <a href="#slot" class="btn btn--primary btn--lg grow">Book a slot</a>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         2.4 ELIGIBILITY CHECK
+         ===================================================== -->
+    <section class="screen" id="eligibility" aria-label="Eligibility check">
+      <p class="screen-label">2.4 Eligibility check</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#home" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a><h1 class="t-title">Eligibility check</h1></header>
+        <div class="content pad gap-24" style="padding-top:4px">
+          <div class="col gap-10">
+            <div class="progress"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
+            <p class="t-caption c-secondary">Question 3 of 6 · about a minute left</p>
+          </div>
+          <h2 class="t-headline">Have you had a tattoo or piercing in the last 12 months?</h2>
+          <p class="t-body-l c-secondary">New tattoos and piercings carry a small risk of infection that tests may not pick up yet. If yes, you can donate 12 months after getting it.</p>
+          <div class="col gap-12">
+            <label class="option"><input class="sr" type="radio" name="tattoo" value="yes"><span class="radio"></span>Yes, I have</label>
+            <label class="option"><input class="sr" type="radio" name="tattoo" value="no" checked><span class="radio"></span>No, I haven’t</label>
+          </div>
+          <details class="why">
+            <summary><svg class="i i-18" aria-hidden="true"><use href="#i-info"/></svg>Why do we ask this?</summary>
+            <p class="t-body c-secondary">Blood centres in India follow National Blood Transfusion Council rules. They protect both you and the patient who receives your blood.</p>
+          </details>
+          <div class="so-far">
+            <p class="t-overline c-secondary">Looking good so far</p>
+            <p class="row gap-10 t-body"><svg class="i i-20 c-sage" aria-hidden="true"><use href="#i-check-circle-fill"/></svg>Aged between 18 and 65</p>
+            <p class="row gap-10 t-body"><svg class="i i-20 c-sage" aria-hidden="true"><use href="#i-check-circle-fill"/></svg>Weigh more than 45 kg</p>
+          </div>
+          <div class="spacer"></div>
+          <div class="row gap-12">
+            <a href="#home" class="btn btn--outline btn--lg">Back</a>
+            <a href="#slot" class="btn btn--primary btn--lg grow">Next</a>
+          </div>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         3.1 CHOOSE A SLOT
+         ===================================================== -->
+    <section class="screen" id="slot" aria-label="Choose a slot">
+      <p class="screen-label">3.1 Choose a slot</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#centre" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a><h1 class="t-title">Book a slot</h1></header>
+        <div class="content pad gap-22" style="padding-top:4px">
+          <div class="card row gap-12" style="padding:12px 16px 12px 12px;border-radius:18px">
+            <span class="circle bg-blush c-red" style="--s:44px;border-radius:12px"><svg class="i i-22" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+            <div class="col gap-2 grow"><span class="t-body-strong">Sahyadri Blood Centre</span><span class="t-caption c-secondary">Deccan · 2.4 km</span></div>
+            <a href="#find" class="t-body-strong c-brand">Change</a>
+          </div>
+          <div class="col gap-10">
+            <p class="t-body-strong c-secondary">Donation type</p>
+            <div class="segmented">
+              <label class="seg"><input class="sr" type="radio" name="dtype" checked><span class="t-body-strong">Whole blood</span><span class="t-caption c-tertiary">About 45 min</span></label>
+              <label class="seg"><input class="sr" type="radio" name="dtype"><span class="t-body-strong">Platelets</span><span class="t-caption c-tertiary">About 2 hrs</span></label>
+            </div>
+          </div>
+          <div class="col gap-10">
+            <div class="row between"><p class="t-body-strong c-secondary">Pick a day</p><p class="t-body-strong">October 2026</p></div>
+            <div class="days">
+              <label class="day"><input class="sr" type="radio" name="day"><small>Wed</small><b>14</b><i></i></label>
+              <label class="day"><input class="sr" type="radio" name="day"><small>Thu</small><b>15</b><i class="few"></i></label>
+              <label class="day"><input class="sr" type="radio" name="day"><small>Fri</small><b>16</b><i></i></label>
+              <label class="day"><input class="sr" type="radio" name="day" checked><small>Sat</small><b>17</b><i></i></label>
+              <label class="day"><input class="sr" type="radio" name="day"><small>Sun</small><b>18</b><i class="few"></i></label>
+            </div>
+          </div>
+          <div class="col gap-10">
+            <p class="t-overline c-tertiary">Morning</p>
+            <div class="slots">
+              <label class="slot"><input class="sr" type="radio" name="time">9:00 AM</label>
+              <label class="slot"><input class="sr" type="radio" name="time" disabled>9:30 AM</label>
+              <label class="slot"><input class="sr" type="radio" name="time">10:00 AM</label>
+              <label class="slot"><input class="sr" type="radio" name="time" checked>10:30 AM</label>
+              <label class="slot"><input class="sr" type="radio" name="time">11:00 AM</label>
+              <label class="slot"><input class="sr" type="radio" name="time" disabled>11:30 AM</label>
+            </div>
+          </div>
+          <div class="col gap-10">
+            <p class="t-overline c-tertiary">Afternoon</p>
+            <div class="slots">
+              <label class="slot"><input class="sr" type="radio" name="time">2:00 PM</label>
+              <label class="slot"><input class="sr" type="radio" name="time">2:30 PM</label>
+              <label class="slot"><input class="sr" type="radio" name="time">3:30 PM</label>
+            </div>
+          </div>
+          <div class="note note--sage" style="padding:12px 14px"><svg class="i i-20" aria-hidden="true"><use href="#i-fork-knife"/></svg><span class="t-body">Have a proper meal and 500 ml of water 2–3 hours before your slot.</span></div>
+        </div>
+        <div class="action-bar">
+          <div class="col"><span class="t-body-strong">Sat, 17 Oct · 10:30 AM</span><span class="t-caption c-secondary">Whole blood · 45 min</span></div>
+          <a href="#booked" class="btn btn--primary btn--lg grow">Confirm</a>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         3.2 BOOKING CONFIRMED
+         ===================================================== -->
+    <section class="screen" id="booked" aria-label="Booking confirmed">
+      <p class="screen-label">3.2 Booking confirmed</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content pad gap-20" style="align-items:center">
+          <div class="row" style="align-self:stretch;justify-content:flex-end"><a href="#home" class="circle bg-sunken" style="--s:40px" aria-label="Close"><svg class="i i-20" aria-hidden="true"><use href="#i-x"/></svg></a></div>
+          <div class="success" aria-hidden="true">
+            <span class="halo"></span>
+            <svg class="i tick"><use href="#i-check-circle-fill"/></svg>
+            <span class="confetti" style="left:8px;top:20px;width:10px;height:10px;background:var(--peach)"></span>
+            <span class="confetti" style="left:140px;top:14px;width:8px;height:8px;background:var(--brand)"></span>
+            <span class="confetti" style="left:148px;top:70px;width:12px;height:5px;border-radius:3px;transform:rotate(-30deg);background:var(--turmeric)"></span>
+            <span class="confetti" style="left:4px;top:74px;width:12px;height:5px;border-radius:3px;transform:rotate(20deg);background:var(--brand-soft)"></span>
+            <span class="confetti" style="left:124px;top:92px;width:7px;height:7px;background:var(--sage)"></span>
+            <span class="confetti" style="left:24px;top:0;width:6px;height:6px;background:var(--turmeric)"></span>
+          </div>
+          <h1 class="t-headline center">You’re booked, Aarav!</h1>
+          <p class="t-body-l c-secondary center">Thank you for turning up for a stranger. We’ll remind you the evening before.</p>
+
+          <div class="ticket" style="align-self:stretch">
+            <div class="col gap-6" style="padding:20px 20px 18px">
+              <p class="t-overline c-brand">Appointment</p>
+              <p class="t-title-l">Sat, 17 Oct · 10:30 AM</p>
+              <p class="t-body c-secondary">Sahyadri Blood Centre, Deccan</p>
+              <div class="row gap-24" style="padding-top:10px;align-items:flex-start">
+                <div class="col"><span class="t-caption c-tertiary">Type</span><span class="t-body-strong">Whole blood</span></div>
+                <div class="col"><span class="t-caption c-tertiary">Token</span><span class="t-body-strong">A-27</span></div>
+                <div class="col"><span class="t-caption c-tertiary">Duration</span><span class="t-body-strong">45 min</span></div>
+              </div>
+            </div>
+            <div class="perforation"><span style="left:-10px"></span><span style="right:-10px"></span></div>
+            <div class="row gap-16" style="padding:16px 20px 20px">
+              <svg class="qr" viewBox="0 0 84 84" role="img" aria-label="Check-in code"><path fill-rule="evenodd" d="M36 0h4v4h-4zM40 4h4v4h-4zM44 4h4v4h-4zM36 8h4v4h-4zM40 8h4v4h-4zM36 12h4v4h-4zM44 12h4v4h-4zM40 16h4v4h-4zM44 16h4v4h-4zM36 20h4v4h-4zM48 20h4v4h-4zM32 24h4v4h-4zM44 24h4v4h-4zM36 28h4v4h-4zM48 28h4v4h-4zM12 32h4v4h-4zM20 32h4v4h-4zM32 32h4v4h-4zM40 32h4v4h-4zM44 32h4v4h-4zM72 32h4v4h-4zM76 32h4v4h-4zM80 32h4v4h-4zM16 36h4v4h-4zM36 36h4v4h-4zM48 36h4v4h-4zM52 36h4v4h-4zM56 36h4v4h-4zM60 36h4v4h-4zM64 36h4v4h-4zM68 36h4v4h-4zM72 36h4v4h-4zM76 36h4v4h-4zM16 40h4v4h-4zM20 40h4v4h-4zM28 40h4v4h-4zM40 40h4v4h-4zM52 40h4v4h-4zM60 40h4v4h-4zM64 40h4v4h-4zM76 40h4v4h-4zM80 40h4v4h-4zM12 44h4v4h-4zM16 44h4v4h-4zM20 44h4v4h-4zM24 44h4v4h-4zM32 44h4v4h-4zM52 44h4v4h-4zM56 44h4v4h-4zM60 44h4v4h-4zM16 48h4v4h-4zM32 48h4v4h-4zM60 48h4v4h-4zM68 48h4v4h-4zM76 48h4v4h-4zM80 48h4v4h-4zM32 52h4v4h-4zM48 52h4v4h-4zM72 52h4v4h-4zM32 56h4v4h-4zM36 56h4v4h-4zM40 56h4v4h-4zM52 56h4v4h-4zM56 56h4v4h-4zM64 56h4v4h-4zM68 56h4v4h-4zM76 56h4v4h-4zM80 56h4v4h-4zM40 60h4v4h-4zM44 60h4v4h-4zM48 60h4v4h-4zM52 60h4v4h-4zM56 60h4v4h-4zM60 60h4v4h-4zM64 60h4v4h-4zM76 60h4v4h-4zM80 60h4v4h-4zM32 64h4v4h-4zM40 64h4v4h-4zM44 64h4v4h-4zM56 64h4v4h-4zM60 64h4v4h-4zM76 64h4v4h-4zM80 64h4v4h-4zM36 68h4v4h-4zM48 68h4v4h-4zM60 68h4v4h-4zM80 68h4v4h-4zM36 72h4v4h-4zM44 72h4v4h-4zM48 72h4v4h-4zM56 72h4v4h-4zM72 72h4v4h-4zM76 72h4v4h-4zM64 76h4v4h-4zM72 76h4v4h-4zM76 76h4v4h-4zM52 80h4v4h-4zM56 80h4v4h-4zM64 80h4v4h-4zM80 80h4v4h-4zM0 0h28v28h-28zM4 4v20h20v-20zM8 8h12v12h-12zM56 0h28v28h-28zM60 4v20h20v-20zM64 8h12v12h-12zM0 56h28v28h-28zM4 60v20h20v-20zM8 64h12v12h-12z"/></svg>
+              <div class="col gap-4"><span class="t-body-strong">Fast check-in</span><span class="t-caption c-secondary">Show this code at the reception desk to skip the paperwork.</span></div>
+            </div>
+          </div>
+
+          <div class="col gap-12" style="align-self:stretch">
+            <h2 class="t-title">Before you come</h2>
+            <div class="row gap-10" style="align-items:stretch">
+              <div class="todo"><svg class="i i-22" aria-hidden="true"><use href="#i-fork-knife"/></svg><span class="t-body-strong">Eat a meal</span></div>
+              <div class="todo"><svg class="i i-22" aria-hidden="true"><use href="#i-drop"/></svg><span class="t-body-strong">Drink water</span></div>
+              <div class="todo"><svg class="i i-22" aria-hidden="true"><use href="#i-identification-card"/></svg><span class="t-body-strong">Carry photo ID</span></div>
+            </div>
+          </div>
+          <div class="spacer"></div>
+          <div class="row gap-12" style="align-self:stretch">
+            <a href="#booked" class="btn btn--outline btn--lg grow">Add to calendar</a>
+            <a href="#find" class="btn btn--primary btn--lg grow">Directions</a>
+          </div>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         4.1 REQUEST BLOOD
+         ===================================================== -->
+    <section class="screen" id="request" aria-label="Request blood">
+      <p class="screen-label">4.1 Request blood</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#home" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a><h1 class="t-title">Request blood</h1></header>
+        <div class="content pad gap-20" style="padding-top:4px;padding-bottom:20px">
+          <p class="note note--blush"><svg class="i i-20" aria-hidden="true"><use href="#i-siren"/></svg><span class="t-body">Life-threatening emergency? Call 108 for an ambulance first.</span></p>
+          <div class="col gap-10">
+            <p class="t-body-strong c-secondary">Blood group needed</p>
+            <div class="grp-grid">
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="A+">A+</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="A−">A−</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="B+" checked>B+</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="B−">B−</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="O+">O+</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="O−">O−</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="AB+">AB+</label>
+              <label class="grp"><input class="sr" type="radio" name="need-group" value="AB−">AB−</label>
+            </div>
+          </div>
+          <div class="card row between" style="padding:8px 8px 8px 16px;border-radius:16px">
+            <div class="col"><span class="t-body-strong">Units needed</span><span class="t-caption c-tertiary">1 unit ≈ 350–450 ml</span></div>
+            <div class="stepper">
+              <button class="circle bg-sunken" style="--s:40px" aria-label="Fewer units"><svg class="i i-18" aria-hidden="true"><use href="#i-minus"/></svg></button>
+              <span class="t-title-l">2</span>
+              <button class="circle bg-ink" style="--s:40px" aria-label="More units"><svg class="i i-18" aria-hidden="true"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="col gap-10">
+            <p class="t-body-strong c-secondary">How urgent is it?</p>
+            <div class="row gap-8" style="align-items:stretch">
+              <label class="urg"><input class="sr" type="radio" name="urgency" checked><svg class="i i-22" aria-hidden="true"><use href="#i-siren"/></svg><span class="t-body-strong">Critical</span><span class="t-caption c-secondary">Within 6 hrs</span></label>
+              <label class="urg"><input class="sr" type="radio" name="urgency"><svg class="i i-22" aria-hidden="true"><use href="#i-clock"/></svg><span class="t-body-strong">Urgent</span><span class="t-caption c-secondary">Within 24 hrs</span></label>
+              <label class="urg"><input class="sr" type="radio" name="urgency"><svg class="i i-22" aria-hidden="true"><use href="#i-calendar-blank"/></svg><span class="t-body-strong">Planned</span><span class="t-caption c-secondary">Surgery date</span></label>
+            </div>
+          </div>
+          <div class="field"><label for="pname">Patient name</label><input id="pname" class="input" value="Meera Kulkarni"></div>
+          <div class="field"><label for="hosp">Hospital</label><input id="hosp" class="input" value="Sahyadri Hospital, Deccan"></div>
+          <div class="field"><label for="contact">Contact number</label><input id="contact" class="input" type="tel" value="+91 98220 41567"></div>
+        </div>
+        <div class="action-bar" style="flex-direction:column;gap:8px">
+          <a href="#matching" class="btn btn--primary btn--lg btn--block">Alert nearby donors</a>
+          <p class="t-caption c-secondary">Goes to verified B+, B−, O+ and O− donors within 5 km</p>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         4.2 MATCHING DONORS (LIVE)
+         ===================================================== -->
+    <section class="screen" id="matching" aria-label="Matching donors">
+      <p class="screen-label">4.2 Matching donors (live)</p>
+      <div class="phone phone--wine">
+        <div class="statusbar statusbar--dark"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content">
+          <div class="radar">
+            <span class="radar-ring r1"></span><span class="radar-ring r2"></span><span class="radar-ring r3"></span>
+            <span class="dot" style="left:calc(50% - 40px);top:56px"></span><span class="dot" style="left:calc(50% + 140px);top:156px"></span>
+            <span class="dot" style="left:calc(50% - 150px);top:236px"></span><span class="dot" style="left:calc(50% + 20px);top:294px"></span>
+            <span class="dot" style="left:calc(50% - 100px);top:76px"></span>
+            <span class="circle bg-brand radar-hosp"><svg class="i i-26" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+            <span class="photo ph-av3" style="left:calc(50% + 60px);top:114px"></span>
+            <span class="photo ph-av0" style="left:calc(50% - 128px);top:146px"></span>
+            <span class="photo ph-av7" style="left:calc(50% + 96px);top:226px"></span>
+            <span class="initials" style="--s:36px;left:calc(50% - 70px);top:246px;background:var(--peach);color:var(--bg-wine)">RS</span>
+            <div class="radar-top">
+              <a href="#request" class="icon-btn" aria-label="Back"><svg class="i i-22" aria-hidden="true"><use href="#i-arrow-left"/></svg></a>
+              <h1 class="t-title grow">Finding donors</h1>
+              <span class="live">Live</span>
+            </div>
+          </div>
+          <div class="results">
+            <div class="col gap-4"><h2 class="t-headline">6 donors said yes</h2><p class="t-body c-secondary">48 alerted within 5 km · 31 have seen it</p></div>
+            <div class="funnel" aria-label="6 accepted, 25 seen, 17 not seen yet">
+              <span style="flex:6;background:var(--sage)"></span><span style="flex:25;background:var(--peach)"></span><span style="flex:17;background:var(--border-subtle)"></span>
+            </div>
+            <div class="row between"><h3 class="t-title">Ready to help</h3><span class="t-body-strong c-secondary">Nearest first</span></div>
+            <div class="card divided" style="border-radius:20px">
+              <div class="donor"><span class="photo ph-av3"></span><div class="col gap-2 grow"><span class="t-body-strong">Tenzin L.</span><span class="t-caption c-secondary">B+ · 1.2 km · can reach in 15 min</span></div>
+                <a href="#tracking" class="circle bg-sunken" style="--s:38px" aria-label="Message"><svg class="i i-18" aria-hidden="true"><use href="#i-chat-circle-dots"/></svg></a><a href="#tracking" class="circle bg-sage-soft" style="--s:38px" aria-label="Call"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+              <div class="donor"><span class="photo ph-av0"></span><div class="col gap-2 grow"><span class="t-body-strong">Joseph A.</span><span class="t-caption c-secondary">O+ · 2.0 km · can reach in 20 min</span></div>
+                <a href="#tracking" class="circle bg-sunken" style="--s:38px" aria-label="Message"><svg class="i i-18" aria-hidden="true"><use href="#i-chat-circle-dots"/></svg></a><a href="#tracking" class="circle bg-sage-soft" style="--s:38px" aria-label="Call"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+              <div class="donor"><span class="initials bg-turmeric-soft">RS</span><div class="col gap-2 grow"><span class="t-body-strong">Rohan S.</span><span class="t-caption c-secondary">B+ · 2.8 km · can reach in 25 min</span></div>
+                <a href="#tracking" class="circle bg-sunken" style="--s:38px" aria-label="Message"><svg class="i i-18" aria-hidden="true"><use href="#i-chat-circle-dots"/></svg></a><a href="#tracking" class="circle bg-sage-soft" style="--s:38px" aria-label="Call"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+              <div class="donor"><span class="photo ph-av7"></span><div class="col gap-2 grow"><span class="t-body-strong">Ananya M.</span><span class="t-caption c-secondary">O− · 3.4 km · can reach in 30 min</span></div>
+                <a href="#tracking" class="circle bg-sunken" style="--s:38px" aria-label="Message"><svg class="i i-18" aria-hidden="true"><use href="#i-chat-circle-dots"/></svg></a><a href="#tracking" class="circle bg-sage-soft" style="--s:38px" aria-label="Call"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg></a></div>
+            </div>
+          </div>
+        </div>
+        <div class="action-bar">
+          <a href="#matching" class="btn btn--outline btn--lg">Share</a>
+          <a href="#tracking" class="btn btn--primary btn--lg grow">Track request</a>
+        </div>
+        <div class="gesture gesture--dark" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         4.3 REQUEST TRACKING
+         ===================================================== -->
+    <section class="screen" id="tracking" aria-label="Request tracking">
+      <p class="screen-label">4.3 Request tracking</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <header class="appbar"><a href="#matching" class="icon-btn" aria-label="Back"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg></a><h1 class="t-title">Request RQ-2041</h1><button class="icon-btn" aria-label="More options"><svg class="i" aria-hidden="true"><use href="#i-dots-three-vertical"/></svg></button></header>
+        <div class="content pad gap-20" style="padding-top:4px;padding-bottom:20px">
+          <div class="card col gap-14" style="padding:18px">
+            <div class="row gap-12"><span class="grp-box">B+</span>
+              <div class="col gap-2 grow"><span class="t-body-strong">2 units for Meera K.</span><span class="t-caption c-secondary">Sahyadri Hospital, Deccan</span></div>
+              <span class="tag tag--urgent">Critical</span></div>
+            <div style="height:1px;background:var(--border-subtle)"></div>
+            <div class="row between"><span class="t-body-strong">1 of 2 units arranged</span><span class="row gap-4 t-caption c-brand"><svg class="i i-14" aria-hidden="true"><use href="#i-clock"/></svg>1 hr 48 min left</span></div>
+            <div class="bar2"><span class="done"></span><span></span></div>
+          </div>
+          <h2 class="t-title-l">Live updates</h2>
+          <ol class="timeline" style="list-style:none;margin:0;padding:0">
+            <li class="step step--done"><div class="rail"><span class="circle" style="--s:36px"><svg class="i i-18" aria-hidden="true"><use href="#i-paper-plane-tilt"/></svg></span></div>
+              <div class="step-text"><span class="t-body-strong">Request posted</span><span class="t-caption c-secondary">4:05 PM · shared by you</span></div></li>
+            <li class="step step--done"><div class="rail"><span class="circle" style="--s:36px"><svg class="i i-18" aria-hidden="true"><use href="#i-drop-fill"/></svg></span></div>
+              <div class="step-text"><span class="t-body-strong">48 donors alerted</span><span class="t-caption c-secondary">4:06 PM · B+, B−, O+, O− within 5 km</span></div></li>
+            <li class="step step--done"><div class="rail"><span class="circle" style="--s:36px"><svg class="i i-18" aria-hidden="true"><use href="#i-check"/></svg></span></div>
+              <div class="step-text"><span class="t-body-strong">Joseph A. donated 1 unit</span><span class="t-caption c-secondary">4:48 PM · at Sahyadri blood bank</span></div></li>
+            <li class="step step--now"><div class="rail"><span class="circle" style="--s:36px"><svg class="i i-18" aria-hidden="true"><use href="#i-person-simple-walk"/></svg></span></div>
+              <div class="step-text"><span class="t-body-strong">Tenzin L. is on the way</span><span class="t-caption c-brand">Arriving in about 12 min · 1.2 km away</span>
+                <a href="#matching" class="btn btn--secondary btn--md" style="width:max-content">Call Tenzin</a></div></li>
+            <li class="step step--todo"><div class="rail"><span class="circle" style="--s:36px"><svg class="i i-18" aria-hidden="true"><use href="#i-hospital"/></svg></span></div>
+              <div class="step-text"><span class="t-body-strong c-tertiary">Blood bank confirms 2nd unit</span><span class="t-caption c-secondary">Usually within 30 min of donation</span></div></li>
+          </ol>
+          <div class="card row gap-12" style="padding:14px 18px">
+            <span class="circle bg-blush c-red" style="--s:44px;border-radius:12px"><svg class="i i-22" aria-hidden="true"><use href="#i-hospital"/></svg></span>
+            <div class="col gap-2 grow"><span class="t-body-strong">Blood bank desk</span><span class="t-caption c-secondary">Dr. S. Patil · Sahyadri Hospital</span></div>
+            <a href="#centre" class="circle bg-sage-soft" style="--s:40px" aria-label="Call blood bank"><svg class="i i-18" aria-hidden="true"><use href="#i-phone"/></svg></a>
+          </div>
+        </div>
+        <div class="action-bar">
+          <a href="#request" class="btn btn--outline btn--lg">Edit</a>
+          <a href="#tracking" class="btn btn--primary btn--lg grow">Share update</a>
+        </div>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         5.1 DONOR CARD
+         ===================================================== -->
+    <section class="screen" id="donorcard" aria-label="Donor card">
+      <p class="screen-label">5.1 Donor card</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content pad gap-18" style="padding-bottom:20px">
+          <div class="row between"><h1 class="t-headline">Donor card</h1><a href="#donorcard" class="circle bg-surface outlined" aria-label="Share"><svg class="i i-20" aria-hidden="true"><use href="#i-share-network"/></svg></a></div>
+          <div class="donor-card">
+            <svg class="watermark" viewBox="0 0 256 256" aria-hidden="true"><path d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Z"/></svg>
+            <div class="dc-top"><svg class="i i-20 c-peach" aria-hidden="true"><use href="#i-drop-fill"/></svg><span class="t-caption">Raktdaan · Voluntary donor</span></div>
+            <span class="verified"><svg class="i i-14" aria-hidden="true"><use href="#i-shield-check"/></svg>Verified</span>
+            <span class="dc-group">B+</span>
+            <div class="dc-name"><span class="t-title">Aarav Deshpande</span><span class="t-caption">ID&nbsp; MH-PNE-204871</span></div>
+            <div class="dc-foot t-caption"><span>Since 2021</span><span>6 donations</span></div>
+            <div class="dc-qr"><svg class="qr" viewBox="0 0 84 84" role="img" aria-label="Check-in code"><path fill-rule="evenodd" d="M32 0h4v4h-4zM36 0h4v4h-4zM32 4h4v4h-4zM44 4h4v4h-4zM32 8h4v4h-4zM36 8h4v4h-4zM40 8h4v4h-4zM40 12h4v4h-4zM48 12h4v4h-4zM36 16h4v4h-4zM32 20h4v4h-4zM36 20h4v4h-4zM40 20h4v4h-4zM44 20h4v4h-4zM32 24h4v4h-4zM48 24h4v4h-4zM36 28h4v4h-4zM40 28h4v4h-4zM44 28h4v4h-4zM0 32h4v4h-4zM4 32h4v4h-4zM8 32h4v4h-4zM12 32h4v4h-4zM20 32h4v4h-4zM24 32h4v4h-4zM28 32h4v4h-4zM32 32h4v4h-4zM40 32h4v4h-4zM68 32h4v4h-4zM80 32h4v4h-4zM0 36h4v4h-4zM4 36h4v4h-4zM12 36h4v4h-4zM24 36h4v4h-4zM40 36h4v4h-4zM44 36h4v4h-4zM60 36h4v4h-4zM68 36h4v4h-4zM72 36h4v4h-4zM0 40h4v4h-4zM8 40h4v4h-4zM16 40h4v4h-4zM20 40h4v4h-4zM24 40h4v4h-4zM32 40h4v4h-4zM36 40h4v4h-4zM40 40h4v4h-4zM44 40h4v4h-4zM52 40h4v4h-4zM56 40h4v4h-4zM60 40h4v4h-4zM64 40h4v4h-4zM76 40h4v4h-4zM80 40h4v4h-4zM12 44h4v4h-4zM28 44h4v4h-4zM32 44h4v4h-4zM36 44h4v4h-4zM40 44h4v4h-4zM56 44h4v4h-4zM64 44h4v4h-4zM76 44h4v4h-4zM80 44h4v4h-4zM0 48h4v4h-4zM28 48h4v4h-4zM40 48h4v4h-4zM44 48h4v4h-4zM48 48h4v4h-4zM52 48h4v4h-4zM64 48h4v4h-4zM72 48h4v4h-4zM32 52h4v4h-4zM36 52h4v4h-4zM48 52h4v4h-4zM52 52h4v4h-4zM56 52h4v4h-4zM60 52h4v4h-4zM64 52h4v4h-4zM72 52h4v4h-4zM76 52h4v4h-4zM36 56h4v4h-4zM56 56h4v4h-4zM64 56h4v4h-4zM68 56h4v4h-4zM80 56h4v4h-4zM36 60h4v4h-4zM40 60h4v4h-4zM44 60h4v4h-4zM68 60h4v4h-4zM76 60h4v4h-4zM32 64h4v4h-4zM36 64h4v4h-4zM40 64h4v4h-4zM44 64h4v4h-4zM48 64h4v4h-4zM52 64h4v4h-4zM68 64h4v4h-4zM80 64h4v4h-4zM32 68h4v4h-4zM36 68h4v4h-4zM44 68h4v4h-4zM48 68h4v4h-4zM52 68h4v4h-4zM68 68h4v4h-4zM36 72h4v4h-4zM64 72h4v4h-4zM68 72h4v4h-4zM76 72h4v4h-4zM80 72h4v4h-4zM36 76h4v4h-4zM40 76h4v4h-4zM48 76h4v4h-4zM60 76h4v4h-4zM48 80h4v4h-4zM52 80h4v4h-4zM56 80h4v4h-4zM60 80h4v4h-4zM64 80h4v4h-4zM72 80h4v4h-4zM76 80h4v4h-4zM80 80h4v4h-4zM0 0h28v28h-28zM4 4v20h20v-20zM8 8h12v12h-12zM56 0h28v28h-28zM60 4v20h20v-20zM64 8h12v12h-12zM0 56h28v28h-28zM4 60v20h20v-20zM8 64h12v12h-12z"/></svg></div>
+          </div>
+          <p class="t-body c-secondary">Show this at any licensed blood centre in India to skip the paperwork.</p>
+          <div class="card divided" style="padding:4px 18px">
+            <div class="kv"><span class="t-body c-secondary">Eligibility</span><span class="tag tag--ready">Eligible now</span></div>
+            <div class="kv"><span class="t-body c-secondary">Last donation</span><span class="t-body-strong">12 Jun 2026 · Sahyadri</span></div>
+            <div class="kv"><span class="t-body c-secondary">Haemoglobin</span><span class="t-body-strong">14.2 g/dL · normal</span></div>
+            <div class="kv"><span class="t-body c-secondary">Blood pressure</span><span class="t-body-strong">118/76 mmHg</span></div>
+          </div>
+          <div class="row gap-12">
+            <a href="#donorcard" class="btn btn--outline btn--md grow">Download PDF</a>
+            <a href="#donorcard" class="btn btn--outline btn--md grow">Add to Wallet</a>
+          </div>
+        </div>
+        <nav class="bottom-nav" aria-label="Main">
+          <a href="#home" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-house"/></svg></span>Home</a>
+          <a href="#find" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-map-pin"/></svg></span>Find</a>
+          <a href="#request" class="nav-item nav-item--request"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-drop-fill"/></svg></span>Request</a>
+          <a href="#donorcard" class="nav-item is-active" aria-current="page"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-identification-card"/></svg></span>Donor card</a>
+          <a href="#impact" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-user"/></svg></span>Profile</a>
+        </nav>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         5.2 YOUR IMPACT & HISTORY
+         ===================================================== -->
+    <section class="screen" id="impact" aria-label="Your impact">
+      <p class="screen-label">5.2 Your impact &amp; history</p>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><svg class="sys" aria-hidden="true"><use href="#i-sys"/></svg></div>
+        <div class="content pad gap-22" style="padding-bottom:24px">
+          <div class="row between"><h1 class="t-headline">Your impact</h1><a href="#impact" class="circle bg-surface outlined" aria-label="Settings"><svg class="i i-20" aria-hidden="true"><use href="#i-gear"/></svg></a></div>
+          <div class="impact-hero">
+            <div class="row gap-14"><span class="big-num">18</span><p class="t-title-l c-brand grow">people may have been helped by your 6 donations</p></div>
+            <p class="t-caption c-secondary">Each whole-blood unit is separated into red cells, plasma and platelets — up to three patients.</p>
+            <div class="row gap-6 wrap" style="padding-top:8px">
+              <span class="pill"><svg class="i i-14" aria-hidden="true"><use href="#i-drop-fill"/></svg>6 donations</span><span class="pill"><svg class="i i-14" aria-hidden="true"><use href="#i-calendar-blank"/></svg>Since 2021</span><span class="pill"><svg class="i i-14" aria-hidden="true"><use href="#i-medal"/></svg>Silver donor</span>
+            </div>
+          </div>
+          <div class="col gap-14">
+            <div class="col gap-2"><h2 class="t-title-l">Where your last donation went</h2><p class="t-caption c-secondary">Donated 12 Jun · Sahyadri Blood Centre</p></div>
+            <div class="journey">
+              <div><span class="circle bg-sage-soft" style="--s:32px"><svg class="i i-16" aria-hidden="true"><use href="#i-check"/></svg></span><span class="t-caption">Donated</span><span class="t-caption c-tertiary">12 Jun</span></div>
+              <div><span class="circle bg-sage-soft" style="--s:32px"><svg class="i i-16" aria-hidden="true"><use href="#i-check"/></svg></span><span class="t-caption">Tested</span><span class="t-caption c-tertiary">13 Jun</span></div>
+              <div><span class="circle bg-sage-soft" style="--s:32px"><svg class="i i-16" aria-hidden="true"><use href="#i-check"/></svg></span><span class="t-caption">Sent out</span><span class="t-caption c-tertiary">15 Jun</span></div>
+              <div><span class="circle bg-brand" style="--s:32px"><svg class="i i-16" aria-hidden="true"><use href="#i-heart-fill"/></svg></span><span class="t-caption c-brand">Used</span><span class="t-caption c-tertiary">17 Jun</span></div>
+            </div>
+            <div class="wine-note"><svg class="i i-26 c-peach" aria-hidden="true"><use href="#i-hand-heart"/></svg><span class="t-body">Your red cells reached a patient at KEM Hospital on 17 Jun. Thank you.</span></div>
+          </div>
+          <div class="col gap-12">
+            <div class="row between"><h2 class="t-title-l">Badges</h2><span class="t-body-strong c-secondary">3 of 12</span></div>
+            <div class="badges">
+              <div class="badge"><span class="circle bg-blush c-red"><svg class="i i-22" aria-hidden="true"><use href="#i-drop-fill"/></svg></span><span class="t-caption">First drop</span><span class="t-caption c-tertiary">2021</span></div>
+              <div class="badge"><span class="circle bg-turmeric-soft"><svg class="i i-22" aria-hidden="true"><use href="#i-star-fill"/></svg></span><span class="t-caption">Regular</span><span class="t-caption c-tertiary">3 donations</span></div>
+              <div class="badge"><span class="circle bg-sage-soft"><svg class="i i-22" aria-hidden="true"><use href="#i-lightning-fill"/></svg></span><span class="t-caption">Monsoon hero</span><span class="t-caption c-tertiary">Jul 2025</span></div>
+              <div class="badge badge--locked"><span class="circle bg-sunken"><svg class="i i-22" aria-hidden="true"><use href="#i-medal"/></svg></span><span class="t-caption">Gold donor</span><span class="t-caption">6 of 10</span></div>
+            </div>
+          </div>
+          <div class="col gap-4">
+            <h2 class="t-title-l">Donation history</h2>
+            <a href="#centre" class="hist"><span class="hist-date"><span class="t-body-strong">12 Jun</span><span class="t-caption c-tertiary">2026</span></span><span class="t-body grow">Whole blood · Sahyadri Blood Centre</span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+            <a href="#centre" class="hist"><span class="hist-date"><span class="t-body-strong">02 Mar</span><span class="t-caption c-tertiary">2026</span></span><span class="t-body grow">Whole blood · KEM Hospital Blood Bank</span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+            <a href="#centre" class="hist"><span class="hist-date"><span class="t-body-strong">20 Nov</span><span class="t-caption c-tertiary">2025</span></span><span class="t-body grow">Whole blood · MIT College camp</span><svg class="i i-18 c-tertiary" aria-hidden="true"><use href="#i-caret-right"/></svg></a>
+          </div>
+        </div>
+        <nav class="bottom-nav" aria-label="Main">
+          <a href="#home" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-house"/></svg></span>Home</a>
+          <a href="#find" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-map-pin"/></svg></span>Find</a>
+          <a href="#request" class="nav-item nav-item--request"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-drop-fill"/></svg></span>Request</a>
+          <a href="#donorcard" class="nav-item"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-identification-card"/></svg></span>Donor card</a>
+          <a href="#impact" class="nav-item is-active" aria-current="page"><span class="nav-ind"><svg class="i i-22" aria-hidden="true"><use href="#i-user-fill"/></svg></span>Profile</a>
+        </nav>
+        <div class="gesture" aria-hidden="true"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
