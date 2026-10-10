@@ -175,6 +175,12 @@ for k, d in DS.items():
     d["object_id"] = f"{d['file']}_{hashlib.md5(k.encode()).hexdigest().upper()}"
     d["fields"] = {c.name: c for c in d["cols"] + d["calcs"]}
 
+COLOUR_MAPS = {"deliveries": [("period", PERIOD_COLOURS)],
+               "employees": [("community", None), ("role_group", "roles")],
+               "network": [("community", None), ("tie_type", TIE_COLOURS), ("role_group", "roles")],
+               "monthly": [("metric", METRIC_COLOURS)], "events": []}
+COLOUR_FIELDS = {k: [f for f, _ in v] for k, v in COLOUR_MAPS.items()}
+
 REMOTE = {"integer": ("20", "Sum"), "real": ("5", "Sum"), "string": ("129", "Count"),
           "date": ("133", "Year"), "datetime": ("135", "Year")}
 PREFIX = {"None": "none", "Sum": "sum", "Avg": "avg", "CountD": "ctd", "Count": "cnt", "User": "usr",
@@ -299,12 +305,12 @@ def datasource_el(parent, key):
         column_el(ds, c)
     SE(ds, TT_T + "column", caption=d["stem"], datatype="table",
        name=f"[__tableau_internal_object_id__].[{d['object_id']}]", role="measure", type="quantitative")
+    for field in COLOUR_FIELDS[key]:              # colour maps below only apply to declared field instances
+        SE(ds, "column-instance", column=f"[{field}]", derivation="None", name=f"[none:{field}:nk]", pivot="key",
+           type="nominal")
     SE(ds, "layout", {SV_F + "dim-percentage": "0.5", SV_F + "measure-percentage": "0.4",
                       "dim-ordering": "alphabetic", "measure-ordering": "alphabetic", "show-structure": "true"})
-    maps = {"deliveries": [("period", PERIOD_COLOURS)],
-            "employees": [("community", None), ("role_group", "roles")],
-            "network": [("community", None), ("tie_type", TIE_COLOURS), ("role_group", "roles")],
-            "monthly": [("metric", METRIC_COLOURS)], "events": []}[key]
+    maps = COLOUR_MAPS[key]
     if maps:
         style = SE(ds, "style")
         rule = SE(style, "style-rule", element="mark")
@@ -487,7 +493,8 @@ def build_sheets():
         deliveries_filter(s)
         s.panes.append(dict(mark="Text", enc=[("text", m)], label=[
             (f"<{m.qual}>", {"bold": "true", "fontcolor": "#1f3864", "fontsize": "24"}),
-            ("Æ\n", {}), (label, {"fontcolor": MUTED, "fontsize": "10"})]))
+            ("Æ\n", {}), (label, {"fontcolor": MUTED, "fontsize": "10"})],
+            formats=[("mark-labels-show", "true")]))
         sheets.append(s)
 
     s = Sheet("Email Volume Timeline", D, "Weekly email deliveries, 1999-2002",
@@ -497,6 +504,7 @@ def build_sheets():
     deliveries_filter(s)
     s.panes.append(dict(mark="Area", enc=[("color", per)]))
     s.rows, s.cols = n.qual, wk.qual
+    s.axis_rules = [{"_tag": "format", "attr": "title", "class": "0", "field": wk.qual, "scope": "cols", "value": "Week"}]
     sheets.append(s)
 
     s = Sheet("Communication Flow by Role", D, "Who emails whom, by seniority",
@@ -508,19 +516,20 @@ def build_sheets():
     sheets.append(s)
 
     s = Sheet("Key Events", "events", "Key events in the Enron collapse")
-    no, when, ev, cat = s.inst("event_no"), s.inst("date_label"), s.inst("event"), s.inst("category")
-    s.panes.append(dict(mark="Text", enc=[("text", cat)]))
-    s.rows = f"(({no.qual} / {when.qual}) / {ev.qual})"
+    no, when, ev = s.inst("event_no"), s.inst("date_label"), s.inst("event")
+    s.panes.append(dict(mark="Text", enc=[("text", ev)]))
+    s.rows = f"({no.qual} / {when.qual})"
     sheets.append(s)
 
     s = Sheet("Locality Test by Month", "monthly", "Unit-5 locality test: is this a social network?",
-              "Blue: P(y-z tie | x-y and x-z ties). Orange: edge density (what chance alone gives).")
+              "Upper line: P(y-z tie | x-y and x-z ties). Lower line: edge density (what chance alone gives).")
     mon, val, met, rel = (s.inst("month", "Month-Trunc", "quantitative"), s.inst("value", "Sum"),
                           s.inst("metric"), s.inst("reliable"))
     s.filters.append(lambda v, i=rel: members_filter(v, i, ["Yes"]))
     s.slices.append(rel)
     s.panes.append(dict(mark="Line", enc=[("color", met)]))
     s.rows, s.cols = val.qual, mon.qual
+    s.axis_rules = [{"_tag": "format", "attr": "title", "class": "0", "field": mon.qual, "scope": "cols", "value": "Month"}]
     sheets.append(s)
 
     s = Sheet("Network Graph", "network", "Email network (Girvan-Newman communities)",
@@ -549,8 +558,10 @@ def build_sheets():
         {"_tag": "format", "attr": "display", "class": "0", "field": x2.qual, "scope": "cols", "value": "false"},
         {"_tag": "format", "attr": "display", "class": "0", "field": y.qual, "scope": "rows", "value": "false"},
     ]
-    s.extra_style.append(("gridline", [{"attr": "line-visibility", "value": "off"}]))
-    s.extra_style.append(("zeroline", [{"attr": "line-visibility", "value": "off"}]))
+    s.extra_style.append(("gridline", [{"attr": "line-visibility", "scope": "cols", "value": "off"},
+                                       {"attr": "line-visibility", "scope": "rows", "value": "off"}]))
+    s.extra_style.append(("zeroline", [{"attr": "line-visibility", "scope": "cols", "value": "off"},
+                                       {"attr": "line-visibility", "scope": "rows", "value": "off"}]))
     sheets.append(s)
 
     s = Sheet("Top People", "employees", "Top 15 people by the selected metric",
@@ -674,7 +685,7 @@ def build_dashboards(parent):
             Z("vert", children=[Z("sheet", 330, name="Email Volume Timeline"),
                                 Z("horz", children=[Z("sheet", name="Communication Flow by Role"),
                                                     Z("sheet", name="Locality Test by Month")])]),
-            Z("vert", 300, children=[
+            Z("vert", 400, children=[
                 Z("param", 60, param="Parameter 2"),
                 Z("param", 60, param="Parameter 3"),
                 Z("color", 92, name="Email Volume Timeline", param=per.qual),
