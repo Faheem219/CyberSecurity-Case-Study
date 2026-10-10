@@ -1279,7 +1279,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Deliveries</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Deliveries</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1345,10 +1345,10 @@
             </encodings>
             <customized-label>
               <formatted-text>
-                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]&gt;</run>
+                <run bold="true" fontcolor="#1f3864" fontsize="32">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[sum:Calculation_1000000000000000001:qk]&gt;</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">deliveries (sender → recipient)</run>
+                <run fontcolor="#4a5160" fontsize="11">deliveries (sender → recipient)</run>
               </formatted-text>
             </customized-label>
             <style>
@@ -1367,7 +1367,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Messages</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Messages</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1431,10 +1431,10 @@
             </encodings>
             <customized-label>
               <formatted-text>
-                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:message_id:qk]&gt;</run>
+                <run bold="true" fontcolor="#1f3864" fontsize="32">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:message_id:qk]&gt;</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">unique messages</run>
+                <run fontcolor="#4a5160" fontsize="11">unique messages</run>
               </formatted-text>
             </customized-label>
             <style>
@@ -1453,7 +1453,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Senders</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Senders</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1517,10 +1517,10 @@
             </encodings>
             <customized-label>
               <formatted-text>
-                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:sender:qk]&gt;</run>
+                <run bold="true" fontcolor="#1f3864" fontsize="32">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[ctd:sender:qk]&gt;</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">active senders</run>
+                <run fontcolor="#4a5160" fontsize="11">active senders</run>
               </formatted-text>
             </customized-label>
             <style>
@@ -1539,7 +1539,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Cross-community</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Cross-community</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1609,10 +1609,10 @@
             </encodings>
             <customized-label>
               <formatted-text>
-                <run bold="true" fontcolor="#1f3864" fontsize="24">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[usr:Calculation_1000000000000000002:qk]&gt;</run>
+                <run bold="true" fontcolor="#1f3864" fontsize="32">&lt;[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[usr:Calculation_1000000000000000002:qk]&gt;</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">of email crosses communities</run>
+                <run fontcolor="#4a5160" fontsize="11">of email crosses communities</run>
               </formatted-text>
             </customized-label>
             <style>
@@ -1631,10 +1631,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Weekly email deliveries, 1999-2002</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Weekly email deliveries, 1999-2002</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Colour = period. Volume more than triples in the crisis window (Aug-Dec 2001).</run>
+            <run fontcolor="#4a5160" fontsize="10">Colour = period. Volume more than triples in the crisis window (Aug-Dec 2001).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1716,10 +1716,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Who emails whom, by seniority</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Who emails whom, by seniority</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Rows = sender role, columns = recipient role; darker = more deliveries.</run>
+            <run fontcolor="#4a5160" fontsize="10">Rows = sender role, columns = recipient role; darker = more deliveries.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1778,7 +1778,7 @@
         </view>
         <style>
           <style-rule element="header">
-            <format attr="width" field="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" value="150"/>
+            <format attr="width" field="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:sender_role:nk]" value="170"/>
           </style-rule>
         </style>
         <panes>
@@ -1802,7 +1802,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Key events in the Enron collapse</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Key events in the Enron collapse</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1825,8 +1825,8 @@
         </view>
         <style>
           <style-rule element="header">
-            <format attr="width" field="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event:nk]" value="262"/>
-            <format attr="width" field="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:date_label:nk]" value="106"/>
+            <format attr="width" field="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event:nk]" value="300"/>
+            <format attr="width" field="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:date_label:nk]" value="112"/>
           </style-rule>
         </style>
         <panes>
@@ -1849,10 +1849,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Unit-5 locality test: is this a social network?</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Unit-5 locality test: is this a social network?</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Upper line: P(y-z tie | x-y and x-z ties). Lower line: edge density (what chance alone gives).</run>
+            <run fontcolor="#4a5160" fontsize="10">Upper line: P(y-z tie | x-y and x-z ties). Lower line: edge density (what chance alone gives).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -1904,10 +1904,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Who sits where in the email network</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Who sits where in the email network</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Each circle is a person, placed by a force-directed layout of their email ties (people who email each other sit close). Size = betweenness, colour = community; top brokers labelled.</run>
+            <run fontcolor="#4a5160" fontsize="10">Each circle is a person, placed by a force-directed layout of their email ties (people who email each other sit close). Size = betweenness, colour = community; top brokers labelled.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -2005,10 +2005,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Top 15 people by the selected metric</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Top 15 people by the selected metric</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.</run>
+            <run fontcolor="#4a5160" fontsize="10">Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -2091,10 +2091,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Who is in each community</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">Who is in each community</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">People per Girvan-Newman community, coloured by role group.</run>
+            <run fontcolor="#4a5160" fontsize="10">People per Girvan-Newman community, coloured by role group.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -2134,7 +2134,7 @@
   <dashboards>
     <dashboard name="1 Overview">
       <style/>
-      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
+      <size maxheight="1220" maxwidth="1900" minheight="1220" minwidth="1900"/>
       <datasources>
         <datasource name="Parameters"/>
       </datasources>
@@ -2165,12 +2165,12 @@
       <zones>
         <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">
           <zone h="100000" id="3" param="vert" type="layout-flow" w="100000" x="0" y="0">
-            <zone h="8049" id="4" type="text" w="100000" x="0" y="0">
+            <zone h="6885" id="4" type="text" w="100000" x="0" y="0">
               <formatted-text>
-                <run bold="true" fontcolor="#111418" fontsize="17">Enron's email network, 1999-2002: how communication changed as the company collapsed</run>
+                <run bold="true" fontcolor="#111418" fontsize="20">Enron's email network, 1999-2002: how communication changed as the company collapsed</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">34,374 de-duplicated deliveries among 148 employees (Enron corpus, FERC/DoJ release). Junior staff are pseudonymised; only metadata (who-whom-when) is used.</run>
+                <run fontcolor="#4a5160" fontsize="11">34,374 de-duplicated deliveries among 148 employees (Enron corpus, FERC/DoJ release). Junior staff are pseudonymised; only metadata (who-whom-when) is used.</run>
               </formatted-text>
               <zone-style>
                 <format attr="border-color" value="#000000"/>
@@ -2179,8 +2179,8 @@
                 <format attr="margin" value="4"/>
               </zone-style>
             </zone>
-            <zone h="12683" id="5" param="horz" type="layout-flow" w="100000" x="0" y="8049">
-              <zone h="12683" id="6" name="KPI Deliveries" w="25000" x="0" y="8049">
+            <zone h="12295" id="5" param="horz" type="layout-flow" w="100000" x="0" y="6885">
+              <zone h="12295" id="6" name="KPI Deliveries" w="25000" x="0" y="6885">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -2188,7 +2188,7 @@
                   <format attr="margin" value="4"/>
                 </zone-style>
               </zone>
-              <zone h="12683" id="7" name="KPI Messages" w="25000" x="25000" y="8049">
+              <zone h="12295" id="7" name="KPI Messages" w="25000" x="25000" y="6885">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -2196,7 +2196,7 @@
                   <format attr="margin" value="4"/>
                 </zone-style>
               </zone>
-              <zone h="12683" id="8" name="KPI Senders" w="25000" x="50000" y="8049">
+              <zone h="12295" id="8" name="KPI Senders" w="25000" x="50000" y="6885">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -2204,7 +2204,7 @@
                   <format attr="margin" value="4"/>
                 </zone-style>
               </zone>
-              <zone h="12683" id="9" name="KPI Cross-community" w="25000" x="75000" y="8049">
+              <zone h="12295" id="9" name="KPI Cross-community" w="25000" x="75000" y="6885">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -2219,9 +2219,9 @@
                 <format attr="margin" value="0"/>
               </zone-style>
             </zone>
-            <zone h="79268" id="10" param="horz" type="layout-flow" w="100000" x="0" y="20732">
-              <zone h="79268" id="11" param="vert" type="layout-flow" w="65385" x="0" y="20732">
-                <zone h="40244" id="12" name="Email Volume Timeline" w="65385" x="0" y="20732">
+            <zone h="80820" id="10" param="horz" type="layout-flow" w="100000" x="0" y="19180">
+              <zone h="80820" id="11" param="vert" type="layout-flow" w="70526" x="0" y="19180">
+                <zone h="39344" id="12" name="Email Volume Timeline" w="70526" x="0" y="19180">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2229,8 +2229,8 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="39024" id="13" param="horz" type="layout-flow" w="65385" x="0" y="60976">
-                  <zone h="39024" id="14" name="Communication Flow by Role" w="32692" x="0" y="60976">
+                <zone h="41475" id="13" param="horz" type="layout-flow" w="70526" x="0" y="58525">
+                  <zone h="41475" id="14" name="Communication Flow by Role" w="35263" x="0" y="58525">
                     <zone-style>
                       <format attr="border-color" value="#000000"/>
                       <format attr="border-style" value="none"/>
@@ -2238,7 +2238,7 @@
                       <format attr="margin" value="4"/>
                     </zone-style>
                   </zone>
-                  <zone h="39024" id="15" name="Locality Test by Month" w="32692" x="32692" y="60976">
+                  <zone h="41475" id="15" name="Locality Test by Month" w="35263" x="35263" y="58525">
                     <zone-style>
                       <format attr="border-color" value="#000000"/>
                       <format attr="border-style" value="none"/>
@@ -2260,8 +2260,8 @@
                   <format attr="margin" value="0"/>
                 </zone-style>
               </zone>
-              <zone h="79268" id="16" param="vert" type="layout-flow" w="34615" x="65385" y="20732">
-                <zone h="7317" id="17" mode="compact" param="[Parameters].[Parameter 2]" type="paramctrl" w="34615" x="65385" y="20732">
+              <zone h="80820" id="16" param="vert" type="layout-flow" w="29474" x="70526" y="19180">
+                <zone h="5246" id="17" mode="compact" param="[Parameters].[Parameter 2]" type="paramctrl" w="29474" x="70526" y="19180">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2269,7 +2269,7 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="7317" id="18" mode="compact" param="[Parameters].[Parameter 3]" type="paramctrl" w="34615" x="65385" y="28049">
+                <zone h="5246" id="18" mode="compact" param="[Parameters].[Parameter 3]" type="paramctrl" w="29474" x="70526" y="24426">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2277,7 +2277,7 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="11220" id="19" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type="color" w="34615" x="65385" y="35366">
+                <zone h="8197" id="19" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type="color" w="29474" x="70526" y="29672">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2285,7 +2285,36 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="53415" id="20" name="Key Events" w="34615" x="65385" y="46585">
+                <zone h="29508" id="20" name="Key Events" w="29474" x="70526" y="37869">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="32623" id="21" type="text" w="29474" x="70526" y="67377">
+                  <formatted-text>
+                    <run bold="true" fontcolor="#111418" fontsize="13">What the data shows</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Volume: 163 → 541 → 129 deliveries a week (pre-crisis → crisis → post-bankruptcy).</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Busiest month: Oct 2001, 3,215 deliveries.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Hierarchy: executives' share of all traffic rose 17% → 22% → 24%.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Locality: when x emails y and z, y and z are linked 42% of the time, against 16% by chance. The graph behaves like a social network.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Data quality: recorded times drift by about 5 hours during 2001, so hour-of-day is not analysed.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#4a5160" fontsize="10">Whole-dataset figures; the drop-downs do not change this box.</run>
+                  </formatted-text>
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2326,7 +2355,7 @@
     </dashboard>
     <dashboard name="2 Network">
       <style/>
-      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
+      <size maxheight="1220" maxwidth="1900" minheight="1220" minwidth="1900"/>
       <datasources>
         <datasource name="Parameters"/>
       </datasources>
@@ -2357,12 +2386,12 @@
       <zones>
         <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">
           <zone h="100000" id="3" param="vert" type="layout-flow" w="100000" x="0" y="0">
-            <zone h="8049" id="4" type="text" w="100000" x="0" y="0">
+            <zone h="6885" id="4" type="text" w="100000" x="0" y="0">
               <formatted-text>
-                <run bold="true" fontcolor="#111418" fontsize="17">Who holds the network together? Communities and brokers</run>
+                <run bold="true" fontcolor="#111418" fontsize="20">Who holds the network together? Communities and brokers</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">Girvan-Newman communities on two-way (strong) ties; brokers = high betweenness. Click a bar to highlight that person on the map.</run>
+                <run fontcolor="#4a5160" fontsize="11">Girvan-Newman communities on two-way (strong) ties; brokers = high betweenness. Click a bar to highlight that person on the map.</run>
               </formatted-text>
               <zone-style>
                 <format attr="border-color" value="#000000"/>
@@ -2371,9 +2400,76 @@
                 <format attr="margin" value="4"/>
               </zone-style>
             </zone>
-            <zone h="86341" id="5" param="horz" type="layout-flow" w="100000" x="0" y="8049">
-              <zone h="86341" id="6" param="vert" type="layout-flow" w="63846" x="0" y="8049">
-                <zone h="86341" id="7" name="People Map" w="63846" x="0" y="8049">
+            <zone h="93115" id="5" param="horz" type="layout-flow" w="100000" x="0" y="6885">
+              <zone h="93115" id="6" name="People Map" w="51053" x="0" y="6885">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="93115" id="7" param="vert" type="layout-flow" w="15263" x="51053" y="6885">
+                <zone h="5246" id="8" mode="compact" param="[Parameters].[Parameter 5]" type="paramctrl" w="15263" x="51053" y="6885">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="18033" id="9" name="People Map" param="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:community:nk]" type="color" w="15263" x="51053" y="12131">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="17213" id="10" name="Top People" param="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:role_group:nk]" type="color" w="15263" x="51053" y="30164">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="24590" id="11" type="text" w="15263" x="51053" y="47377">
+                  <formatted-text>
+                    <run bold="true" fontcolor="#111418" fontsize="13">How to read the map</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Each circle is one person, placed so that people who email each other sit close together.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Size = betweenness: how often a person lies on the shortest path between two others (a broker).</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Colour = community. The six biggest brokers are labelled.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Click a bar on the right to highlight that person on the map.</run>
+                  </formatted-text>
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="28033" id="12" type="text" w="15263" x="51053" y="71967">
+                  <formatted-text>
+                    <run bold="true" fontcolor="#111418" fontsize="13">What it shows</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• 148 people, 1,788 ties (816 two-way); any two people are about 2 steps apart.</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• 7 communities (Girvan-Newman, modularity 0.52); Louvain agrees (NMI 0.62).</run>
+                    <run>Æ
+</run>
+                    <run fontcolor="#111418" fontsize="11">• Top brokers: Sally Beck, UNK-13, John Lavorato.</run>
+                  </formatted-text>
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2388,32 +2484,8 @@
                   <format attr="margin" value="0"/>
                 </zone-style>
               </zone>
-              <zone h="86341" id="8" param="vert" type="layout-flow" w="36154" x="63846" y="8049">
-                <zone h="7317" id="9" param="horz" type="layout-flow" w="36154" x="63846" y="8049">
-                  <zone h="7317" id="10" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" w="18077" x="63846" y="8049">
-                    <zone-style>
-                      <format attr="border-color" value="#000000"/>
-                      <format attr="border-style" value="none"/>
-                      <format attr="border-width" value="0"/>
-                      <format attr="margin" value="4"/>
-                    </zone-style>
-                  </zone>
-                  <zone h="7317" id="11" mode="compact" param="[Parameters].[Parameter 5]" type="paramctrl" w="18077" x="81923" y="8049">
-                    <zone-style>
-                      <format attr="border-color" value="#000000"/>
-                      <format attr="border-style" value="none"/>
-                      <format attr="border-width" value="0"/>
-                      <format attr="margin" value="4"/>
-                    </zone-style>
-                  </zone>
-                  <zone-style>
-                    <format attr="border-color" value="#000000"/>
-                    <format attr="border-style" value="none"/>
-                    <format attr="border-width" value="0"/>
-                    <format attr="margin" value="0"/>
-                  </zone-style>
-                </zone>
-                <zone h="48780" id="12" name="Top People" w="36154" x="63846" y="15366">
+              <zone h="93115" id="13" param="vert" type="layout-flow" w="33684" x="66316" y="6885">
+                <zone h="5246" id="14" mode="compact" param="[Parameters].[Parameter 1]" type="paramctrl" w="33684" x="66316" y="6885">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2421,7 +2493,15 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="30244" id="13" name="Community Composition" w="36154" x="63846" y="64146">
+                <zone h="45902" id="15" name="Top People" w="33684" x="66316" y="12131">
+                  <zone-style>
+                    <format attr="border-color" value="#000000"/>
+                    <format attr="border-style" value="none"/>
+                    <format attr="border-width" value="0"/>
+                    <format attr="margin" value="4"/>
+                  </zone-style>
+                </zone>
+                <zone h="41967" id="16" name="Community Composition" w="33684" x="66316" y="58033">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2441,14 +2521,6 @@
                 <format attr="border-style" value="none"/>
                 <format attr="border-width" value="0"/>
                 <format attr="margin" value="0"/>
-              </zone-style>
-            </zone>
-            <zone h="5610" id="14" name="People Map" param="[federated.s2c8zq20erd9zeegb9aikl2nd62g].[none:community:nk]" type="color" w="100000" x="0" y="94390">
-              <zone-style>
-                <format attr="border-color" value="#000000"/>
-                <format attr="border-style" value="none"/>
-                <format attr="border-width" value="0"/>
-                <format attr="margin" value="4"/>
               </zone-style>
             </zone>
             <zone-style>

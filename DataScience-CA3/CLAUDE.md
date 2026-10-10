@@ -21,6 +21,7 @@ Deadline: final submission and presentation between 5 and 12 Oct 2026. Requireme
 | Group number | **Leave it out** |
 | Dataset | **Enron email network**: igraphdata `enron` (JHU / Priebe et al. 2005), `data/raw/enron.rda` from raw.githubusercontent.com/igraph/igraphdata |
 | Tableau route | Claude **generates a `.twbx`**; the user opens it in Tableau (they have **Desktop 2026.2.3**), publishes, and sends screenshots |
+| Dashboard size | **1900 × 1220 fixed** (user request) |
 | Title | *Enron Email Network Analytics: An Interactive Tableau Dashboard of Communication Patterns, Communities and Privacy Risks during a Corporate Collapse (1999–2002)* |
 
 **Environment facts.**
@@ -113,8 +114,19 @@ re-add it.
   - The user's Tableau runs on a high-DPI Windows screen, and they had set both dashboards to Custom 1900 × 1220.
   - `screenshots/overview.png` is an interim crop of their screenshot. It still shows the old truncated events table.
   - Ask for **Dashboard ▸ Export Image…** PNGs of both dashboards for the final deck.
+- **Redesign at 1900 × 1220 (user request, 2026-10-10).** Constant `W, H` in `build_workbook.py`.
+  - Overview: KPI row of 150 px. Left: timeline 480 px, then heat-map and locality side by side. Right column of
+    560 px: Period and Sender-role controls, the period legend, Key Events, and a "What the data shows" text box.
+    Its numbers are read from `results/summary.json`.
+  - Network: three columns. People Map (flex). A 290 px column with the Community control, the community legend,
+    a role-group legend (newly added, for the two bar charts), and "How to read" and "What it shows" text boxes.
+    A 640 px column with Rank-by, Top People and Community Composition.
+  - Larger type: dashboard title 20, sheet titles 14/10, KPI numbers 32. The test grid adds T5 (mark `size` format).
+- **Git.** The user merges this branch into `main` themselves (PRs #1–#5, all merged) and also commits directly to
+  `main`. After their merge, the branch was restarted from `origin/main`. Use `GIT_LFS_SKIP_SMUDGE=1`: `main`
+  tracks large videos in LFS. On 2026-10-10 the user asked for work to be pushed straight to `main` as well.
 - **Status:** awaiting the user's sixth test: the main workbook (People Map should now render) and one screenshot
-  of the test grid.
+  of the test grid. Then get Export-Image PNGs of both dashboards for deck slides 8 and 9.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with

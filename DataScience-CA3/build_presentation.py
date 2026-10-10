@@ -177,13 +177,15 @@ def overview_panel():
 def network_panel():
     if "network" in SHOT:
         return f'<img class="shot" src="{SHOT["network"]}" alt="Tableau dashboard 2: Network">'
-    return """<div class="wf" style="grid-template-columns:3fr 2fr;grid-template-rows:auto auto 1.4fr 1fr auto">
- <div class="t" style="grid-column:1/3"><b>Title + how to use</b>click a bar to highlight that person on the map</div>
- <div style="grid-row:2/5"><b>People map</b>force-directed layout positions of all 148 people;<br>size = betweenness, colour = community</div>
- <div><b>Controls</b>Rank people by · Community</div>
- <div><b>Top 15 people</b>bar chart, metric chosen by the parameter</div>
+    return """<div class="wf" style="grid-template-columns:3fr 1fr 2fr;grid-template-rows:auto auto auto 1.3fr 1fr">
+ <div class="t" style="grid-column:1/4"><b>Title + how to use</b>click a bar to highlight that person on the map</div>
+ <div style="grid-row:2/6"><b>People map</b>force-directed layout of all 148 people; size = betweenness, colour = community</div>
+ <div><b>Community</b>drop-down</div>
+ <div><b>Rank people by</b>drop-down</div>
+ <div style="grid-row:3/5"><b>Legends</b>community; role group</div>
+ <div style="grid-row:3/5"><b>Top 15 people</b>bar chart, metric chosen by the parameter</div>
+ <div><b>How to read · findings</b></div>
  <div><b>Community composition</b>stacked bar by role group</div>
- <div style="grid-column:1/3"><b>Community colour legend</b></div>
 </div>"""
 
 

@@ -14,6 +14,7 @@ parameters (+ a "Keep/Drop" calculated filter on each sheet) instead of shared f
 is ordered by a rank label instead of a sort element.
 """
 import hashlib
+import json
 import re
 import shutil
 import uuid
@@ -44,6 +45,7 @@ ROLE_COLOURS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"
 TIE_COLOURS = {"Strong (two-way)": "#8f96a3", "Weak (one-way)": "#d5d9e0", "None": "#ffffff"}
 METRIC_COLOURS = {"Observed: P(friend-of-friend tie)": "#2a78d6", "Expected at random: edge density": "#eb6834"}
 INK, MUTED = "#111418", "#4a5160"
+W, H = 1900, 1220          # dashboard canvas; the user runs Tableau full-screen at this size
 
 
 def stable_id(text, n=28, alphabet="0123456789abcdefghijklmnopqrstuvwxyz"):
@@ -393,10 +395,10 @@ def title_el(parent, text, sub=None):
     lo = SE(parent, "layout-options")
     t = SE(lo, "title")
     ft = SE(t, "formatted-text")
-    SE(ft, "run", bold="true", fontcolor=INK, fontsize="12", text=text)
+    SE(ft, "run", bold="true", fontcolor=INK, fontsize="14", text=text)
     if sub:
         SE(ft, "run", text="Æ\n")
-        SE(ft, "run", fontcolor=MUTED, fontsize="9", text=sub)
+        SE(ft, "run", fontcolor=MUTED, fontsize="10", text=sub)
 
 
 class Sheet:
@@ -496,8 +498,8 @@ def build_sheets():
         m = s.inst(field, der, "quantitative")
         deliveries_filter(s)
         s.panes.append(dict(mark="Text", enc=[("text", m)], label=[
-            (f"<{m.qual}>", {"bold": "true", "fontcolor": "#1f3864", "fontsize": "24"}),
-            ("Æ\n", {}), (label, {"fontcolor": MUTED, "fontsize": "10"})],
+            (f"<{m.qual}>", {"bold": "true", "fontcolor": "#1f3864", "fontsize": "32"}),
+            ("Æ\n", {}), (label, {"fontcolor": MUTED, "fontsize": "11"})],
             formats=[("mark-labels-show", "true")]))
         sheets.append(s)
 
@@ -517,15 +519,15 @@ def build_sheets():
     deliveries_filter(s)
     s.panes.append(dict(mark="Square", enc=[("color", n), ("text", n)]))
     s.rows, s.cols = sr.qual, rr.qual
-    s.extra_style.append(("header", [{"attr": "width", "field": sr.qual, "value": "150"}]))
+    s.extra_style.append(("header", [{"attr": "width", "field": sr.qual, "value": "170"}]))
     sheets.append(s)
 
     s = Sheet("Key Events", "events", "Key events in the Enron collapse")
     no, when, ev, cat = s.inst("event_no"), s.inst("date_label"), s.inst("event"), s.inst("category")
     s.panes.append(dict(mark="Text", enc=[("text", cat)]))
     s.rows = f"(({no.qual} / {when.qual}) / {ev.qual})"
-    s.extra_style.append(("header", [{"attr": "width", "field": ev.qual, "value": "262"},
-                                     {"attr": "width", "field": when.qual, "value": "106"}]))
+    s.extra_style.append(("header", [{"attr": "width", "field": ev.qual, "value": "300"},
+                                     {"attr": "width", "field": when.qual, "value": "112"}]))
     sheets.append(s)
 
     s = Sheet("Locality Test by Month", "monthly", "Unit-5 locality test: is this a social network?",
@@ -597,7 +599,7 @@ def no_gridlines():
 
 
 TEST_SHEETS = ["T1 Dual axis (2021 panes)", "T2 Dual axis (2026 panes)", "T3 People + tooltips",
-               "T4 People + transparency"]
+               "T4 People + transparency", "T5 People + bigger marks"]
 
 
 def build_ties_sheets():
@@ -645,17 +647,18 @@ def build_ties_sheets():
 
     people(TEST_SHEETS[2], [("tooltip", ("role_group",)), ("tooltip", ("contacts", "Avg"))], [])
     people(TEST_SHEETS[3], [], [("mark-transparency", "225")])
+    people(TEST_SHEETS[4], [], [("size", "2.5")])
     return sheets
 
 
 def build_test_dashboard(parent):
     grid = Z("vert", children=[
-        Z("text", 50, runs=text_runs("Tableau test grid: which of these four views shows a picture?",
+        Z("text", 70, runs=text_runs("Tableau test grid: which of these five views shows a picture?",
                                      "Please send one screenshot of this dashboard.")),
-        Z("horz", children=[Z("sheet", name=TEST_SHEETS[0]), Z("sheet", name=TEST_SHEETS[1])]),
-        Z("horz", children=[Z("sheet", name=TEST_SHEETS[2]), Z("sheet", name=TEST_SHEETS[3])]),
+        Z("horz", children=[Z("sheet", name=n) for n in TEST_SHEETS[:2]]),
+        Z("horz", children=[Z("sheet", name=n) for n in TEST_SHEETS[2:]]),
     ])
-    dashboard_el(parent, "Test grid", 1300, 820, grid, [], [])
+    dashboard_el(parent, "Test grid", W, H, grid, [], [])
 
 
 # ----------------------------------------------------------------------------------------------- dashboards
@@ -740,49 +743,92 @@ def dashboard_el(parent, name, W, H, layout, params, legend_insts):
 
 
 def text_runs(title, sub):
-    return [(title, {"bold": "true", "fontcolor": INK, "fontsize": "17"}), ("Æ\n", {}),
-            (sub, {"fontcolor": MUTED, "fontsize": "10"})]
+    return [(title, {"bold": "true", "fontcolor": INK, "fontsize": "20"}), ("Æ\n", {}),
+            (sub, {"fontcolor": MUTED, "fontsize": "11"})]
+
+
+def note_runs(heading, lines, foot=None):
+    """A text box: bold heading, one bullet per line, optional muted footnote."""
+    runs = [(heading, {"bold": "true", "fontcolor": INK, "fontsize": "13"})]
+    for line in lines:
+        runs += [("Æ\n", {}), ("• " + line, {"fontcolor": INK, "fontsize": "11"})]
+    if foot:
+        runs += [("Æ\n", {}), (foot, {"fontcolor": MUTED, "fontsize": "10"})]
+    return runs
 
 
 def build_dashboards(parent):
+    S = json.loads((ROOT / "results" / "summary.json").read_text())
+    per_m = {k[0]: v for k, v in S["periods"].items()}          # "1", "2", "3"
+    wk = [per_m[k]["deliveries_per_week"] for k in "123"]
+    ex = [per_m[k]["executive_share_of_traffic"] * 100 for k in "123"]
+    loc = S["locality_whole"]
+    peak = S["peak_month"]
     per = Inst("deliveries", "period")
-    comm = Inst("employees", "community")
-    W, H = 1300, 820
+    comm, role = Inst("employees", "community"), Inst("employees", "role_group")
+
+    findings = note_runs("What the data shows", [
+        f"Volume: {wk[0]:.0f} → {wk[1]:.0f} → {wk[2]:.0f} deliveries a week (pre-crisis → crisis → post-bankruptcy).",
+        f"Busiest month: {pd.Timestamp(peak['month']):%b %Y}, {peak['deliveries']:,} deliveries.",
+        f"Hierarchy: executives' share of all traffic rose {ex[0]:.0f}% → {ex[1]:.0f}% → {ex[2]:.0f}%.",
+        f"Locality: when x emails y and z, y and z are linked {loc['p_closed']:.0%} of the time, against "
+        f"{loc['density']:.0%} by chance. The graph behaves like a social network.",
+        "Data quality: recorded times drift by about 5 hours during 2001, so hour-of-day is not analysed."],
+        "Whole-dataset figures; the drop-downs do not change this box.")
     overview = Z("vert", children=[
-        Z("text", 66, runs=text_runs(
+        Z("text", 84, runs=text_runs(
             "Enron's email network, 1999-2002: how communication changed as the company collapsed",
-            "34,374 de-duplicated deliveries among 148 employees (Enron corpus, FERC/DoJ release). "
-            "Junior staff are pseudonymised; only metadata (who-whom-when) is used.")),
-        Z("horz", 104, children=[Z("sheet", name="KPI Deliveries"), Z("sheet", name="KPI Messages"),
+            f"{S['deliveries']:,} de-duplicated deliveries among {S['active_people']} employees (Enron corpus, "
+            "FERC/DoJ release). Junior staff are pseudonymised; only metadata (who-whom-when) is used.")),
+        Z("horz", 150, children=[Z("sheet", name="KPI Deliveries"), Z("sheet", name="KPI Messages"),
                                  Z("sheet", name="KPI Senders"), Z("sheet", name="KPI Cross-community")]),
         Z("horz", children=[
-            Z("vert", children=[Z("sheet", 330, name="Email Volume Timeline"),
+            Z("vert", children=[Z("sheet", 480, name="Email Volume Timeline"),
                                 Z("horz", children=[Z("sheet", name="Communication Flow by Role"),
                                                     Z("sheet", name="Locality Test by Month")])]),
-            Z("vert", 450, children=[
-                Z("param", 60, param="Parameter 2"),
-                Z("param", 60, param="Parameter 3"),
-                Z("color", 92, name="Email Volume Timeline", param=per.qual),
-                Z("sheet", name="Key Events")]),
+            Z("vert", 560, children=[
+                Z("param", 64, param="Parameter 2"),
+                Z("param", 64, param="Parameter 3"),
+                Z("color", 100, name="Email Volume Timeline", param=per.qual),
+                Z("sheet", 360, name="Key Events"),
+                Z("text", runs=findings)]),
         ]),
     ])
     dashboard_el(parent, "1 Overview", W, H, overview, ["Parameter 2", "Parameter 3"], [per])
 
+    top3 = [r["display_name"] for r in S["top10_betweenness"][:3]]
+    gn, nmi = S["girvan_newman"], S["gn_vs_louvain"]["NMI"]
+    how_to = note_runs("How to read the map", [
+        "Each circle is one person, placed so that people who email each other sit close together.",
+        "Size = betweenness: how often a person lies on the shortest path between two others (a broker).",
+        "Colour = community. The six biggest brokers are labelled.",
+        "Click a bar on the right to highlight that person on the map."])
+    shows = note_runs("What it shows", [
+        f"{S['active_people']} people, {S['ties_undirected']:,} ties ({S['strong_ties']} two-way); any two people "
+        f"are about {S['avg_shortest_path']:.0f} steps apart.",
+        f"{gn['communities_ge3']} communities (Girvan-Newman, modularity {gn['best_modularity']:.2f}); "
+        f"Louvain agrees (NMI {nmi:.2f}).",
+        "Top brokers: " + ", ".join(top3) + "."])
     network = Z("vert", children=[
-        Z("text", 66, runs=text_runs(
+        Z("text", 84, runs=text_runs(
             "Who holds the network together? Communities and brokers",
             "Girvan-Newman communities on two-way (strong) ties; brokers = high betweenness. "
             "Click a bar to highlight that person on the map.")),
         Z("horz", children=[
-            Z("vert", children=[Z("sheet", name="People Map")]),
-            Z("vert", 470, children=[
-                Z("horz", 60, children=[Z("param", param="Parameter 1"), Z("param", param="Parameter 5")]),
-                Z("sheet", 400, name="Top People"),
+            Z("sheet", name="People Map"),
+            Z("vert", 290, children=[
+                Z("param", 64, param="Parameter 5"),
+                Z("color", 220, name="People Map", param=comm.qual),
+                Z("color", 210, name="Top People", param=role.qual),
+                Z("text", 300, runs=how_to),
+                Z("text", runs=shows)]),
+            Z("vert", 640, children=[
+                Z("param", 64, param="Parameter 1"),
+                Z("sheet", 560, name="Top People"),
                 Z("sheet", name="Community Composition")]),
         ]),
-        Z("color", 46, name="People Map", param=comm.qual),
     ])
-    dashboard_el(parent, "2 Network", W, H, network, ["Parameter 1", "Parameter 5"], [comm])
+    dashboard_el(parent, "2 Network", W, H, network, ["Parameter 1", "Parameter 5"], [comm, role])
 
 
 def actions_el(parent):

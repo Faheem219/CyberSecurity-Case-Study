@@ -47,12 +47,12 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
    (this gives a clean PNG without the Tableau window). Save them as `screenshots/overview.png` and
    `screenshots/network.png`, then run `python3 build_presentation.py`. Slides 8 and 9 then show the real
    dashboards instead of the layout wireframes. You can also just send the two images to Claude.
-   Keep the dashboard size at the designed 1300 × 820; the layout was drawn for it.
+   Both dashboards are designed at a fixed 1900 × 1220 (full screen on the presenting laptop); keep that size.
 
 ### Optional: the full node-link graph (ties + people)
 
 `tableau/Enron_Network_Ties_test.twbx` is a small separate workbook that tests the email *ties* drawn as lines
-under the people. It opens on one **Test grid** dashboard with four small views, each changing one thing:
+under the people. It opens on one **Test grid** dashboard with five small views, each changing one thing:
 
 | View | What it tests |
 |---|---|
@@ -60,6 +60,7 @@ under the people. It opens on one **Test grid** dashboard with four small views,
 | T2 Dual axis (2026 panes) | the same, pane layout as saved by Tableau 2026 |
 | T3 People + tooltips | people circles with two tooltip fields |
 | T4 People + transparency | people circles at reduced opacity |
+| T5 People + bigger marks | people circles with a larger mark size |
 
 One screenshot of the grid shows which views draw a picture. A working dual-axis view can then replace the People Map
 on dashboard 2. The full node-link figure is already on slide 12 of the deck.

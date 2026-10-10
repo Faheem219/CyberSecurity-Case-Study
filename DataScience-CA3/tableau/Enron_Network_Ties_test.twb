@@ -415,10 +415,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">T1 Dual axis (2021 panes)</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">T1 Dual axis (2021 panes)</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Lines = email ties; circles = people (size = betweenness).</run>
+            <run fontcolor="#4a5160" fontsize="10">Lines = email ties; circles = people (size = betweenness).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -542,10 +542,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">T2 Dual axis (2026 panes)</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">T2 Dual axis (2026 panes)</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Lines = email ties; circles = people (size = betweenness).</run>
+            <run fontcolor="#4a5160" fontsize="10">Lines = email ties; circles = people (size = betweenness).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -669,10 +669,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">T3 People + tooltips</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">T3 People + tooltips</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Circles = people; size = betweenness, colour = community.</run>
+            <run fontcolor="#4a5160" fontsize="10">Circles = people; size = betweenness, colour = community.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -731,10 +731,10 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">T4 People + transparency</run>
+            <run bold="true" fontcolor="#111418" fontsize="14">T4 People + transparency</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Circles = people; size = betweenness, colour = community.</run>
+            <run fontcolor="#4a5160" fontsize="10">Circles = people; size = betweenness, colour = community.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -788,20 +788,81 @@
       </table>
       <simple-id uuid="{7AB9758E-511E-D07D-EE58-F752FDD7A239}"/>
     </worksheet>
+    <worksheet name="T5 People + bigger marks">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="14">T5 People + bigger marks</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="10">Circles = people; size = betweenness, colour = community.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
+            <column caption="Betweenness centrality" datatype="real" name="[betweenness]" role="measure" type="quantitative"/>
+            <column caption="Community" datatype="string" name="[community]" role="dimension" type="nominal"/>
+            <column caption="Person" datatype="string" name="[display_name]" role="dimension" type="nominal"/>
+            <column caption="x" datatype="real" name="[x]" role="measure" type="quantitative"/>
+            <column caption="y" datatype="real" name="[y]" role="measure" type="quantitative"/>
+            <column-instance column="[betweenness]" derivation="Avg" name="[avg:betweenness:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[x]" derivation="Avg" name="[avg:x:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[y]" derivation="Avg" name="[avg:y:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="axis">
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="cols" type="space"/>
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="rows" type="space"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" scope="cols" value="false"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" scope="rows" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Circle"/>
+            <encodings>
+              <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
+              <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
+            </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="size" value="2.5"/>
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
+        <cols>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]</cols>
+      </table>
+      <simple-id uuid="{37DDF982-6FF6-7832-22F1-D7B5C3B3DF26}"/>
+    </worksheet>
   </worksheets>
   <dashboards>
     <dashboard name="Test grid">
       <style/>
-      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
+      <size maxheight="1220" maxwidth="1900" minheight="1220" minwidth="1900"/>
       <zones>
         <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">
           <zone h="100000" id="3" param="vert" type="layout-flow" w="100000" x="0" y="0">
-            <zone h="6098" id="4" type="text" w="100000" x="0" y="0">
+            <zone h="5738" id="4" type="text" w="100000" x="0" y="0">
               <formatted-text>
-                <run bold="true" fontcolor="#111418" fontsize="17">Tableau test grid: which of these four views shows a picture?</run>
+                <run bold="true" fontcolor="#111418" fontsize="20">Tableau test grid: which of these five views shows a picture?</run>
                 <run>Æ
 </run>
-                <run fontcolor="#4a5160" fontsize="10">Please send one screenshot of this dashboard.</run>
+                <run fontcolor="#4a5160" fontsize="11">Please send one screenshot of this dashboard.</run>
               </formatted-text>
               <zone-style>
                 <format attr="border-color" value="#000000"/>
@@ -810,8 +871,8 @@
                 <format attr="margin" value="4"/>
               </zone-style>
             </zone>
-            <zone h="46951" id="5" param="horz" type="layout-flow" w="100000" x="0" y="6098">
-              <zone h="46951" id="6" name="T1 Dual axis (2021 panes)" w="50000" x="0" y="6098">
+            <zone h="47131" id="5" param="horz" type="layout-flow" w="100000" x="0" y="5738">
+              <zone h="47131" id="6" name="T1 Dual axis (2021 panes)" w="50000" x="0" y="5738">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -819,7 +880,7 @@
                   <format attr="margin" value="4"/>
                 </zone-style>
               </zone>
-              <zone h="46951" id="7" name="T2 Dual axis (2026 panes)" w="50000" x="50000" y="6098">
+              <zone h="47131" id="7" name="T2 Dual axis (2026 panes)" w="50000" x="50000" y="5738">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -834,8 +895,8 @@
                 <format attr="margin" value="0"/>
               </zone-style>
             </zone>
-            <zone h="46951" id="8" param="horz" type="layout-flow" w="100000" x="0" y="53049">
-              <zone h="46951" id="9" name="T3 People + tooltips" w="50000" x="0" y="53049">
+            <zone h="47131" id="8" param="horz" type="layout-flow" w="100000" x="0" y="52869">
+              <zone h="47131" id="9" name="T3 People + tooltips" w="33333" x="0" y="52869">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -843,7 +904,15 @@
                   <format attr="margin" value="4"/>
                 </zone-style>
               </zone>
-              <zone h="46951" id="10" name="T4 People + transparency" w="50000" x="50000" y="53049">
+              <zone h="47131" id="10" name="T4 People + transparency" w="33333" x="33333" y="52869">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="47131" id="11" name="T5 People + bigger marks" w="33333" x="66667" y="52869">
                 <zone-style>
                   <format attr="border-color" value="#000000"/>
                   <format attr="border-style" value="none"/>
@@ -883,6 +952,7 @@
         <viewpoint name="T2 Dual axis (2026 panes)"/>
         <viewpoint name="T3 People + tooltips"/>
         <viewpoint name="T4 People + transparency"/>
+        <viewpoint name="T5 People + bigger marks"/>
       </viewpoints>
       <active id="-1"/>
       <simple-id uuid="{B3BD7423-BF7E-45C6-BE07-62DD81FC0783}"/>
@@ -978,6 +1048,29 @@
         </edge>
       </cards>
       <simple-id uuid="{1D879C81-8D58-F66D-4C38-90ABA1D74C11}"/>
+    </window>
+    <window class="worksheet" name="T5 People + bigger marks">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{9F08A609-506E-60AE-3094-0E0B55C58BE2}"/>
     </window>
   </windows>
 </workbook>
