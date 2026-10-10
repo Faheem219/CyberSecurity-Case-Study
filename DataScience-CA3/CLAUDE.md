@@ -61,7 +61,16 @@ re-add it.
   - No `filter-group`: dashboard filtering uses 5 parameters (Rank by, Period, Sender role, Ties shown, Community) plus a "Keep/Drop" calculated field filtered to "Keep" on each sheet.
   - No sort element: the Top-15 rows use a "Rank" label calc (`01. Name`).
 - **Checks.** A dialect lint against the genuine samples left only standard constructs unflagged-by-sample (textscan `columns`, list-parameter `members`, `path` encoding, text zones, axis `fold`). The semantic cross-reference check finds 0 problems.
-- **Status:** awaiting the user's second test in Tableau.
+- **Second test (2026-10-10):** the file now loaded, but every sheet that used a parameter was removed with "The
+  worksheet does not have a valid data source". Cause: the worksheet `<datasources>` listed `Parameters` *first*,
+  and Tableau takes the first entry as the primary data source. Also missing: the data-source-level
+  `<datasource-dependencies datasource='Parameters'>` block. Both were fixed by mirroring the genuine Superstore
+  workbook inside dapi `samples/show_workbook_info/geocoding.twbx`, which has a CSV textscan source, parameter-driven
+  worksheets and dashboards. Dashboards now list only `Parameters`.
+- **Lint scripts** (scratchpad; they are easy to recreate): a dialect lint (element/attribute pairs vs genuine
+  files) and an order lint (child order vs genuine files). Both are clean, apart from the axis `fold`/`synchronized`
+  and the `path` encoding, which are in the official schema.
+- **Status:** awaiting the user's third test in Tableau.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with
