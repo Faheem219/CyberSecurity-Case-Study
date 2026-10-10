@@ -43,16 +43,26 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 1. **File ▸ Save to Tableau Public As…**, sign in, and name it e.g. *Enron Email Network Analytics*.
 2. On the published page, open the viz settings and **turn off "Allow workbook and its data to be downloaded"**.
    This is part of our privacy argument.
-3. Take a full-window screenshot of each dashboard. Save them as `screenshots/overview.png` and
+3. Screenshots for the deck: in Tableau Desktop open each dashboard and use **Dashboard ▸ Export Image…**
+   (this gives a clean PNG without the Tableau window). Save them as `screenshots/overview.png` and
    `screenshots/network.png`, then run `python3 build_presentation.py`. Slides 8 and 9 then show the real
-   dashboards instead of the layout wireframes. You can also just send the two screenshots to Claude.
+   dashboards instead of the layout wireframes. You can also just send the two images to Claude.
+   Keep the dashboard size at the designed 1300 × 820; the layout was drawn for it.
 
 ### Optional: the full node-link graph (ties + people)
 
-`tableau/Enron_Network_Ties_test.twbx` is a small separate workbook with the email *ties* drawn as lines: a
-dual-axis "ties + people" sheet and two single-layer variants. Tableau 2026.2.3 dropped the ties sheet from the
-main workbook without a visible reason, so it was moved out to keep the main dashboards safe. If you open it, note
-which of the three tabs survive. The full node-link figure is also on slide 12 of the deck.
+`tableau/Enron_Network_Ties_test.twbx` is a small separate workbook that tests the email *ties* drawn as lines
+under the people. It opens on one **Test grid** dashboard with four small views, each changing one thing:
+
+| View | What it tests |
+|---|---|
+| T1 Dual axis (2021 panes) | ties + people overlaid, pane layout as saved by Tableau 2021 |
+| T2 Dual axis (2026 panes) | the same, pane layout as saved by Tableau 2026 |
+| T3 People + tooltips | people circles with two tooltip fields |
+| T4 People + transparency | people circles at reduced opacity |
+
+One screenshot of the grid shows which views draw a picture. A working dual-axis view can then replace the People Map
+on dashboard 2. The full node-link figure is already on slide 12 of the deck.
 
 ### If the generated workbook does not open (fallback, ~30 min by hand)
 

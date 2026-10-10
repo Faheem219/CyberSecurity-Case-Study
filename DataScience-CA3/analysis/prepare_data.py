@@ -52,14 +52,14 @@ PREFIX = {g: p for g, _, p in ROLE_GROUPS}
 EVENTS = [  # well-documented public milestones of the Enron collapse
     ("2000-08-23", "Share price peaks near $90", "Market"),
     ("2001-01-17", "California rolling blackouts", "Market"),
-    ("2001-02-12", "Skilling becomes CEO", "Leaders"),
-    ("2001-08-14", "Skilling resigns; Lay returns as CEO", "Leaders"),
+    ("2001-02-12", "Skilling becomes CEO", "CEO"),
+    ("2001-08-14", "Skilling quits; Lay back as CEO", "CEO"),
     ("2001-10-16", "Q3 loss of $618M announced", "Crisis"),
     ("2001-10-22", "SEC inquiry disclosed", "Crisis"),
     ("2001-11-08", "Earnings restated back to 1997", "Crisis"),
-    ("2001-11-28", "Dynegy merger collapses; credit cut to junk", "Crisis"),
+    ("2001-11-28", "Dynegy deal fails; junk rating", "Crisis"),
     ("2001-12-02", "Chapter 11 bankruptcy filing", "Crisis"),
-    ("2002-01-23", "Lay resigns as Chairman and CEO", "Leaders"),
+    ("2002-01-23", "Lay resigns as Chairman and CEO", "CEO"),
 ]
 
 

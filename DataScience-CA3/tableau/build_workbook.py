@@ -524,8 +524,8 @@ def build_sheets():
     no, when, ev, cat = s.inst("event_no"), s.inst("date_label"), s.inst("event"), s.inst("category")
     s.panes.append(dict(mark="Text", enc=[("text", cat)]))
     s.rows = f"(({no.qual} / {when.qual}) / {ev.qual})"
-    s.extra_style.append(("header", [{"attr": "width", "field": ev.qual, "value": "250"},
-                                     {"attr": "width", "field": when.qual, "value": "84"}]))
+    s.extra_style.append(("header", [{"attr": "width", "field": ev.qual, "value": "262"},
+                                     {"attr": "width", "field": when.qual, "value": "106"}]))
     sheets.append(s)
 
     s = Sheet("Locality Test by Month", "monthly", "Unit-5 locality test: is this a social network?",
@@ -542,15 +542,16 @@ def build_sheets():
     s = Sheet("People Map", "employees", "Who sits where in the email network",
               "Each circle is a person, placed by a force-directed layout of their email ties (people who email "
               "each other sit close). Size = betweenness, colour = community; top brokers labelled.")
+    # Only constructs that render in Tableau 2026.2.3 (test round 5): the "C People only" circle sheet plus
+    # the Keep filter, text encoding and mark-labels-show used by working sheets. Tooltip encodings and
+    # mark-transparency were the two things the blank sheets had in common, so they are left out.
     x, y, person = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("display_name")
-    comm, btw, role = s.inst("community"), s.inst("betweenness", "Avg"), s.inst("role_group")
-    contacts, lab = s.inst("contacts", "Avg"), s.inst("Calculation_2000000000000000005")
+    comm, btw, lab = s.inst("community"), s.inst("betweenness", "Avg"), s.inst("Calculation_2000000000000000005")
     k = s.inst("Calculation_2000000000000000004")
     s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
     s.slices.append(k)
-    s.panes.append(dict(mark="Circle", enc=[("color", comm), ("size", btw), ("text", lab), ("tooltip", role),
-                                            ("tooltip", contacts), ("lod", person)],
-                        formats=[("mark-labels-show", "true"), ("mark-transparency", "225")]))
+    s.panes.append(dict(mark="Circle", enc=[("color", comm), ("size", btw), ("text", lab), ("lod", person)],
+                        formats=[("mark-labels-show", "true")]))
     s.rows, s.cols = y.qual, x.qual
     s.axis_rules = hidden_fixed_axes([x], y)
     s.extra_style += no_gridlines()
@@ -595,63 +596,66 @@ def no_gridlines():
                   {"attr": "line-visibility", "scope": "rows", "value": "off"}]) for el in ("gridline", "zeroline")]
 
 
+TEST_SHEETS = ["T1 Dual axis (2021 panes)", "T2 Dual axis (2026 panes)", "T3 People + tooltips",
+               "T4 People + transparency"]
+
+
 def build_ties_sheets():
-    """Optional test workbook: the full node-link graph (ties + people) on network_paths.csv, plus two
-    single-layer variants, so whichever construct Tableau rejects can be identified without touching the
-    main dashboards."""
+    """Optional test workbook. Round 5 showed: ties alone (Line + path) and people alone (Circle + size)
+    render; the first dual-axis sheet did not. Each sheet below changes ONE thing, and all four sit on one
+    'Test grid' dashboard, so a single screenshot shows which construct Tableau rejects."""
     sheets = []
-    s = Sheet("A Ties + People (dual axis)", "network", "Email network: ties and people",
-              "Node = person (size = betweenness, colour = community); line = email tie.")
-    x, x2, y = s.inst("x", "Avg"), s.inst("Calculation_3000000000000000001", "Avg"), s.inst("y", "Avg")
-    pid, order, person = s.inst("path_id"), s.inst("path_order"), s.inst("display_name")
-    tie, comm, btw = s.inst("tie_type"), s.inst("community"), s.inst("betweenness", "Avg")
-    role, contacts, k = s.inst("role_group"), s.inst("contacts", "Avg"), s.inst("Calculation_3000000000000000002")
-    s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
-    s.slices.append(k)
-    s.panes += [dict(mark="Automatic"),
-                {"id": "1", "x-axis-name": x.qual, "mark": "Line",
-                 "enc": [("color", tie), ("lod", pid), ("path", order)], "formats": [("size", "0.2")]},
-                {"id": "2", "x-axis-name": x2.qual, "mark": "Circle",
-                 "enc": [("color", comm), ("size", btw), ("tooltip", role), ("tooltip", contacts), ("lod", person)],
-                 "formats": [("mark-transparency", "235")]}]
-    s.rows, s.cols = y.qual, f"({x.qual} + {x2.qual})"
-    s.axis_rules = [
-        {"attr": "space", "class": "0", "field": x2.qual, "field-type": "quantitative", "fold": "true",
-         "scope": "cols", "synchronized": "true", "type": "space"},
-        {"attr": "space", "class": "0", "field": x.qual, "field-type": "quantitative", "max": "104", "min": "-4",
-         "range-type": "fixed", "scope": "cols", "type": "space"},
-        {"attr": "space", "class": "0", "field": y.qual, "field-type": "quantitative", "max": "104", "min": "-4",
-         "range-type": "fixed", "scope": "rows", "type": "space"},
-        {"_tag": "format", "attr": "display", "class": "0", "field": x.qual, "scope": "cols", "value": "false"},
-        {"_tag": "format", "attr": "display", "class": "0", "field": x2.qual, "scope": "cols", "value": "false"},
-        {"_tag": "format", "attr": "display", "class": "0", "field": y.qual, "scope": "rows", "value": "false"},
-    ]
-    s.extra_style.append(("gridline", [{"attr": "line-visibility", "scope": "cols", "value": "off"},
-                                       {"attr": "line-visibility", "scope": "rows", "value": "off"}]))
-    s.extra_style.append(("zeroline", [{"attr": "line-visibility", "scope": "cols", "value": "off"},
-                                       {"attr": "line-visibility", "scope": "rows", "value": "off"}]))
-    sheets.append(s)
 
+    def dual_axis(name, ground_id):
+        s = Sheet(name, "network", name, "Lines = email ties; circles = people (size = betweenness).")
+        x, x2, y = s.inst("x", "Avg"), s.inst("Calculation_3000000000000000001", "Avg"), s.inst("y", "Avg")
+        pid, order, person = s.inst("path_id"), s.inst("path_order"), s.inst("display_name")
+        tie, comm, btw = s.inst("tie_type"), s.inst("community"), s.inst("betweenness", "Avg")
+        k = s.inst("Calculation_3000000000000000002")
+        s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
+        s.slices.append(k)
+        first = 2 if ground_id else 1          # 2026 style (tabsdk): ground pane id 1, axis panes id 2 and 3
+        ground = dict(mark="Automatic")
+        if ground_id:
+            ground["id"] = "1"
+        s.panes += [ground,
+                    {"id": str(first), "x-axis-name": x.qual, "mark": "Line",
+                     "enc": [("color", tie), ("lod", pid), ("path", order)]},
+                    {"id": str(first + 1), "x-axis-name": x2.qual, "mark": "Circle",
+                     "enc": [("color", comm), ("size", btw), ("lod", person)]}]
+        s.rows, s.cols = y.qual, f"({x.qual} + {x2.qual})"
+        s.axis_rules = [{"attr": "space", "class": "0", "field": x2.qual, "field-type": "quantitative",
+                         "fold": "true", "scope": "cols", "synchronized": "true", "type": "space"}]
+        s.axis_rules += hidden_fixed_axes([x, x2], y)
+        s.extra_style += no_gridlines()
+        sheets.append(s)
 
-    s = Sheet("B Ties only", "network", "Email ties only (line + path)")
-    x, y, pid, order = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("path_id"), s.inst("path_order")
-    tie, k = s.inst("tie_type"), s.inst("Calculation_3000000000000000002")
-    s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
-    s.slices.append(k)
-    s.panes.append(dict(mark="Line", enc=[("color", tie), ("lod", pid), ("path", order)]))
-    s.rows, s.cols = y.qual, x.qual
-    s.axis_rules = hidden_fixed_axes([x], y)
-    s.extra_style += no_gridlines()
-    sheets.append(s)
+    dual_axis(TEST_SHEETS[0], ground_id=False)
+    dual_axis(TEST_SHEETS[1], ground_id=True)
 
-    s = Sheet("C People only", "network", "People only (circles, network_paths.csv)")
-    x, y, person, comm = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("display_name"), s.inst("community")
-    btw = s.inst("betweenness", "Avg")
-    s.panes.append(dict(mark="Circle", enc=[("color", comm), ("size", btw), ("lod", person)]))
-    s.rows, s.cols = y.qual, x.qual
-    s.axis_rules = hidden_fixed_axes([x], y)
-    sheets.append(s)
+    def people(name, extra_enc, formats):
+        s = Sheet(name, "network", name, "Circles = people; size = betweenness, colour = community.")
+        x, y, person, comm = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("display_name"), s.inst("community")
+        btw = s.inst("betweenness", "Avg")
+        enc = [("color", comm), ("size", btw)] + [(t, s.inst(*f)) for t, f in extra_enc] + [("lod", person)]
+        s.panes.append(dict(mark="Circle", enc=enc, formats=formats))
+        s.rows, s.cols = y.qual, x.qual
+        s.axis_rules = hidden_fixed_axes([x], y)
+        sheets.append(s)
+
+    people(TEST_SHEETS[2], [("tooltip", ("role_group",)), ("tooltip", ("contacts", "Avg"))], [])
+    people(TEST_SHEETS[3], [], [("mark-transparency", "225")])
     return sheets
+
+
+def build_test_dashboard(parent):
+    grid = Z("vert", children=[
+        Z("text", 50, runs=text_runs("Tableau test grid: which of these four views shows a picture?",
+                                     "Please send one screenshot of this dashboard.")),
+        Z("horz", children=[Z("sheet", name=TEST_SHEETS[0]), Z("sheet", name=TEST_SHEETS[1])]),
+        Z("horz", children=[Z("sheet", name=TEST_SHEETS[2]), Z("sheet", name=TEST_SHEETS[3])]),
+    ])
+    dashboard_el(parent, "Test grid", 1300, 820, grid, [], [])
 
 
 # ----------------------------------------------------------------------------------------------- dashboards
@@ -715,11 +719,12 @@ def dashboard_el(parent, name, W, H, layout, params, legend_insts):
     db = SE(parent, "dashboard", name=name)
     SE(db, "style")
     SE(db, "size", maxheight=H, maxwidth=W, minheight=H, minwidth=W)
-    dss = SE(db, "datasources")
-    SE(dss, "datasource", name="Parameters")
-    pdep = SE(db, "datasource-dependencies", datasource="Parameters")
-    for p in params:
-        param_column_el(pdep, p)
+    if params:
+        dss = SE(db, "datasources")
+        SE(dss, "datasource", name="Parameters")
+        pdep = SE(db, "datasource-dependencies", datasource="Parameters")
+        for p in params:
+            param_column_el(pdep, p)
     zones = SE(db, "zones")
     place(layout, 0, 0, W, H)
     ids = iter(range(3, 1000))
@@ -754,7 +759,7 @@ def build_dashboards(parent):
             Z("vert", children=[Z("sheet", 330, name="Email Volume Timeline"),
                                 Z("horz", children=[Z("sheet", name="Communication Flow by Role"),
                                                     Z("sheet", name="Locality Test by Month")])]),
-            Z("vert", 400, children=[
+            Z("vert", 450, children=[
                 Z("param", 60, param="Parameter 2"),
                 Z("param", 60, param="Parameter 3"),
                 Z("color", 92, name="Email Volume Timeline", param=per.qual),
@@ -793,14 +798,17 @@ def actions_el(parent):
         SE(cmd, "param", name="target", value=dashboard)
 
 
-def windows_el(parent, sheets, dashboards=True):
+MAIN_WINDOWS = (("1 Overview", ["KPI Deliveries", "KPI Messages", "KPI Senders", "KPI Cross-community",
+                                 "Email Volume Timeline", "Communication Flow by Role", "Key Events",
+                                 "Locality Test by Month"]),
+                ("2 Network", ["People Map", "Top People", "Community Composition"]))
+
+
+def windows_el(parent, sheets, dashboards):
     wins = SE(parent, "windows", source__height="30")
-    for name, views in () if not dashboards else (("1 Overview", ["KPI Deliveries", "KPI Messages", "KPI Senders", "KPI Cross-community",
-                                        "Email Volume Timeline", "Communication Flow by Role", "Key Events",
-                                        "Locality Test by Month"]),
-                        ("2 Network", ["People Map", "Top People", "Community Composition"])):
+    for n, (name, views) in enumerate(dashboards):
         a = {"class": "dashboard"}
-        if name == "1 Overview":
+        if n == 0:
             a["maximized"] = "true"
         a["name"] = name
         w = SE(wins, "window", a)
@@ -827,7 +835,7 @@ MAIN_DS = ["deliveries", "employees", "monthly", "events"]
 MAIN_PARAMS = ["Parameter 1", "Parameter 2", "Parameter 3", "Parameter 5"]
 
 
-def build(ds_keys, param_names, sheets, with_dashboards):
+def build(ds_keys, param_names, sheets, dashboards_fn=None, windows=()):
     root = ET.Element("workbook", {"original-version": VERSION, "source-build": SOURCE_BUILD,
                                    "source-platform": "win", "version": VERSION}, nsmap={"user": USER})
     man = SE(root, "document-format-change-manifest")
@@ -843,14 +851,14 @@ def build(ds_keys, param_names, sheets, with_dashboards):
     parameters_el(dss, param_names)
     for k in ds_keys:
         datasource_el(dss, k)
-    if with_dashboards:
+    if dashboards_fn is build_dashboards:
         actions_el(root)
     wss = SE(root, "worksheets")
     for sh in sheets:
         sh.xml(wss)
-    if with_dashboards:
-        build_dashboards(SE(root, "dashboards"))
-    windows_el(root, sheets, with_dashboards)
+    if dashboards_fn:
+        dashboards_fn(SE(root, "dashboards"))
+    windows_el(root, sheets, windows)
     return ET.ElementTree(root)
 
 
@@ -870,9 +878,9 @@ def package(tree, name, ds_keys):
 
 
 def main():
-    package(build(MAIN_DS, MAIN_PARAMS, build_sheets(), True), NAME, MAIN_DS)
-    package(build(["network"], ["Parameter 4", "Parameter 5"], build_ties_sheets(), False),
-            "Enron_Network_Ties_test", ["network"])
+    package(build(MAIN_DS, MAIN_PARAMS, build_sheets(), build_dashboards, MAIN_WINDOWS), NAME, MAIN_DS)
+    package(build(["network"], ["Parameter 4", "Parameter 5"], build_ties_sheets(), build_test_dashboard,
+                  [("Test grid", TEST_SHEETS)]), "Enron_Network_Ties_test", ["network"])
 
 
 if __name__ == "__main__":

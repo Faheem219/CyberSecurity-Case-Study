@@ -1,11 +1,11 @@
 event_no,date,event,category,date_label
 1,2000-08-23,Share price peaks near $90,Market,23 Aug 2000
 2,2001-01-17,California rolling blackouts,Market,17 Jan 2001
-3,2001-02-12,Skilling becomes CEO,Leaders,12 Feb 2001
-4,2001-08-14,Skilling resigns; Lay returns as CEO,Leaders,14 Aug 2001
+3,2001-02-12,Skilling becomes CEO,CEO,12 Feb 2001
+4,2001-08-14,Skilling quits; Lay back as CEO,CEO,14 Aug 2001
 5,2001-10-16,Q3 loss of $618M announced,Crisis,16 Oct 2001
 6,2001-10-22,SEC inquiry disclosed,Crisis,22 Oct 2001
 7,2001-11-08,Earnings restated back to 1997,Crisis,08 Nov 2001
-8,2001-11-28,Dynegy merger collapses; credit cut to junk,Crisis,28 Nov 2001
+8,2001-11-28,Dynegy deal fails; junk rating,Crisis,28 Nov 2001
 9,2001-12-02,Chapter 11 bankruptcy filing,Crisis,02 Dec 2001
-10,2002-01-23,Lay resigns as Chairman and CEO,Leaders,23 Jan 2002
+10,2002-01-23,Lay resigns as Chairman and CEO,CEO,23 Jan 2002

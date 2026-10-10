@@ -411,14 +411,14 @@
     </datasource>
   </datasources>
   <worksheets>
-    <worksheet name="A Ties + People (dual axis)">
+    <worksheet name="T1 Dual axis (2021 panes)">
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Email network: ties and people</run>
+            <run bold="true" fontcolor="#111418" fontsize="12">T1 Dual axis (2021 panes)</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Node = person (size = betweenness, colour = community); line = email tie.</run>
+            <run fontcolor="#4a5160" fontsize="9">Lines = email ties; circles = people (size = betweenness).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -459,18 +459,15 @@
             </column>
             <column caption="Betweenness centrality" datatype="real" name="[betweenness]" role="measure" type="quantitative"/>
             <column caption="Community" datatype="string" name="[community]" role="dimension" type="nominal"/>
-            <column caption="Contacts (degree)" datatype="integer" name="[contacts]" role="measure" type="quantitative"/>
             <column caption="Person" datatype="string" name="[display_name]" role="dimension" type="nominal"/>
             <column caption="Path ID" datatype="string" name="[path_id]" role="dimension" type="nominal"/>
             <column caption="Path order" datatype="integer" name="[path_order]" role="dimension" type="ordinal"/>
-            <column caption="Role group" datatype="string" name="[role_group]" role="dimension" type="nominal"/>
             <column caption="Row type" datatype="string" name="[row_type]" role="dimension" type="nominal"/>
             <column caption="Tie type" datatype="string" name="[tie_type]" role="dimension" type="nominal"/>
             <column caption="x" datatype="real" name="[x]" role="measure" type="quantitative"/>
             <column caption="y" datatype="real" name="[y]" role="measure" type="quantitative"/>
             <column-instance column="[Calculation_3000000000000000001]" derivation="Avg" name="[avg:Calculation_3000000000000000001:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[betweenness]" derivation="Avg" name="[avg:betweenness:qk]" pivot="key" type="quantitative"/>
-            <column-instance column="[contacts]" derivation="Avg" name="[avg:contacts:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[x]" derivation="Avg" name="[avg:x:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[y]" derivation="Avg" name="[avg:y:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[Calculation_3000000000000000002]" derivation="None" name="[none:Calculation_3000000000000000002:nk]" pivot="key" type="nominal"/>
@@ -478,7 +475,6 @@
             <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
             <column-instance column="[path_id]" derivation="None" name="[none:path_id:nk]" pivot="key" type="nominal"/>
             <column-instance column="[path_order]" derivation="None" name="[none:path_order:ok]" pivot="key" type="ordinal"/>
-            <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
             <column-instance column="[tie_type]" derivation="None" name="[none:tie_type:nk]" pivot="key" type="nominal"/>
           </datasource-dependencies>
           <filter class="categorical" column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:Calculation_3000000000000000002:nk]">
@@ -524,11 +520,6 @@
               <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:path_id:nk]"/>
               <path column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:path_order:ok]"/>
             </encodings>
-            <style>
-              <style-rule element="mark">
-                <format attr="size" value="0.2"/>
-              </style-rule>
-            </style>
           </pane>
           <pane id="2" selection-relaxation-option="selection-relaxation-allow" x-axis-name="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]">
             <view>
@@ -538,27 +529,23 @@
             <encodings>
               <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
               <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
-              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:role_group:nk]"/>
-              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:contacts:qk]"/>
               <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
             </encodings>
-            <style>
-              <style-rule element="mark">
-                <format attr="mark-transparency" value="235"/>
-              </style-rule>
-            </style>
           </pane>
         </panes>
         <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
         <cols>([federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk] + [federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk])</cols>
       </table>
-      <simple-id uuid="{1D528621-4FE4-F437-DB3F-7EEE1F6A609D}"/>
+      <simple-id uuid="{131E701F-908C-A5C6-01D5-428F762EE049}"/>
     </worksheet>
-    <worksheet name="B Ties only">
+    <worksheet name="T2 Dual axis (2026 panes)">
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">Email ties only (line + path)</run>
+            <run bold="true" fontcolor="#111418" fontsize="12">T2 Dual axis (2026 panes)</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Lines = email ties; circles = people (size = betweenness).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -591,19 +578,28 @@
             </column>
           </datasource-dependencies>
           <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
+            <column caption="x (people layer)" datatype="real" name="[Calculation_3000000000000000001]" role="measure" type="quantitative">
+              <calculation class="tableau" formula="[x]"/>
+            </column>
             <column caption="Keep row (ties, community)" datatype="string" name="[Calculation_3000000000000000002]" role="dimension" type="nominal">
               <calculation class="tableau" formula="IF ([row_type] = &quot;Person&quot; OR [Parameters].[Parameter 4] = &quot;All ties&quot; OR [tie_type] = &quot;Strong (two-way)&quot;) AND ([Parameters].[Parameter 5] = &quot;All communities&quot; OR [community] = [Parameters].[Parameter 5]) THEN &quot;Keep&quot; ELSE &quot;Drop&quot; END"/>
             </column>
+            <column caption="Betweenness centrality" datatype="real" name="[betweenness]" role="measure" type="quantitative"/>
             <column caption="Community" datatype="string" name="[community]" role="dimension" type="nominal"/>
+            <column caption="Person" datatype="string" name="[display_name]" role="dimension" type="nominal"/>
             <column caption="Path ID" datatype="string" name="[path_id]" role="dimension" type="nominal"/>
             <column caption="Path order" datatype="integer" name="[path_order]" role="dimension" type="ordinal"/>
             <column caption="Row type" datatype="string" name="[row_type]" role="dimension" type="nominal"/>
             <column caption="Tie type" datatype="string" name="[tie_type]" role="dimension" type="nominal"/>
             <column caption="x" datatype="real" name="[x]" role="measure" type="quantitative"/>
             <column caption="y" datatype="real" name="[y]" role="measure" type="quantitative"/>
+            <column-instance column="[Calculation_3000000000000000001]" derivation="Avg" name="[avg:Calculation_3000000000000000001:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[betweenness]" derivation="Avg" name="[avg:betweenness:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[x]" derivation="Avg" name="[avg:x:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[y]" derivation="Avg" name="[avg:y:qk]" pivot="key" type="quantitative"/>
             <column-instance column="[Calculation_3000000000000000002]" derivation="None" name="[none:Calculation_3000000000000000002:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
             <column-instance column="[path_id]" derivation="None" name="[none:path_id:nk]" pivot="key" type="nominal"/>
             <column-instance column="[path_order]" derivation="None" name="[none:path_order:ok]" pivot="key" type="ordinal"/>
             <column-instance column="[tie_type]" derivation="None" name="[none:tie_type:nk]" pivot="key" type="nominal"/>
@@ -618,9 +614,11 @@
         </view>
         <style>
           <style-rule element="axis">
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]" field-type="quantitative" fold="true" scope="cols" synchronized="true" type="space"/>
             <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="cols" type="space"/>
             <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="rows" type="space"/>
             <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" scope="cols" value="false"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]" scope="cols" value="false"/>
             <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" scope="rows" value="false"/>
           </style-rule>
           <style-rule element="gridline">
@@ -633,7 +631,13 @@
           </style-rule>
         </style>
         <panes>
-          <pane selection-relaxation-option="selection-relaxation-allow">
+          <pane id="1" selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Automatic"/>
+          </pane>
+          <pane id="2" selection-relaxation-option="selection-relaxation-allow" x-axis-name="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]">
             <view>
               <breakdown value="auto"/>
             </view>
@@ -644,17 +648,93 @@
               <path column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:path_order:ok]"/>
             </encodings>
           </pane>
+          <pane id="3" selection-relaxation-option="selection-relaxation-allow" x-axis-name="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk]">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Circle"/>
+            <encodings>
+              <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
+              <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
+        <cols>([federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk] + [federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:Calculation_3000000000000000001:qk])</cols>
+      </table>
+      <simple-id uuid="{FB434EEF-D88D-6F20-E700-12A9E6F3FA6D}"/>
+    </worksheet>
+    <worksheet name="T3 People + tooltips">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold="true" fontcolor="#111418" fontsize="12">T3 People + tooltips</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Circles = people; size = betweenness, colour = community.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
+          </datasources>
+          <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
+            <column caption="Betweenness centrality" datatype="real" name="[betweenness]" role="measure" type="quantitative"/>
+            <column caption="Community" datatype="string" name="[community]" role="dimension" type="nominal"/>
+            <column caption="Contacts (degree)" datatype="integer" name="[contacts]" role="measure" type="quantitative"/>
+            <column caption="Person" datatype="string" name="[display_name]" role="dimension" type="nominal"/>
+            <column caption="Role group" datatype="string" name="[role_group]" role="dimension" type="nominal"/>
+            <column caption="x" datatype="real" name="[x]" role="measure" type="quantitative"/>
+            <column caption="y" datatype="real" name="[y]" role="measure" type="quantitative"/>
+            <column-instance column="[betweenness]" derivation="Avg" name="[avg:betweenness:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[contacts]" derivation="Avg" name="[avg:contacts:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[x]" derivation="Avg" name="[avg:x:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[y]" derivation="Avg" name="[avg:y:qk]" pivot="key" type="quantitative"/>
+            <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[display_name]" derivation="None" name="[none:display_name:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style>
+          <style-rule element="axis">
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="cols" type="space"/>
+            <encoding attr="space" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" field-type="quantitative" max="104" min="-4" range-type="fixed" scope="rows" type="space"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]" scope="cols" value="false"/>
+            <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" scope="rows" value="false"/>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Circle"/>
+            <encodings>
+              <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
+              <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
+              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:role_group:nk]"/>
+              <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:contacts:qk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
+            </encodings>
+          </pane>
         </panes>
         <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
         <cols>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]</cols>
       </table>
-      <simple-id uuid="{747A3E76-76AD-D89E-371E-693F48DE1813}"/>
+      <simple-id uuid="{4857E1B2-3A98-F78B-7052-5B26C6EF9335}"/>
     </worksheet>
-    <worksheet name="C People only">
+    <worksheet name="T4 People + transparency">
       <layout-options>
         <title>
           <formatted-text>
-            <run bold="true" fontcolor="#111418" fontsize="12">People only (circles, network_paths.csv)</run>
+            <run bold="true" fontcolor="#111418" fontsize="12">T4 People + transparency</run>
+            <run>Æ
+</run>
+            <run fontcolor="#4a5160" fontsize="9">Circles = people; size = betweenness, colour = community.</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -696,39 +776,118 @@
               <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
               <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
             </encodings>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-transparency" value="225"/>
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]</rows>
         <cols>[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:x:qk]</cols>
       </table>
-      <simple-id uuid="{F4BEAA63-C7E9-B65A-F0F7-D8E0921D2057}"/>
+      <simple-id uuid="{7AB9758E-511E-D07D-EE58-F752FDD7A239}"/>
     </worksheet>
   </worksheets>
+  <dashboards>
+    <dashboard name="Test grid">
+      <style/>
+      <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
+      <zones>
+        <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">
+          <zone h="100000" id="3" param="vert" type="layout-flow" w="100000" x="0" y="0">
+            <zone h="6098" id="4" type="text" w="100000" x="0" y="0">
+              <formatted-text>
+                <run bold="true" fontcolor="#111418" fontsize="17">Tableau test grid: which of these four views shows a picture?</run>
+                <run>Æ
+</run>
+                <run fontcolor="#4a5160" fontsize="10">Please send one screenshot of this dashboard.</run>
+              </formatted-text>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="4"/>
+              </zone-style>
+            </zone>
+            <zone h="46951" id="5" param="horz" type="layout-flow" w="100000" x="0" y="6098">
+              <zone h="46951" id="6" name="T1 Dual axis (2021 panes)" w="50000" x="0" y="6098">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="46951" id="7" name="T2 Dual axis (2026 panes)" w="50000" x="50000" y="6098">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="0"/>
+              </zone-style>
+            </zone>
+            <zone h="46951" id="8" param="horz" type="layout-flow" w="100000" x="0" y="53049">
+              <zone h="46951" id="9" name="T3 People + tooltips" w="50000" x="0" y="53049">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone h="46951" id="10" name="T4 People + transparency" w="50000" x="50000" y="53049">
+                <zone-style>
+                  <format attr="border-color" value="#000000"/>
+                  <format attr="border-style" value="none"/>
+                  <format attr="border-width" value="0"/>
+                  <format attr="margin" value="4"/>
+                </zone-style>
+              </zone>
+              <zone-style>
+                <format attr="border-color" value="#000000"/>
+                <format attr="border-style" value="none"/>
+                <format attr="border-width" value="0"/>
+                <format attr="margin" value="0"/>
+              </zone-style>
+            </zone>
+            <zone-style>
+              <format attr="border-color" value="#000000"/>
+              <format attr="border-style" value="none"/>
+              <format attr="border-width" value="0"/>
+              <format attr="margin" value="0"/>
+            </zone-style>
+          </zone>
+          <zone-style>
+            <format attr="border-color" value="#000000"/>
+            <format attr="border-style" value="none"/>
+            <format attr="border-width" value="0"/>
+            <format attr="margin" value="8"/>
+          </zone-style>
+        </zone>
+      </zones>
+      <simple-id uuid="{23022917-5D60-6555-6671-0092604C9F1D}"/>
+    </dashboard>
+  </dashboards>
   <windows source-height="30">
-    <window class="worksheet" name="A Ties + People (dual axis)">
-      <cards>
-        <edge name="left">
-          <strip size="160">
-            <card type="pages"/>
-            <card type="filters"/>
-            <card type="marks"/>
-          </strip>
-        </edge>
-        <edge name="top">
-          <strip size="2147483647">
-            <card type="columns"/>
-          </strip>
-          <strip size="2147483647">
-            <card type="rows"/>
-          </strip>
-          <strip size="31">
-            <card type="title"/>
-          </strip>
-        </edge>
-      </cards>
-      <simple-id uuid="{91838FEC-6287-9AFE-8D63-E3726C8A4FF6}"/>
+    <window class="dashboard" maximized="true" name="Test grid">
+      <viewpoints>
+        <viewpoint name="T1 Dual axis (2021 panes)"/>
+        <viewpoint name="T2 Dual axis (2026 panes)"/>
+        <viewpoint name="T3 People + tooltips"/>
+        <viewpoint name="T4 People + transparency"/>
+      </viewpoints>
+      <active id="-1"/>
+      <simple-id uuid="{B3BD7423-BF7E-45C6-BE07-62DD81FC0783}"/>
     </window>
-    <window class="worksheet" name="B Ties only">
+    <window class="worksheet" name="T1 Dual axis (2021 panes)">
       <cards>
         <edge name="left">
           <strip size="160">
@@ -749,9 +908,9 @@
           </strip>
         </edge>
       </cards>
-      <simple-id uuid="{EA7674E2-0848-ECCE-4F0D-6B4D5C3ED4CA}"/>
+      <simple-id uuid="{BA7173F9-6E3A-05BF-DC00-839300500B1A}"/>
     </window>
-    <window class="worksheet" name="C People only">
+    <window class="worksheet" name="T2 Dual axis (2026 panes)">
       <cards>
         <edge name="left">
           <strip size="160">
@@ -772,7 +931,53 @@
           </strip>
         </edge>
       </cards>
-      <simple-id uuid="{87B0D060-2A37-D0BC-06F0-68190D059BA4}"/>
+      <simple-id uuid="{39CCDDD1-F4B4-BAF1-930F-3C205F18282D}"/>
+    </window>
+    <window class="worksheet" name="T3 People + tooltips">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{60F5BAC6-AE6C-7C29-4B88-5F39E5B78BCF}"/>
+    </window>
+    <window class="worksheet" name="T4 People + transparency">
+      <cards>
+        <edge name="left">
+          <strip size="160">
+            <card type="pages"/>
+            <card type="filters"/>
+            <card type="marks"/>
+          </strip>
+        </edge>
+        <edge name="top">
+          <strip size="2147483647">
+            <card type="columns"/>
+          </strip>
+          <strip size="2147483647">
+            <card type="rows"/>
+          </strip>
+          <strip size="31">
+            <card type="title"/>
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid="{1D879C81-8D58-F66D-4C38-90ABA1D74C11}"/>
     </window>
   </windows>
 </workbook>

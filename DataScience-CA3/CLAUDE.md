@@ -88,10 +88,33 @@ re-add it.
   workbook. The network data source, the "Ties shown" parameter and the dual-axis sheet moved to the optional
   `tableau/Enron_Network_Ties_test.twbx`, which has sheets A dual-axis, B ties only and C people only. That lets
   the user report which ones survive, without risking the main dashboards.
-- Event categories were shortened ("Leadership" became "Leaders"), the event and heat-map row headers widened
+- Event categories were shortened ("Leadership" became "Leaders", later "CEO"), the event and heat-map row headers widened
   (header width style), and the README, deck, form answers and viva notes now describe the People Map.
-- **Status:** awaiting the user's fifth test and final screenshots, which go into the deck (`screenshots/overview.png`,
-  `screenshots/network.png`) for slides 8–9.
+- **Fifth test (2026-10-10).**
+  - The Overview dashboard is fully correct: colours, KPIs, events and heat-map.
+  - The People Map was **blank on dashboard 2**, with no title and no legend.
+  - Test workbook: A (dual axis) loaded with the correct marks cards but showed "No data available" and no title.
+    B (ties, Line + path + Keep filter + gridline style) and C (people, Circle + size) render.
+  - The only constructs shared by the two blank sheets and absent from every rendering sheet were **tooltip
+    encodings** (`role_group`, AVG(contacts)) and **mark-transparency**.
+  - Fix: the People Map now uses only proven constructs (C's circle sheet plus the Keep filter, text label and
+    `mark-labels-show`). **Do not re-add tooltip encodings or mark-transparency** unless the test grid proves them.
+- **Test workbook rebuilt as a one-screenshot bisection.** One "Test grid" dashboard holds:
+  - T1: dual axis, 2021 pane layout (default pane + id 1, 2).
+  - T2: dual axis, 2026/tabsdk pane layout (ground pane id 1 + axis panes id 2, 3).
+  - T3: people + tooltips.
+  - T4: people + transparency.
+
+  None of these have tooltips, transparency or a size format unless that is the thing being tested. If T1 or T2
+  renders, swap it in for the People Map on dashboard 2.
+- **Events table.** It truncated on the user's display, so "Leaders" became "CEO" and two event texts were shortened
+  (≤ 31 chars). The When and Event header widths are now 106 and 262, and the Overview's right column is 450 px.
+- **Screenshots.**
+  - The user's Tableau runs on a high-DPI Windows screen, and they had set both dashboards to Custom 1900 × 1220.
+  - `screenshots/overview.png` is an interim crop of their screenshot. It still shows the old truncated events table.
+  - Ask for **Dashboard ▸ Export Image…** PNGs of both dashboards for the final deck.
+- **Status:** awaiting the user's sixth test: the main workbook (People Map should now render) and one screenshot
+  of the test grid.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with

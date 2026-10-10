@@ -187,8 +187,14 @@ def network_panel():
 </div>"""
 
 
-SHOT_NOTE = "" if len(SHOT) == 2 else ('<div class="src">Layout shown as a wireframe — the live dashboard is '
-                                       'demonstrated in Tableau.</div>')
+def dash_cols(name):
+    """A real screenshot gets more room than the wireframe so its labels stay readable."""
+    return "2.3fr 1fr" if name in SHOT else "1.55fr 1fr"
+
+
+def shot_note(name):
+    return "" if name in SHOT else ('<div class="src">Layout shown as a wireframe — the live dashboard is '
+                                    'demonstrated in Tableau.</div>')
 
 SLIDES = [
     # 1 — title (group template; two members; guided by)
@@ -311,7 +317,7 @@ SLIDES = [
 
     # 8 — dashboard 1
     slide(head("Tableau dashboard 1", "Overview: volume, hierarchy and locality over time") + f"""
-<div class="grid2" style="grid-template-columns:1.55fr 1fr;align-items:stretch;height:600px">
+<div class="grid2" style="grid-template-columns:{dash_cols("overview")};align-items:stretch;height:600px">
  {overview_panel()}
  <ul style="align-self:center">
   <li><b>KPI tiles</b> answer “how much?” at a glance.</li>
@@ -320,11 +326,11 @@ SLIDES = [
   <li><b>Locality line chart</b> repeats the Unit 5 test month by month.</li>
   <li>Period and sender-role drop-downs (parameters) drive the KPIs, volume chart and heat-map together.</li>
  </ul>
-</div>{SHOT_NOTE}"""),
+</div>{shot_note("overview")}"""),
 
     # 9 — dashboard 2
     slide(head("Tableau dashboard 2", "Network: communities and brokers") + f"""
-<div class="grid2" style="grid-template-columns:1.55fr 1fr;align-items:stretch;height:600px">
+<div class="grid2" style="grid-template-columns:{dash_cols("network")};align-items:stretch;height:600px">
  {network_panel()}
  <ul style="align-self:center">
   <li><b>People map</b>: everyone placed by a force-directed layout of their email ties, so communities form visible clusters.</li>
@@ -332,7 +338,7 @@ SLIDES = [
   <li><b>Highlight action</b>: click a person in the bar chart to find them on the map.</li>
   <li>Community drop-down filters the map; top brokers are labelled.</li>
  </ul>
-</div>{SHOT_NOTE}"""),
+</div>{shot_note("network")}"""),
 
     # 10 — visualisation principles
     slide(head("Visualisation principles", "Design choices and why we made them") + """

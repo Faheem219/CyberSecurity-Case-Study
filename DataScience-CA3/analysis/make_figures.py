@@ -52,7 +52,7 @@ def timeline():
     ax.text(pd.Timestamp("2001-10-08"), wk.max() * 1.12, "Crisis window", ha="center", color=INK2, fontsize=13)
     ax.fill_between(wk.index, wk.values, color=BLUE, alpha=0.10, linewidth=0)
     ax.plot(wk.index, wk.values, color=BLUE, lw=2, solid_joinstyle="round")
-    keep = {"Skilling becomes CEO": (0.86, "left"), "Skilling resigns; Lay returns as CEO": (0.62, "right"),
+    keep = {"Skilling becomes CEO": (0.86, "left"), "Skilling quits; Lay back as CEO": (0.62, "right"),
             "Q3 loss of $618M announced": (1.0, "right"), "Chapter 11 bankruptcy filing": (0.80, "left"),
             "California rolling blackouts": (0.95, "right")}
     for _, r in ev.iterrows():
