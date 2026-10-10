@@ -179,10 +179,10 @@ def network_panel():
         return f'<img class="shot" src="{SHOT["network"]}" alt="Tableau dashboard 2: Network">'
     return """<div class="wf" style="grid-template-columns:3fr 1fr 2fr;grid-template-rows:auto auto auto 1.3fr 1fr">
  <div class="t" style="grid-column:1/4"><b>Title + how to use</b>click a bar to highlight that person on the map</div>
- <div style="grid-row:2/6"><b>People map</b>force-directed layout of all 148 people; size = betweenness, colour = community</div>
+ <div style="grid-row:2/6"><b>Network map</b>email ties as lines; 148 people as circles, size = betweenness, colour = community</div>
  <div><b>Community</b>drop-down</div>
  <div><b>Rank people by</b>drop-down</div>
- <div style="grid-row:3/5"><b>Legends</b>community; role group</div>
+ <div style="grid-row:3/5"><b>Ties shown · legends</b>community; role group</div>
  <div style="grid-row:3/5"><b>Top 15 people</b>bar chart, metric chosen by the parameter</div>
  <div><b>How to read · findings</b></div>
  <div><b>Community composition</b>stacked bar by role group</div>
@@ -335,10 +335,10 @@ SLIDES = [
 <div class="grid2" style="grid-template-columns:{dash_cols("network")};align-items:stretch;height:600px">
  {network_panel()}
  <ul style="align-self:center">
-  <li><b>People map</b>: everyone placed by a force-directed layout of their email ties, so communities form visible clusters.</li>
+  <li><b>Network map</b>: every email tie is a line and every person a circle, placed by a force-directed layout, so communities form visible clusters.</li>
   <li><b>Parameter</b> switches the ranking: betweenness, PageRank, contacts, emails sent.</li>
   <li><b>Highlight action</b>: click a person in the bar chart to find them on the map.</li>
-  <li>Community drop-down filters the map; top brokers are labelled.</li>
+  <li>Community and “Ties shown” drop-downs filter the map; top brokers are labelled.</li>
  </ul>
 </div>{shot_note("network")}"""),
 

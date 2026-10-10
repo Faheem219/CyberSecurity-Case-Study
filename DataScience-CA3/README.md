@@ -35,7 +35,8 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 2. Double-click `tableau/Enron_Email_Network.twbx`. You should see two dashboards, **1 Overview** and **2 Network**, plus 11 sheets.
 3. Quick check:
    - **1 Overview:** the *Period* and *Sender role* drop-downs (parameter controls) change the KPIs, the volume chart and the heat-map.
-   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* filters the People Map. Clicking a bar highlights that person on the map.
+   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* and *Ties shown* filter the Email Network Map. Clicking a bar highlights that person on the map.
+   - The workbook also keeps a spare **People Map** sheet (circles only, no ties). It is not on a dashboard; it is a fallback if the network map ever fails to draw.
 4. If Tableau ever says it cannot find a data file, point it to the matching CSV in `data/processed/`. The file names are the same.
 
 ### Publish to Tableau Public and take screenshots
@@ -49,22 +50,6 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
    dashboards instead of the layout wireframes. You can also just send the two images to Claude.
    Both dashboards are designed at a fixed 1900 × 1220 (full screen on the presenting laptop); keep that size.
 
-### Optional: the full node-link graph (ties + people)
-
-`tableau/Enron_Network_Ties_test.twbx` is a small separate workbook that tests the email *ties* drawn as lines
-under the people. It opens on one **Test grid** dashboard with five small views, each changing one thing:
-
-| View | What it tests |
-|---|---|
-| T1 Dual axis (2021 panes) | ties + people overlaid, pane layout as saved by Tableau 2021 |
-| T2 Dual axis (2026 panes) | the same, pane layout as saved by Tableau 2026 |
-| T3 People + tooltips | people circles with two tooltip fields |
-| T4 People + transparency | people circles at reduced opacity |
-| T5 People + bigger marks | people circles with a larger mark size |
-
-One screenshot of the grid shows which views draw a picture. A working dual-axis view can then replace the People Map
-on dashboard 2. The full node-link figure is already on slide 12 of the deck.
-
 ### If the generated workbook does not open (fallback, ~30 min by hand)
 
 Connect each CSV in `data/processed/` as a separate data source (Connect ▸ Text file), then build:
@@ -76,6 +61,7 @@ Connect each CSV in `data/processed/` as a separate data source (Connect ▸ Tex
 | Communication Flow by Role | deliveries | Rows: sender_role. Columns: recipient_role. Square mark. Colour and Label: SUM(Deliveries). |
 | Locality Test by Month | monthly_locality_long | Columns: continuous MONTH(month). Rows: SUM(value). Colour: metric. Filter: reliable = Yes. |
 | Key Events | events | Rows: event_no, date_label, event. Text: category. |
+| Email Network Map | network_paths | Columns: AVG(x) and a copy `x (people layer)` = `[x]`, then **Dual Axis** + Synchronize Axis. Rows: AVG(y). Marks card 1: Line, Detail = path_id, Path = path_order, Colour = tie_type. Marks card 2: Circle, Detail = display_name, Colour = community, Size = AVG(betweenness), Label = *Broker label*. Filter on a calc that keeps person rows and, unless *Ties shown* = All ties, only strong ties. Fix the axes to -4…104 and hide them. Avoid fields on the Tooltip shelf (Tableau 2026.2.3 dropped such sheets in our tests). |
 | People Map | employees | Columns: AVG(x). Rows: AVG(y). Circle mark. Detail = display_name, Colour = community, Size = AVG(betweenness), Label = *Broker label* (`IF [rank_betweenness] <= 6 THEN [display_name] ELSE "" END`). Fix both axes to -4…104 and hide them. |
 | Top People | employees | Parameter *Rank people by* (Betweenness, PageRank, Contacts, Emails sent). *Selected metric* = CASE on the parameter. Rows: display_name, sorted descending by the metric. Columns: SUM(Selected metric). Colour: role_group. Filter *Selected rank* ≤ 15. |
 | Community Composition | employees | Rows: community. Columns: CNT(employee_key). Colour: role_group. |

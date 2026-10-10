@@ -122,11 +122,33 @@ re-add it.
     a role-group legend (newly added, for the two bar charts), and "How to read" and "What it shows" text boxes.
     A 640 px column with Rank-by, Top People and Community Composition.
   - Larger type: dashboard title 20, sheet titles 14/10, KPI numbers 32. The test grid adds T5 (mark `size` format).
-- **Git.** The user merges this branch into `main` themselves (PRs #1–#5, all merged) and also commits directly to
-  `main`. After their merge, the branch was restarted from `origin/main`. Use `GIT_LFS_SKIP_SMUDGE=1`: `main`
-  tracks large videos in LFS. On 2026-10-10 the user asked for work to be pushed straight to `main` as well.
-- **Status:** awaiting the user's sixth test: the main workbook (People Map should now render) and one screenshot
-  of the test grid. Then get Export-Image PNGs of both dashboards for deck slides 8 and 9.
+- **Git — standing rule (user, 2026-10-10): push every change directly to `main`.** Commit on
+  `claude/fervent-ritchie-8z9wsy`, which is kept equal to `main`, then `git push origin HEAD:main` and push the
+  branch too. The user also commits to `main` themselves, so fetch first and make sure the push is a
+  fast-forward. Use `GIT_LFS_SKIP_SMUDGE=1`, because `main` tracks large videos in LFS.
+- **Sixth test (2026-10-10): exported images (Dashboard ▸ Export Image, 1900 × 1220).**
+  - Test grid: **T1 and T2 (dual-axis ties + people) render; T3 (tooltip fields) was silently dropped**, which
+    confirms the cause of every blank sheet. T4 (transparency) and T5 (size format) render.
+  - Tableau did **not** keep the zone widths. Columns were re-sized to fit their content: text boxes widened their
+    column and the map shrank. Genuine files pin sizes with `fixed-size='px' is-fixed='true'` on the child (px
+    along the parent's direction) and `layout-strategy-id='distribute-evenly'` on rows of equal tiles. Both are
+    now emitted (`Z(size=…)`, `Z(even=True)`).
+  - The broker labels overlapped in the dense leadership core.
+- **Changes after test 6.**
+  - Dashboard 2 now shows **"Email Network Map"**: the T1 dual-axis structure on `network_paths.csv`. Pane 1 is a
+    Line (ties, transparency 150); pane 2 is Circle with community colour, betweenness size, Broker-label text and
+    size 1.6. It has the "Ties shown" (Parameter 4) control, and the colour legend uses `pane-specification-id='2'`.
+  - The People Map is kept as a spare sheet, not on any dashboard.
+  - The test workbook was deleted.
+  - Layout: after the spring layout, an overlap-removal step pushes circles apart, and the top 6 brokers get
+    ≥ 11 units for labels (`prepare_data.py`). Only x/y changed; every metric is identical. `network_paths.csv`
+    gained `rank_betweenness`.
+  - Heat-map: short column labels (calc "Recipient role (short)") and `cell` width 76 / height 30.
+  - Deck: `screenshots/overview.png` = the user's clean export (11.png). Slide 9 is still a wireframe, waiting
+    for an export of the new network dashboard.
+- **Never use on Tableau 2026.2.3:** fields on the Tooltip shelf. Anything else used here is proven.
+- **Status:** awaiting the user's export of the new dashboard 2 (and a re-export of dashboard 1, whose column
+  widths are now pinned).
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with

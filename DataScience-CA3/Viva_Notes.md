@@ -42,11 +42,13 @@ Showing it would have produced a false "after-hours email doubled" finding.
 
 **How is the network drawn in Tableau?** Tableau has no built-in network chart.
 - In Python we computed a force-directed layout, giving each person x and y coordinates.
-- The dashboard plots every person at those coordinates as a circle, sized by betweenness and coloured by
-  community. People who email each other end up close together, so the communities appear as clusters.
-- The full node-link picture with the ties drawn as lines is on slide 12. Drawing ties in Tableau needs each tie
-  exported as two rows (start and end) plus a path order on a dual-axis chart; that version is in the optional
-  test workbook.
+- Each tie is exported as two rows (start point and end point) with a path order. A **Line** mark with Path =
+  path order draws the ties.
+- Each person is plotted at their coordinates as a **Circle**, sized by betweenness and coloured by community.
+- The two layers sit on a **dual axis** (x and a copy of x, synchronised). People who email each other end up
+  close together, so the communities appear as clusters.
+- A small overlap-removal step after the force layout pushes apart circles that would sit on top of each other.
+  This is only for readability; no metric changes.
 
 **Creator vs Viewer?**
 - **Creator** (US$75 per user per month, Standard): connects to data, builds and publishes. It includes Desktop and

@@ -279,10 +279,28 @@ def main():
     lay_g.add_edges_from((a, b, {"w": np.log1p(d["weight"]) * (3.0 if comm_of[a] == comm_of[b] else 0.3)})
                          for a, b, d in gu.edges(data=True))
     pos = nx.spring_layout(lay_g, weight="w", seed=SEED, k=0.35, iterations=500)
-    xy = np.array([pos[n] for n in gu])
-    lo, hi = xy.min(0), xy.max(0)
-    for n in gu:
-        x, y = (np.array(pos[n]) - lo) / (hi - lo) * 100
+    lay_nodes = list(gu)
+    xy = np.array([pos[n] for n in lay_nodes])
+    xy = (xy - xy.min(0)) / (xy.max(0) - xy.min(0)) * 100
+    # Overlap removal (drawing only): the leadership core collapses into one blob in which circles and the broker
+    # labels sit on top of each other. Push pairs apart until they clear a minimum gap that grows with circle size;
+    # the six biggest brokers keep extra room for their name labels. Relative positions are otherwise kept.
+    btw = m.loc[lay_nodes, "betweenness"].to_numpy()
+    r = 4.0 * np.sqrt(btw / btw.max())
+    top6 = np.zeros(len(lay_nodes), bool)
+    top6[np.argsort(-btw)[:6]] = True
+    gap = 2.4 + r[:, None] + r[None, :]
+    gap = np.where(top6[:, None] & top6[None, :], np.maximum(gap, 11.0), gap)
+    np.fill_diagonal(gap, 0)
+    for _ in range(400):
+        d = xy[:, None, :] - xy[None, :, :]
+        dist = np.hypot(d[..., 0], d[..., 1]) + np.eye(len(lay_nodes))
+        push = np.clip(gap - dist, 0, None) / 2
+        if push.max() < 0.01:
+            break
+        xy += (d / dist[..., None] * push[..., None]).sum(1) * 0.5
+    xy = (xy - xy.min(0)) / (xy.max(0) - xy.min(0)) * 100
+    for n, (x, y) in zip(lay_nodes, xy):
         m.loc[n, "x"], m.loc[n, "y"] = round(x, 3), round(y, 3)
 
     m["role_rank"] = m.role_group.map(RANK)
@@ -329,14 +347,14 @@ def main():
         for order, n in ((1, a), (2, b)):
             rows.append((f"T{k:04d}", order, "Tie", emp.loc[n, "display_name"], emp.loc[n, "x"], emp.loc[n, "y"],
                          dat["weight"], tie, link, emp.loc[n, "community"], ROLE_LABEL[emp.loc[n, "role_group"]],
-                         emp.loc[n, "betweenness"], emp.loc[n, "contacts"]))
+                         emp.loc[n, "betweenness"], emp.loc[n, "contacts"], emp.loc[n, "rank_betweenness"]))
     for n in gu:
         rows.append((f"N-{emp.loc[n, 'employee_key']}", 1, "Person", emp.loc[n, "display_name"], emp.loc[n, "x"],
                      emp.loc[n, "y"], 0, "None", "None", emp.loc[n, "community"], ROLE_LABEL[emp.loc[n, "role_group"]],
-                     emp.loc[n, "betweenness"], emp.loc[n, "contacts"]))
+                     emp.loc[n, "betweenness"], emp.loc[n, "contacts"], emp.loc[n, "rank_betweenness"]))
     net = pd.DataFrame(rows, columns=["path_id", "path_order", "row_type", "display_name", "x", "y", "tie_emails",
                                       "tie_type", "community_link", "community", "role_group", "betweenness",
-                                      "contacts"])
+                                      "contacts", "rank_betweenness"])
     net.to_csv(OUT / "network_paths.csv", index=False)
 
     # ---- monthly network snapshots (locality test over time) ---------------------------------------------

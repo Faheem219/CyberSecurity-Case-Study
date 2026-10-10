@@ -85,7 +85,7 @@ def network():
         same = t.community_link.iloc[0] == "Within community"
         c = col[t.community.iloc[0]] if same else "#9aa0aa"
         ax.plot(pos.loc[[a, b], "x"], pos.loc[[a, b], "y"], color=c, lw=0.7, alpha=0.30 if same else 0.18, zorder=1)
-    size = 40 + 2600 * np.sqrt(emp.betweenness / emp.betweenness.max())
+    size = 30 + 1300 * np.sqrt(emp.betweenness / emp.betweenness.max())
     ax.scatter(emp.x, emp.y, s=size, c=emp.community.map(col), edgecolors=SURF, linewidths=1.8, zorder=2)
     for c, sub in emp.groupby("community"):                       # direct labels = secondary encoding
         if c.startswith("C0") or len(sub) < 5:
