@@ -29,12 +29,13 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 
 ## 1. Open the dashboard in Tableau
 
-1. Install **Tableau Public** (free, tableau.com/products/public/download) or Tableau Desktop. You need
-   **version 2026.1 or newer**, because the workbook is saved in the 2026.1 format.
+1. Install **Tableau Public** (free, tableau.com/products/public/download) or Tableau Desktop (any recent
+   version; tested target: Desktop 2026.2.3). The workbook is written in the classic 18.1 format that Tableau
+   2021 saved, which every later version opens and upgrades. Tableau may ask to upgrade it on save; say yes.
 2. Double-click `tableau/Enron_Email_Network.twbx`. You should see two dashboards, **1 Overview** and **2 Network**, plus 11 sheets.
 3. Quick check:
-   - **1 Overview:** the Period and Sender-role filters change the KPIs, the volume chart and the heat-map.
-   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart. Clicking a bar highlights that person in the graph.
+   - **1 Overview:** the *Period* and *Sender role* drop-downs (parameter controls) change the KPIs, the volume chart and the heat-map.
+   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* and *Ties shown* change the graph. Clicking a bar highlights that person in the graph.
 4. If Tableau ever says it cannot find a data file, point it to the matching CSV in `data/processed/`. The file names are the same.
 
 ### Publish to Tableau Public and take screenshots
@@ -57,11 +58,11 @@ Connect each CSV in `data/processed/` as a separate data source (Connect ▸ Tex
 | Communication Flow by Role | deliveries | Rows: sender_role. Columns: recipient_role. Square mark. Colour and Label: SUM(Deliveries). |
 | Locality Test by Month | monthly_locality_long | Columns: continuous MONTH(month). Rows: SUM(value). Colour: metric. Filter: reliable = Yes. |
 | Key Events | events | Rows: event_no, date_label, event. Text: category. |
-| Network Graph | network_paths | Columns: AVG(x) twice → *Dual Axis* → *Synchronize*. Rows: AVG(y). Pane 1: Line mark, Detail = path_id, Path = path_order, Colour = tie_type. Pane 2: Circle mark, Detail = display_name, Colour = community, Size = AVG(betweenness). Filter tie_type to Strong + None. Hide the axes. |
-| Top People | employees | Parameter *Rank people by* (Betweenness, PageRank, Contacts, Emails sent). *Selected metric* = CASE on the parameter. Rows: display_name sorted descending. Columns: SUM(Selected metric). Colour: role_group. Filter *Selected rank* ≤ 15. |
+| Network Graph | network_paths | Columns: AVG(x) twice → *Dual Axis* → *Synchronize*. Rows: AVG(y). Pane 1: Line mark, Detail = path_id, Path = path_order, Colour = tie_type. Pane 2: Circle mark, Detail = display_name, Colour = community, Size = AVG(betweenness). Filter tie_type to Strong (two-way) + None. Hide the axes. |
+| Top People | employees | Parameter *Rank people by* (Betweenness, PageRank, Contacts, Emails sent). *Selected metric* = CASE on the parameter. Rows: display_name, sorted descending by the metric. Columns: SUM(Selected metric). Colour: role_group. Filter *Selected rank* ≤ 15. |
 | Community Composition | employees | Rows: community. Columns: CNT(employee_key). Colour: role_group. |
 
-Dashboards: **1 Overview** has the KPIs on top, the timeline, and the heat-map and locality chart below, with filters and key events on the right. **2 Network** has the graph on the left and the parameter, Top People and Community Composition on the right. Add a highlight action on *Person*.
+Dashboards: **1 Overview** has the KPIs on top, the timeline, and the heat-map and locality chart below, with the Period / Sender-role controls and key events on the right. **2 Network** has the graph on the left and the parameter, Top People and Community Composition on the right. Add a highlight action on *Person*.
 
 ## 2. Reproduce everything
 
@@ -69,13 +70,15 @@ Dashboards: **1 Overview** has the KPIs on top, the timeline, and the heat-map a
 pip install -r requirements.txt
 python3 analysis/prepare_data.py           # cleaning + metrics  -> data/processed, results/summary.json
 python3 analysis/make_figures.py           # slide charts        -> figures/
-python3 tableau/build_workbook.py --xsd <twb_2026.1.0.xsd>   # workbook (+ schema check) -> tableau/
+python3 tableau/build_workbook.py         # Tableau workbook    -> tableau/
 python3 build_presentation.py              # deck                -> CA3_Presentation.html
 ```
 
-The XSD comes from github.com/tableau/tableau-document-schemas (`schemas/2026_1`). It imports a `user`
-namespace schema that the repository does not ship, so pass a copy whose `xs:import` lines point to small stub
-schemas. `--xsd` is optional.
+**Why the classic format?** A first version used Tableau's new 2026.1 "ManifestByVersion" format and passed the
+official schema (github.com/tableau/tableau-document-schemas), but Tableau Desktop 2026.2.3 refused to load it
+(error D2E8DA72: its loader expects attributes the published schema does not mention). The generator now mirrors,
+element by element, workbooks genuinely saved by Tableau 2021.x, and dashboard filtering uses parameters instead of
+shared filter groups.
 
 ## 3. Method in brief
 
