@@ -351,6 +351,7 @@
         <calculation class="tableau" formula="IF ([Parameters].[Parameter 2] = &quot;All periods&quot; OR [period] = [Parameters].[Parameter 2]) AND ([Parameters].[Parameter 3] = &quot;All roles&quot; OR [sender_role] = [Parameters].[Parameter 3]) THEN &quot;Keep&quot; ELSE &quot;Drop&quot; END"/>
       </column>
       <_.fcp.ObjectModelTableType.true...column caption="deliveries" datatype="table" name="[__tableau_internal_object_id__].[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]" role="measure" type="quantitative"/>
+      <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -844,6 +845,8 @@
         <calculation class="tableau" formula="RIGHT(&quot;0&quot; + STR([Calculation_2000000000000000002]), 2) + &quot;. &quot; + [display_name]"/>
       </column>
       <_.fcp.ObjectModelTableType.true...column caption="employees" datatype="table" name="[__tableau_internal_object_id__].[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]" role="measure" type="quantitative"/>
+      <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+      <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -1204,6 +1207,9 @@
         <calculation class="tableau" formula="IF ([row_type] = &quot;Person&quot; OR [Parameters].[Parameter 4] = &quot;All ties&quot; OR [tie_type] = &quot;Strong (two-way)&quot;) AND ([Parameters].[Parameter 5] = &quot;All communities&quot; OR [community] = [Parameters].[Parameter 5]) THEN &quot;Keep&quot; ELSE &quot;Drop&quot; END"/>
       </column>
       <_.fcp.ObjectModelTableType.true...column caption="network_paths" datatype="table" name="[__tableau_internal_object_id__].[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]" role="measure" type="quantitative"/>
+      <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
+      <column-instance column="[tie_type]" derivation="None" name="[none:tie_type:nk]" pivot="key" type="nominal"/>
+      <column-instance column="[role_group]" derivation="None" name="[none:role_group:nk]" pivot="key" type="nominal"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -1434,6 +1440,7 @@
       <column caption="Metric" datatype="string" name="[metric]" role="dimension" type="nominal"/>
       <column caption="Probability" datatype="real" name="[value]" role="measure" type="quantitative"/>
       <_.fcp.ObjectModelTableType.true...column caption="monthly_locality_long" datatype="table" name="[__tableau_internal_object_id__].[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]" role="measure" type="quantitative"/>
+      <column-instance column="[metric]" derivation="None" name="[none:metric:nk]" pivot="key" type="nominal"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -1706,6 +1713,11 @@
                 <run fontcolor="#4a5160" fontsize="10">deliveries (sender → recipient)</run>
               </formatted-text>
             </customized-label>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true"/>
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows/>
@@ -1787,6 +1799,11 @@
                 <run fontcolor="#4a5160" fontsize="10">unique messages</run>
               </formatted-text>
             </customized-label>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true"/>
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows/>
@@ -1868,6 +1885,11 @@
                 <run fontcolor="#4a5160" fontsize="10">active senders</run>
               </formatted-text>
             </customized-label>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true"/>
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows/>
@@ -1955,6 +1977,11 @@
                 <run fontcolor="#4a5160" fontsize="10">of email crosses communities</run>
               </formatted-text>
             </customized-label>
+            <style>
+              <style-rule element="mark">
+                <format attr="mark-labels-show" value="true"/>
+              </style-rule>
+            </style>
           </pane>
         </panes>
         <rows/>
@@ -2026,7 +2053,11 @@
           </slices>
           <aggregation value="true"/>
         </view>
-        <style/>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[twk:sent_at:qk]" scope="cols" value="Week"/>
+          </style-rule>
+        </style>
         <panes>
           <pane selection-relaxation-option="selection-relaxation-allow">
             <view>
@@ -2139,11 +2170,9 @@
             <datasource caption="Key events" name="federated.ym411v7tbvbkzaeec5rxw28rns4z"/>
           </datasources>
           <datasource-dependencies datasource="federated.ym411v7tbvbkzaeec5rxw28rns4z">
-            <column caption="Category" datatype="string" name="[category]" role="dimension" type="nominal"/>
             <column caption="When" datatype="string" name="[date_label]" role="dimension" type="nominal"/>
             <column caption="Event" datatype="string" name="[event]" role="dimension" type="nominal"/>
             <column caption="#" datatype="integer" name="[event_no]" role="dimension" type="ordinal"/>
-            <column-instance column="[category]" derivation="None" name="[none:category:nk]" pivot="key" type="nominal"/>
             <column-instance column="[date_label]" derivation="None" name="[none:date_label:nk]" pivot="key" type="nominal"/>
             <column-instance column="[event]" derivation="None" name="[none:event:nk]" pivot="key" type="nominal"/>
             <column-instance column="[event_no]" derivation="None" name="[none:event_no:ok]" pivot="key" type="ordinal"/>
@@ -2158,11 +2187,11 @@
             </view>
             <mark class="Text"/>
             <encodings>
-              <text column="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:category:nk]"/>
+              <text column="[federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event:nk]"/>
             </encodings>
           </pane>
         </panes>
-        <rows>(([federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event_no:ok] / [federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:date_label:nk]) / [federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event:nk])</rows>
+        <rows>([federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:event_no:ok] / [federated.ym411v7tbvbkzaeec5rxw28rns4z].[none:date_label:nk])</rows>
         <cols/>
       </table>
       <simple-id uuid="{F3EEA057-90AC-630E-BF5E-E9473BF120FE}"/>
@@ -2174,7 +2203,7 @@
             <run bold="true" fontcolor="#111418" fontsize="12">Unit-5 locality test: is this a social network?</run>
             <run>Æ
 </run>
-            <run fontcolor="#4a5160" fontsize="9">Blue: P(y-z tie | x-y and x-z ties). Orange: edge density (what chance alone gives).</run>
+            <run fontcolor="#4a5160" fontsize="9">Upper line: P(y-z tie | x-y and x-z ties). Lower line: edge density (what chance alone gives).</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -2201,7 +2230,11 @@
           </slices>
           <aggregation value="true"/>
         </view>
-        <style/>
+        <style>
+          <style-rule element="axis">
+            <format attr="title" class="0" field="[federated.syg3kmqzwfl18gnom9ynass9ukcu].[tmn:month:qk]" scope="cols" value="Month"/>
+          </style-rule>
+        </style>
         <panes>
           <pane selection-relaxation-option="selection-relaxation-allow">
             <view>
@@ -2306,10 +2339,12 @@
             <format attr="display" class="0" field="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:y:qk]" scope="rows" value="false"/>
           </style-rule>
           <style-rule element="gridline">
-            <format attr="line-visibility" value="off"/>
+            <format attr="line-visibility" scope="cols" value="off"/>
+            <format attr="line-visibility" scope="rows" value="off"/>
           </style-rule>
           <style-rule element="zeroline">
-            <format attr="line-visibility" value="off"/>
+            <format attr="line-visibility" scope="cols" value="off"/>
+            <format attr="line-visibility" scope="rows" value="off"/>
           </style-rule>
         </style>
         <panes>
@@ -2578,8 +2613,8 @@
               </zone-style>
             </zone>
             <zone h="79268" id="10" param="horz" type="layout-flow" w="100000" x="0" y="20732">
-              <zone h="79268" id="11" param="vert" type="layout-flow" w="76923" x="0" y="20732">
-                <zone h="40244" id="12" name="Email Volume Timeline" w="76923" x="0" y="20732">
+              <zone h="79268" id="11" param="vert" type="layout-flow" w="69231" x="0" y="20732">
+                <zone h="40244" id="12" name="Email Volume Timeline" w="69231" x="0" y="20732">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2587,8 +2622,8 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="39024" id="13" param="horz" type="layout-flow" w="76923" x="0" y="60976">
-                  <zone h="39024" id="14" name="Communication Flow by Role" w="38462" x="0" y="60976">
+                <zone h="39024" id="13" param="horz" type="layout-flow" w="69231" x="0" y="60976">
+                  <zone h="39024" id="14" name="Communication Flow by Role" w="34615" x="0" y="60976">
                     <zone-style>
                       <format attr="border-color" value="#000000"/>
                       <format attr="border-style" value="none"/>
@@ -2596,7 +2631,7 @@
                       <format attr="margin" value="4"/>
                     </zone-style>
                   </zone>
-                  <zone h="39024" id="15" name="Locality Test by Month" w="38462" x="38462" y="60976">
+                  <zone h="39024" id="15" name="Locality Test by Month" w="34615" x="34615" y="60976">
                     <zone-style>
                       <format attr="border-color" value="#000000"/>
                       <format attr="border-style" value="none"/>
@@ -2618,8 +2653,8 @@
                   <format attr="margin" value="0"/>
                 </zone-style>
               </zone>
-              <zone h="79268" id="16" param="vert" type="layout-flow" w="23077" x="76923" y="20732">
-                <zone h="7317" id="17" mode="compact" param="[Parameters].[Parameter 2]" type="paramctrl" w="23077" x="76923" y="20732">
+              <zone h="79268" id="16" param="vert" type="layout-flow" w="30769" x="69231" y="20732">
+                <zone h="7317" id="17" mode="compact" param="[Parameters].[Parameter 2]" type="paramctrl" w="30769" x="69231" y="20732">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2627,7 +2662,7 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="7317" id="18" mode="compact" param="[Parameters].[Parameter 3]" type="paramctrl" w="23077" x="76923" y="28049">
+                <zone h="7317" id="18" mode="compact" param="[Parameters].[Parameter 3]" type="paramctrl" w="30769" x="69231" y="28049">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2635,7 +2670,7 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="11220" id="19" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type="color" w="23077" x="76923" y="35366">
+                <zone h="11220" id="19" name="Email Volume Timeline" param="[federated.vwi0hgtr7e75loby7dimk7pq3a7n].[none:period:nk]" type="color" w="30769" x="69231" y="35366">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>
@@ -2643,7 +2678,7 @@
                     <format attr="margin" value="4"/>
                   </zone-style>
                 </zone>
-                <zone h="53415" id="20" name="Key Events" w="23077" x="76923" y="46585">
+                <zone h="53415" id="20" name="Key Events" w="30769" x="69231" y="46585">
                   <zone-style>
                     <format attr="border-color" value="#000000"/>
                     <format attr="border-style" value="none"/>

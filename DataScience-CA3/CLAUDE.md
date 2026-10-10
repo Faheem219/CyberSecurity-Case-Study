@@ -70,7 +70,17 @@ re-add it.
 - **Lint scripts** (scratchpad; they are easy to recreate): a dialect lint (element/attribute pairs vs genuine
   files) and an order lint (child order vs genuine files). Both are clean, apart from the axis `fold`/`synchronized`
   and the `path` encoding, which are in the official schema.
-- **Status:** awaiting the user's third test in Tableau.
+- **Third test (2026-10-10): the workbook opens.** Both dashboards render real data. Problems seen:
+  - My colour maps were ignored, and Tableau used its default "Tableau 10" palette. Genuine data sources declare a
+    `column-instance` for every field their style maps; that is now added before `<layout>`.
+  - The KPI custom labels were ignored. Genuine panes pair `customized-label` with the
+    `mark-labels-show=true` style; that is now added.
+  - **The "Network Graph" sheet was missing from dashboard 2.** The cause is unknown, and the warning text was not
+    reported. The dual-axis (`+`, `fold`, `synchronized`) and `path` syntax is confirmed by
+    github.com/tomohiro-ono-works/tabsdk (verified against real workbooks; it ships a sample saved by Tableau
+    2026.2.1, which is version 18.1 with the same manifest style as ours). Next step: ask the user whether a
+    "Network Graph" tab exists and what warning appears.
+- **Status:** awaiting the user's fourth test plus the Network Graph diagnosis.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with
