@@ -32,7 +32,7 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 1. Install **Tableau Public** (free, tableau.com/products/public/download) or Tableau Desktop (any recent
    version; tested target: Desktop 2026.2.3). The workbook is written in the classic 18.1 format that Tableau
    2021 saved, which every later version opens and upgrades. Tableau may ask to upgrade it on save; say yes.
-2. Double-click `tableau/Enron_Email_Network.twbx`. You should see two dashboards, **1 Overview** and **2 Network**, plus 11 sheets.
+2. Double-click `tableau/Enron_Email_Network.twbx`. You should see two dashboards, **1 Overview** and **2 Network**, plus 12 sheets.
 3. Quick check:
    - **1 Overview:** the *Period* and *Sender role* drop-downs (parameter controls) change the KPIs, the volume chart and the heat-map.
    - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* and *Ties shown* filter the Email Network Map. Clicking a bar highlights that person on the map.

@@ -147,8 +147,13 @@ re-add it.
   - Deck: `screenshots/overview.png` = the user's clean export (11.png). Slide 9 is still a wireframe, waiting
     for an export of the new network dashboard.
 - **Never use on Tableau 2026.2.3:** fields on the Tooltip shelf. Anything else used here is proven.
-- **Status:** awaiting the user's export of the new dashboard 2 (and a re-export of dashboard 1, whose column
-  widths are now pinned).
+- **Seventh test (2026-10-10): both dashboards render as designed.** The network map shows ties, communities and
+  broker labels; the pinned widths hold. The user's exports are now `screenshots/overview.png` (15.png) and
+  `screenshots/network.png` (14.jpg); deck slides 8–9 show them.
+  - Cosmetic leftovers: each KPI tile shows a thin vertical scrollbar, because the 32 pt number plus title is
+    taller than the 150 px band. The Key Events table shows a horizontal scrollbar. Fix if asked: KPI band
+    ~175 px or KPI font 28; events Event width ~280.
+- **Status:** the Tableau work is done. Remaining user TODO: publish to Tableau Public (downloads off) and rehearse.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with

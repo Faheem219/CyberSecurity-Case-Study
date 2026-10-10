@@ -280,7 +280,7 @@ SLIDES = [
  <div class="arrow">›</div>
  <div class="step"><b>5 · Analyse</b><span>Locality test, centrality, Girvan–Newman, period comparison</span></div>
  <div class="arrow">›</div>
- <div class="step"><b>6 · Visualise</b><span>5 Tableau data sources → 11 sheets → 2 dashboards</span></div>
+ <div class="step"><b>6 · Visualise</b><span>5 Tableau data sources → 12 sheets → 2 dashboards</span></div>
 </div>
 <div class="chips" style="margin-top:40px"><span class="chip">Python · pandas · NetworkX · scikit-learn</span>
 <span class="chip">Tableau Desktop / Public 2026</span><span class="chip">Fully reproducible scripts</span></div>"""),
@@ -335,7 +335,7 @@ SLIDES = [
 <div class="grid2" style="grid-template-columns:{dash_cols("network")};align-items:stretch;height:600px">
  {network_panel()}
  <ul style="align-self:center">
-  <li><b>Network map</b>: every email tie is a line and every person a circle, placed by a force-directed layout, so communities form visible clusters.</li>
+  <li><b>Network map</b>: email ties as lines, people as circles; communities form visible clusters.</li>
   <li><b>Parameter</b> switches the ranking: betweenness, PageRank, contacts, emails sent.</li>
   <li><b>Highlight action</b>: click a person in the bar chart to find them on the map.</li>
   <li>Community and “Ties shown” drop-downs filter the map; top brokers are labelled.</li>
