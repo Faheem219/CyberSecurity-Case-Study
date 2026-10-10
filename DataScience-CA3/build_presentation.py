@@ -166,7 +166,7 @@ def overview_panel():
  grid-template-areas:'t t t' 'k k f' 'v v e' 'h l e'">
  <div class="t" style="grid-area:t"><b>Title + one-line context</b>data source, privacy note</div>
  <div style="grid-area:k"><b>KPI tiles</b>deliveries · messages · active senders · cross-community %</div>
- <div style="grid-area:f"><b>Filters</b>Period · Sender role</div>
+ <div style="grid-area:f"><b>Controls</b>Period · Sender role</div>
  <div style="grid-area:v"><b>Weekly email volume</b>area chart, colour = period</div>
  <div style="grid-area:e"><b>Period legend + Key events</b>10 dated milestones of the collapse</div>
  <div style="grid-area:h"><b>Who emails whom</b>sender role × recipient role heat-map</div>
@@ -318,7 +318,7 @@ SLIDES = [
   <li><b>Weekly volume</b> coloured by period shows the crisis surge.</li>
   <li><b>Role × role heat-map</b>: who emails whom up and down the hierarchy.</li>
   <li><b>Locality line chart</b> repeats the Unit 5 test month by month.</li>
-  <li>Period and sender-role filters drive the KPIs, volume chart and heat-map together.</li>
+  <li>Period and sender-role drop-downs (parameters) drive the KPIs, volume chart and heat-map together.</li>
  </ul>
 </div>{SHOT_NOTE}"""),
 
@@ -330,14 +330,14 @@ SLIDES = [
   <li><b>Node-link graph</b> drawn in Tableau with a dual axis (lines + circles).</li>
   <li><b>Parameter</b> switches the ranking: betweenness, PageRank, contacts, emails sent.</li>
   <li><b>Highlight action</b>: click a person in the bar chart to find them in the graph.</li>
-  <li>Filters for community and tie type (weak ties hidden by default to avoid a hairball).</li>
+  <li>Community and tie-type drop-downs (weak ties hidden by default to avoid a hairball).</li>
  </ul>
 </div>{SHOT_NOTE}"""),
 
     # 10 — visualisation principles
     slide(head("Visualisation principles", "Design choices and why we made them") + """
 <div class="grid3">
- <div class="card tint"><h3>Overview → detail</h3><p>KPIs first, then trends, then filters and tooltips
+ <div class="card tint"><h3>Overview → detail</h3><p>KPIs first, then trends, then drop-down controls and tooltips
  (Shneiderman’s mantra).</p></div>
  <div class="card tint"><h3>Reading order</h3><p>Most important view top-left, supporting views below and right
  (Z-pattern).</p></div>

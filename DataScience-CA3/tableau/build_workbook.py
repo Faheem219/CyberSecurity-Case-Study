@@ -1,15 +1,20 @@
 """Generate the Tableau workbook (Enron_Email_Network.twb + packaged .twbx) from data/processed/*.csv.
 
-Usage : python3 tableau/build_workbook.py [--xsd path/to/twb_2026.1.0.xsd]
+Usage : python3 tableau/build_workbook.py
 Output: tableau/Enron_Email_Network.twb, tableau/Data/enron/*.csv (unpackaged, opens in place)
         tableau/Enron_Email_Network.twbx                          (packaged: workbook + data in one file)
 
-The TWB is written in the Tableau 2026.1 document format (version 26.1, <ManifestByVersion/>), as documented in
-Tableau's official schema repository (github.com/tableau/tableau-document-schemas). Pass --xsd to validate the
-XML against that schema before packaging. Opening the workbook needs Tableau Desktop / Tableau Public 2026.1+.
+Format: the classic version-18.1 workbook dialect exactly as Tableau 2021.x saved it (explicit feature manifest,
+_.fcp.* dual elements for the object model), mirrored element by element from genuine Tableau-saved workbooks.
+Tableau Desktop / Public of any later version (incl. 2026.x) upgrades it on open. The newer "26.1 +
+<ManifestByVersion/>" dialect was tried first and is rejected by Tableau 2026.2.3's loader, so it is not used.
+
+Interactivity deliberately avoids constructs that changed between versions: dashboard filtering is driven by
+parameters (+ a "Keep/Drop" calculated filter on each sheet) instead of shared filter groups, and the Top-15 chart
+is ordered by a rank label instead of a sort element.
 """
-import argparse
 import hashlib
+import re
 import shutil
 import uuid
 import zipfile
@@ -23,9 +28,14 @@ ROOT = HERE.parent
 SRC = ROOT / "data" / "processed"
 DATA_DIR = "Data/enron"
 NAME = "Enron_Email_Network"
-VERSION = "26.1"
+VERSION = "18.1"
+SOURCE_BUILD = "2021.3.3 (20213.21.1018.0949)"
 USER = "http://www.tableausoftware.com/xml/user"
 U = "{%s}" % USER
+OM_T = "_.fcp.ObjectModelEncapsulateLegacy.true..."      # feature-prefixed names as Tableau 2021 writes them
+OM_F = "_.fcp.ObjectModelEncapsulateLegacy.false..."
+TT_T = "_.fcp.ObjectModelTableType.true..."
+SV_F = "_.fcp.SchemaViewerObjectModel.false..."
 
 # ----------------------------------------------------------------------------------------------- palette
 COMMUNITY_COLOURS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"]
@@ -54,6 +64,22 @@ def q(s):
     return f'"{s}"'
 
 
+def csv_values(file, col):
+    return sorted(pd.read_csv(SRC / file)[col].dropna().unique())
+
+
+# ----------------------------------------------------------------------------------------------- parameters
+ALL_PERIODS, ALL_ROLES, ALL_COMMS = "All periods", "All roles", "All communities"
+PARAMS = {  # name -> (caption, default, members)
+    "Parameter 1": ("Rank people by", "Betweenness", ["Betweenness", "PageRank", "Contacts", "Emails sent"]),
+    "Parameter 2": ("Period", ALL_PERIODS, [ALL_PERIODS] + csv_values("deliveries.csv", "period")),
+    "Parameter 3": ("Sender role", ALL_ROLES, [ALL_ROLES] + csv_values("deliveries.csv", "sender_role")),
+    "Parameter 4": ("Ties shown", "Strong ties only", ["Strong ties only", "All ties"]),
+    "Parameter 5": ("Community", ALL_COMMS,
+                    [ALL_COMMS] + sorted(csv_values("employees.csv", "community"), key=lambda c: int(c.split()[0][1:]))),
+}
+
+
 # ----------------------------------------------------------------------------------------------- data model
 class Col:
     def __init__(self, name, datatype, role, type_, caption=None, fmt=None):
@@ -74,6 +100,10 @@ def mea(name, caption, datatype="real", fmt=None):
     return Col(name, datatype, "measure", "quantitative", caption, fmt)
 
 
+def keep(cid, caption, condition):
+    return Calc(cid, caption, "string", "dimension", "nominal", f'IF {condition} THEN "Keep" ELSE "Drop" END')
+
+
 DS = {
     "deliveries": dict(caption="Email deliveries", file="deliveries.csv", cols=[
         dim("delivery_id", "Delivery ID", "integer", "ordinal"),
@@ -89,6 +119,9 @@ DS = {
         Calc("Calculation_1000000000000000002", "Cross-community share", "real", "measure", "quantitative",
              'SUM(IF [community_link] = "Across communities" THEN 1 ELSE 0 END) / '
              "SUM([Calculation_1000000000000000001])", "p0.0%"),
+        keep("Calculation_1000000000000000003", "Keep row (period, role)",
+             f'([Parameters].[Parameter 2] = "{ALL_PERIODS}" OR [period] = [Parameters].[Parameter 2]) AND '
+             f'([Parameters].[Parameter 3] = "{ALL_ROLES}" OR [sender_role] = [Parameters].[Parameter 3])'),
     ]),
     "employees": dict(caption="People (network metrics)", file="employees.csv", cols=[
         dim("employee_key", "Pseudonym key"), dim("display_name", "Person"), dim("named_officer", "Named officer"),
@@ -111,6 +144,8 @@ DS = {
              'CASE [Parameters].[Parameter 1] WHEN "Betweenness" THEN [rank_betweenness] '
              'WHEN "PageRank" THEN [rank_pagerank] WHEN "Contacts" THEN [rank_contacts] '
              'WHEN "Emails sent" THEN [rank_emails_sent] END'),
+        Calc("Calculation_2000000000000000003", "Rank", "string", "dimension", "nominal",
+             'RIGHT("0" + STR([Calculation_2000000000000000002]), 2) + ". " + [display_name]'),
     ]),
     "network": dict(caption="Network paths (node-link layout)", file="network_paths.csv", cols=[
         dim("path_id", "Path ID"), dim("path_order", "Path order", "integer", "ordinal"), dim("row_type", "Row type"),
@@ -120,6 +155,9 @@ DS = {
         mea("contacts", "Contacts (degree)", "integer"),
     ], calcs=[
         Calc("Calculation_3000000000000000001", "x (people layer)", "real", "measure", "quantitative", "[x]"),
+        keep("Calculation_3000000000000000002", "Keep row (ties, community)",
+             '([row_type] = "Person" OR [Parameters].[Parameter 4] = "All ties" OR [tie_type] = "Strong (two-way)") '
+             f'AND ([Parameters].[Parameter 5] = "{ALL_COMMS}" OR [community] = [Parameters].[Parameter 5])'),
     ]),
     "monthly": dict(caption="Monthly locality test", file="monthly_locality_long.csv", cols=[
         dim("month", "Month", "date", "ordinal"), dim("reliable", "Reliable month"),
@@ -137,9 +175,6 @@ for k, d in DS.items():
     d["object_id"] = f"{d['file']}_{hashlib.md5(k.encode()).hexdigest().upper()}"
     d["fields"] = {c.name: c for c in d["cols"] + d["calcs"]}
 
-PARAM = dict(name="[Parameter 1]", caption="Rank people by", value="Betweenness",
-             members=["Betweenness", "PageRank", "Contacts", "Emails sent"])
-
 REMOTE = {"integer": ("20", "Sum"), "real": ("5", "Sum"), "string": ("129", "Count"),
           "date": ("133", "Year"), "datetime": ("135", "Year")}
 PREFIX = {"None": "none", "Sum": "sum", "Avg": "avg", "CountD": "ctd", "Count": "cnt", "User": "usr",
@@ -155,13 +190,17 @@ class Inst:
         col = DS[ds]["fields"][field]
         self.col = col
         if type_ is None:
-            type_ = "quantitative" if derivation not in ("None",) or col.role == "measure" else col.type
+            type_ = "quantitative" if derivation != "None" or col.role == "measure" else col.type
         self.type = type_
         self.name = f"[{PREFIX[derivation]}:{field}:{SUFFIX[type_]}]"
 
     @property
     def qual(self):
         return f"[{DS[self.ds]['name']}].{self.name}"
+
+
+def params_in(formula):
+    return sorted(set(re.findall(r"\[Parameters\]\.\[(Parameter \d+)\]", formula)))
 
 
 # ----------------------------------------------------------------------------------------------- XML helpers
@@ -175,19 +214,33 @@ def SE(parent, tag, attrib=None, text=None, **kw):
 
 
 def column_el(parent, c):
-    a = {"datatype": c.datatype, "name": f"[{c.name}]", "role": c.role, "type": c.type}
+    a = {}
     if c.caption:
         a["caption"] = c.caption
+    a["datatype"] = c.datatype
     if c.fmt:
         a["default-format"] = c.fmt
+    a.update({"name": f"[{c.name}]", "role": c.role, "type": c.type})
     el = SE(parent, "column", a)
     if isinstance(c, Calc):
         SE(el, "calculation", {"class": "tableau", "formula": c.formula})
     return el
 
 
-def relation_el(parent, d):
-    rel = SE(parent, "relation", connection=d["conn"], name=d["file"], table=f"[{d['stem']}#csv]", type="table")
+def param_column_el(parent, pname):
+    caption, default, members = PARAMS[pname]
+    col = SE(parent, "column", {"caption": caption, "datatype": "string", "name": f"[{pname}]",
+                                "param-domain-type": "list", "role": "measure", "type": "nominal",
+                                "value": q(default)})
+    SE(col, "calculation", {"class": "tableau", "formula": q(default)})
+    mem = SE(col, "members")
+    for m in members:
+        SE(mem, "member", value=q(m))
+    return col
+
+
+def relation_el(parent, d, tag="relation"):
+    rel = SE(parent, tag, connection=d["conn"], name=d["file"], table=f"[{d['stem']}#csv]", type="table")
     cols = SE(rel, "columns", {"character-set": "UTF-8", "header": "yes", "locale": "en_US", "separator": ","})
     for i, c in enumerate(d["cols"]):
         SE(cols, "column", datatype=c.datatype, name=c.name, ordinal=i)
@@ -209,7 +262,8 @@ def datasource_el(parent, key):
     nc = SE(ncs, "named-connection", caption=d["stem"], name=d["conn"])
     SE(nc, "connection", {"class": "textscan", "directory": DATA_DIR, "filename": d["file"], "password": "",
                           "server": ""})
-    relation_el(conn, d)
+    relation_el(conn, d, OM_F + "relation")
+    relation_el(conn, d, OM_T + "relation")
     mrs = SE(conn, "metadata-records")
     cap = SE(mrs, "metadata-record", {"class": "capability"})
     SE(cap, "remote-name", text="")
@@ -239,29 +293,33 @@ def datasource_el(parent, key):
         SE(mr, "contains-null", text="true")
         if c.datatype == "string":
             SE(mr, "collation", flag="0", name="LEN_RUS")
-        SE(mr, "object-id", text=f"[{d['object_id']}]")
+        SE(mr, OM_T + "object-id", text=f"[{d['object_id']}]")
     SE(ds, "aliases", enabled="yes")
-    SE(ds, "column", caption=d["file"], datatype="table",
-       name=f"[__tableau_internal_object_id__].[{d['object_id']}]", role="measure", type="quantitative")
     for c in d["cols"] + d["calcs"]:
         column_el(ds, c)
-    SE(ds, "layout", {"dim-ordering": "alphabetic", "measure-ordering": "alphabetic", "show-structure": "true"})
-    style = SE(ds, "style")
-    rule = SE(style, "style-rule", element="mark")
+    SE(ds, TT_T + "column", caption=d["file"], datatype="table",
+       name=f"[__tableau_internal_object_id__].[{d['object_id']}]", role="measure", type="quantitative")
+    SE(ds, "layout", {SV_F + "dim-percentage": "0.5", SV_F + "measure-percentage": "0.4",
+                      "dim-ordering": "alphabetic", "measure-ordering": "alphabetic", "show-structure": "true"})
     maps = {"deliveries": [("period", PERIOD_COLOURS)],
             "employees": [("community", None), ("role_group", "roles")],
             "network": [("community", None), ("tie_type", TIE_COLOURS), ("role_group", "roles")],
             "monthly": [("metric", METRIC_COLOURS)], "events": []}[key]
-    src = pd.read_csv(SRC / d["file"])
-    for field, mapping in maps:
-        if mapping is None:
-            vals = sorted(src[field].unique(), key=lambda c: int(c.split()[0][1:]))
-            mapping = {v: (COMMUNITY_COLOURS[int(v.split()[0][1:]) - 1] if not v.startswith("C0") else "#b9bec8")
-                       for v in vals}
-        elif mapping == "roles":
-            mapping = {v: ROLE_COLOURS[i] for i, v in enumerate(sorted(src[field].unique()))}
-        colour_map(rule, f"[none:{field}:nk]", mapping)
-    og = SE(ds, "object-graph")
+    if maps:
+        style = SE(ds, "style")
+        rule = SE(style, "style-rule", element="mark")
+        src = pd.read_csv(SRC / d["file"])
+        for field, mapping in maps:
+            if mapping is None:
+                vals = sorted(src[field].unique(), key=lambda c: int(c.split()[0][1:]))
+                mapping = {v: (COMMUNITY_COLOURS[int(v.split()[0][1:]) - 1] if not v.startswith("C0")
+                               else "#b9bec8") for v in vals}
+            elif mapping == "roles":
+                mapping = {v: ROLE_COLOURS[i] for i, v in enumerate(sorted(src[field].unique()))}
+            colour_map(rule, f"[none:{field}:nk]", mapping)
+    sv = SE(ds, "semantic-values")
+    SE(sv, "semantic-value", key="[Country].[Name]", value=q("United States"))
+    og = SE(ds, OM_T + "object-graph")
     objs = SE(og, "objects")
     obj = SE(objs, "object", caption=d["file"], id=d["object_id"])
     props = SE(obj, "properties", context="")
@@ -272,12 +330,8 @@ def datasource_el(parent, key):
 def parameters_el(parent):
     ds = SE(parent, "datasource", hasconnection="false", inline="true", name="Parameters", version=VERSION)
     SE(ds, "aliases", enabled="yes")
-    col = SE(ds, "column", caption=PARAM["caption"], datatype="string", name=PARAM["name"],
-             param__domain__type="list", role="measure", type="nominal", value=q(PARAM["value"]))
-    SE(col, "calculation", {"class": "tableau", "formula": q(PARAM["value"])})
-    mem = SE(col, "members")
-    for m in PARAM["members"]:
-        SE(mem, "member", value=q(m))
+    for p in PARAMS:
+        param_column_el(ds, p)
     return ds
 
 
@@ -286,16 +340,16 @@ def deps_el(view, ds_key, insts, extra_fields=()):
     d = DS[ds_key]
     dep = SE(view, "datasource-dependencies", datasource=d["name"])
     fields = []
-    for i in insts:
-        fields.append(i.field)
-        if isinstance(i.col, Calc):
-            fields += [f for f in d["fields"] if f"[{f}]" in i.col.formula]
-    fields += list(extra_fields)
-    seen = []
-    for f in fields:
-        if f not in seen:
-            seen.append(f)
-    for f in sorted(seen):
+    pending = [i.field for i in insts] + list(extra_fields)
+    while pending:                                    # include fields referenced by calculations, recursively
+        f = pending.pop(0)
+        if f in fields:
+            continue
+        fields.append(f)
+        col = d["fields"][f]
+        if isinstance(col, Calc):
+            pending += [g for g in d["fields"] if f"[{g}]" in col.formula]
+    for f in sorted(fields):
         column_el(dep, d["fields"][f])
     done = set()
     for i in sorted(insts, key=lambda i: i.name):
@@ -304,29 +358,14 @@ def deps_el(view, ds_key, insts, extra_fields=()):
         done.add(i.name)
         SE(dep, "column-instance", column=f"[{i.field}]", derivation=i.derivation, name=i.name, pivot="key",
            type=i.type)
-    return dep
-
-
-def all_filter(view, inst, group=None):
-    a = {"class": "categorical", "column": inst.qual}
-    if group:
-        a["filter-group"] = group
-    f = SE(view, "filter", a)
-    SE(f, "groupfilter", {"function": "level-members", "level": inst.name, U + "ui-enumeration": "all",
-                          U + "ui-marker": "enumerate"})
+    return dep, fields
 
 
 def members_filter(view, inst, members):
     f = SE(view, "filter", {"class": "categorical", "column": inst.qual})
-    if len(members) == 1:
-        SE(f, "groupfilter", {"function": "member", "level": inst.name, "member": q(members[0]),
-                              U + "ui-domain": "database", U + "ui-enumeration": "inclusive",
-                              U + "ui-marker": "enumerate"})
-        return
-    u = SE(f, "groupfilter", {"function": "union", U + "ui-domain": "database", U + "ui-enumeration": "inclusive",
-                              U + "ui-marker": "enumerate"})
-    for m in members:
-        SE(u, "groupfilter", function="member", level=inst.name, member=q(m))
+    SE(f, "groupfilter", {"function": "member", "level": inst.name, "member": q(members[0]),
+                          U + "ui-domain": "database", U + "ui-enumeration": "inclusive",
+                          U + "ui-marker": "enumerate"})
 
 
 def range_filter(view, inst, lo, hi):
@@ -348,14 +387,9 @@ def title_el(parent, text, sub=None):
 class Sheet:
     def __init__(self, name, ds, title, sub=None):
         self.name, self.ds, self.title, self.sub = name, ds, title, sub
-        self.insts, self.extra = [], []
-        self.filters = []          # callables(view)
-        self.slices = []
-        self.sort = None
-        self.panes = []            # list of dicts
+        self.insts, self.filters, self.slices, self.panes = [], [], [], []
         self.rows = self.cols = ""
-        self.axis_rules = []       # (attr-dict) for <style-rule element='axis'>
-        self.extra_style = []      # (element, [format dicts])
+        self.axis_rules, self.extra_style = [], []
 
     def inst(self, field, derivation="None", type_=None):
         i = Inst(self.ds, field, derivation, type_)
@@ -368,23 +402,20 @@ class Sheet:
         table = SE(ws, "table")
         view = SE(table, "view")
         dss = SE(view, "datasources")
-        if any(isinstance(i.col, Calc) and "[Parameters]" in i.col.formula for i in self.insts):
-            SE(dss, "datasource", caption="Parameters", name="Parameters")
+        tmp = ET.Element("tmp")                       # collect field list first to know which parameters are used
+        _, fields = deps_el(tmp, self.ds, self.insts)
+        used = sorted({p for f in fields if isinstance(DS[self.ds]["fields"][f], Calc)
+                       for p in params_in(DS[self.ds]["fields"][f].formula)})
+        if used:
+            SE(dss, "datasource", name="Parameters")
         SE(dss, "datasource", caption=DS[self.ds]["caption"], name=DS[self.ds]["name"])
-        if any(isinstance(i.col, Calc) and "[Parameters]" in i.col.formula for i in self.insts):
+        if used:
             pdep = SE(view, "datasource-dependencies", datasource="Parameters")
-            c = SE(pdep, "column", caption=PARAM["caption"], datatype="string", name=PARAM["name"],
-                   param__domain__type="list", role="measure", type="nominal", value=q(PARAM["value"]))
-            SE(c, "calculation", {"class": "tableau", "formula": q(PARAM["value"])})
-            mem = SE(c, "members")
-            for m in PARAM["members"]:
-                SE(mem, "member", value=q(m))
-        deps_el(view, self.ds, self.insts, self.extra)
+            for p in used:
+                param_column_el(pdep, p)
+        deps_el(view, self.ds, self.insts)
         for f in self.filters:
             f(view)
-        if self.sort:
-            col, using = self.sort
-            SE(view, "computed-sort", {"column": col.qual, "direction": "DESC", "using": using.qual})
         if self.slices:
             sl = SE(view, "slices")
             for s in self.slices:
@@ -394,6 +425,7 @@ class Sheet:
         if self.axis_rules:
             r = SE(style, "style-rule", element="axis")
             for a in self.axis_rules:
+                a = dict(a)
                 SE(r, a.pop("_tag", "encoding"), a)
         for element, formats in self.extra_style:
             r = SE(style, "style-rule", element=element)
@@ -401,10 +433,12 @@ class Sheet:
                 SE(r, "format", f)
         panes = SE(table, "panes")
         for p in self.panes:
-            a = {"selection-relaxation-option": "selection-relaxation-allow"}
-            for k in ("id", "x-axis-name"):
-                if k in p:
-                    a[k] = p[k]
+            a = {}
+            if "id" in p:
+                a["id"] = p["id"]
+            a["selection-relaxation-option"] = "selection-relaxation-allow"
+            if "x-axis-name" in p:
+                a["x-axis-name"] = p["x-axis-name"]
             pane = SE(panes, "pane", a)
             pv = SE(pane, "view")
             SE(pv, "breakdown", value="auto")
@@ -433,30 +467,29 @@ def build_sheets():
     sheets = []
     D = "deliveries"
 
-    def deliveries_filters(s):
-        per, role = s.inst("period"), s.inst("sender_role")
-        s.filters += [lambda v, i=per: all_filter(v, i, "1"), lambda v, i=role: all_filter(v, i, "2")]
-        s.slices += [per, role]
+    def deliveries_filter(s):
+        k = s.inst("Calculation_1000000000000000003")
+        s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
+        s.slices.append(k)
 
-    kpis = [("KPI Deliveries", "sum", "Calculation_1000000000000000001", "Sum", "deliveries (sender → recipient)"),
-            ("KPI Messages", "ctd", "message_id", "CountD", "unique messages"),
-            ("KPI Senders", "ctd", "sender", "CountD", "active senders"),
-            ("KPI Cross-community", "usr", "Calculation_1000000000000000002", "User", "of email crosses communities")]
-    for name, _, field, der, label in kpis:
+    kpis = [("KPI Deliveries", "Calculation_1000000000000000001", "Sum", "deliveries (sender → recipient)"),
+            ("KPI Messages", "message_id", "CountD", "unique messages"),
+            ("KPI Senders", "sender", "CountD", "active senders"),
+            ("KPI Cross-community", "Calculation_1000000000000000002", "User", "of email crosses communities")]
+    for name, field, der, label in kpis:
         s = Sheet(name, D, name.replace("KPI ", ""))
         m = s.inst(field, der, "quantitative")
-        deliveries_filters(s)
+        deliveries_filter(s)
         s.panes.append(dict(mark="Text", enc=[("text", m)], label=[
             (f"<{m.qual}>", {"bold": "true", "fontcolor": "#1f3864", "fontsize": "24"}),
             ("Æ\n", {}), (label, {"fontcolor": MUTED, "fontsize": "10"})]))
-        s.extra_style.append(("worksheet", [{"attr": "display-field-labels", "scope": "cols", "value": "false"}]))
         sheets.append(s)
 
     s = Sheet("Email Volume Timeline", D, "Weekly email deliveries, 1999-2002",
               "Colour = period. Volume more than triples in the crisis window (Aug-Dec 2001).")
-    wk, n, per = s.inst("sent_at", "Week-Trunc", "quantitative"), s.inst(
-        "Calculation_1000000000000000001", "Sum"), s.inst("period")
-    deliveries_filters(s)
+    wk, n, per = (s.inst("sent_at", "Week-Trunc", "quantitative"), s.inst("Calculation_1000000000000000001", "Sum"),
+                  s.inst("period"))
+    deliveries_filter(s)
     s.panes.append(dict(mark="Area", enc=[("color", per)]))
     s.rows, s.cols = n.qual, wk.qual
     sheets.append(s)
@@ -464,7 +497,7 @@ def build_sheets():
     s = Sheet("Communication Flow by Role", D, "Who emails whom, by seniority",
               "Rows = sender role, columns = recipient role; darker = more deliveries.")
     sr, rr, n = s.inst("sender_role"), s.inst("recipient_role"), s.inst("Calculation_1000000000000000001", "Sum")
-    deliveries_filters(s)
+    deliveries_filter(s)
     s.panes.append(dict(mark="Square", enc=[("color", n), ("text", n)]))
     s.rows, s.cols = sr.qual, rr.qual
     sheets.append(s)
@@ -485,15 +518,14 @@ def build_sheets():
     s.rows, s.cols = val.qual, mon.qual
     sheets.append(s)
 
-    s = Sheet("Network Graph", "network", "Strong-tie email network (Girvan-Newman communities)",
-              "Node = person (size = betweenness, colour = community); line = two-way email tie.")
+    s = Sheet("Network Graph", "network", "Email network (Girvan-Newman communities)",
+              "Node = person (size = betweenness, colour = community); line = email tie.")
     x, x2, y = s.inst("x", "Avg"), s.inst("Calculation_3000000000000000001", "Avg"), s.inst("y", "Avg")
     pid, order, person = s.inst("path_id"), s.inst("path_order"), s.inst("display_name")
     tie, comm, btw = s.inst("tie_type"), s.inst("community"), s.inst("betweenness", "Avg")
-    role, contacts = s.inst("role_group"), s.inst("contacts", "Avg")
-    s.filters += [lambda v, i=tie: members_filter(v, i, ["Strong (two-way)", "None"]),
-                  lambda v, i=comm: all_filter(v, i)]
-    s.slices += [tie, comm]
+    role, contacts, k = s.inst("role_group"), s.inst("contacts", "Avg"), s.inst("Calculation_3000000000000000002")
+    s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
+    s.slices.append(k)
     s.panes += [dict(mark="Automatic"),
                 {"id": "1", "x-axis-name": x.qual, "mark": "Line",
                  "enc": [("color", tie), ("lod", pid), ("path", order)], "formats": [("size", "0.2")]},
@@ -518,13 +550,14 @@ def build_sheets():
 
     s = Sheet("Top People", "employees", "Top 15 people by the selected metric",
               "Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.")
-    person, metric, rank, role = (s.inst("display_name"), s.inst("Calculation_2000000000000000001", "Sum"),
-                                  s.inst("Calculation_2000000000000000002"), s.inst("role_group"))
+    label, metric, rank = (s.inst("Calculation_2000000000000000003"), s.inst("Calculation_2000000000000000001", "Sum"),
+                           s.inst("Calculation_2000000000000000002"))
+    role, person = s.inst("role_group"), s.inst("display_name")
     s.filters.append(lambda v, i=rank: range_filter(v, i, 1, 15))
     s.slices.append(rank)
-    s.sort = (person, metric)
-    s.panes.append(dict(mark="Bar", enc=[("color", role)], formats=[("mark-labels-show", "true")]))
-    s.rows, s.cols = person.qual, metric.qual
+    s.panes.append(dict(mark="Bar", enc=[("color", role), ("lod", person)],
+                        formats=[("mark-labels-show", "true")]))
+    s.rows, s.cols = label.qual, metric.qual
     sheets.append(s)
 
     s = Sheet("Community Composition", "employees", "Who is in each community",
@@ -563,23 +596,21 @@ def place(z, x, y, w, h):
 
 def emit(parent, z, W, H, ids):
     x, y, w, h = z.rect
-    a = {"h": round(h / H * 100000), "id": next(ids), "w": round(w / W * 100000), "x": round(x / W * 100000),
-         "y": round(y / H * 100000)}
+    a = {"h": round(h / H * 100000), "id": next(ids)}
     if z.kind in ("horz", "vert"):
-        a.update({"param": z.kind, "type-v2": "layout-flow"})
+        a.update({"param": z.kind, "type": "layout-flow"})
     elif z.kind == "sheet":
         a["name"] = z.attrs["name"]
     elif z.kind == "text":
-        a["type-v2"] = "text"
-    elif z.kind == "filter":
-        a.update({"mode": z.attrs.get("mode", "checkdropdown"), "name": z.attrs["name"], "param": z.attrs["param"],
-                  "type-v2": "filter"})
+        a["type"] = "text"
     elif z.kind == "param":
-        a.update({"mode": "compact", "param": "[Parameters].[Parameter 1]", "type-v2": "paramctrl"})
+        a.update({"mode": "compact", "param": f"[Parameters].[{z.attrs['param']}]", "type": "paramctrl"})
     elif z.kind == "color":
-        a.update({"name": z.attrs["name"], "param": z.attrs["param"], "type-v2": "color"})
+        a["name"] = z.attrs["name"]
         if "pane" in z.attrs:
             a["pane-specification-id"] = z.attrs["pane"]
+        a.update({"param": z.attrs["param"], "type": "color"})
+    a.update({"w": round(w / W * 100000), "x": round(x / W * 100000), "y": round(y / H * 100000)})
     el = SE(parent, "zone", a)
     if z.kind == "text":
         ft = SE(el, "formatted-text")
@@ -595,34 +626,32 @@ def emit(parent, z, W, H, ids):
     return el
 
 
-def dashboard_el(parent, name, W, H, layout, deps):
+def dashboard_el(parent, name, W, H, layout, params, legend_insts):
     db = SE(parent, "dashboard", name=name)
     SE(db, "style")
-    SE(db, "size", maxheight=H, maxwidth=W, minheight=H, minwidth=W, sizing__mode="fixed")
-    if deps:
-        dss = SE(db, "datasources")
-        if any(i == "PARAM" for i in deps):
-            SE(dss, "datasource", caption="Parameters", name="Parameters")
-        keys = sorted({i.ds for i in deps if i != "PARAM"})
-        for k in keys:
-            SE(dss, "datasource", caption=DS[k]["caption"], name=DS[k]["name"])
-        if any(i == "PARAM" for i in deps):
-            pdep = SE(db, "datasource-dependencies", datasource="Parameters")
-            c = SE(pdep, "column", caption=PARAM["caption"], datatype="string", name=PARAM["name"],
-                   param__domain__type="list", role="measure", type="nominal", value=q(PARAM["value"]))
-            SE(c, "calculation", {"class": "tableau", "formula": q(PARAM["value"])})
-            mem = SE(c, "members")
-            for m in PARAM["members"]:
-                SE(mem, "member", value=q(m))
-        for k in keys:
-            deps_el(db, k, [i for i in deps if i != "PARAM" and i.ds == k])
+    SE(db, "size", maxheight=H, maxwidth=W, minheight=H, minwidth=W)
+    dss = SE(db, "datasources")
+    if params:
+        SE(dss, "datasource", name="Parameters")
+    keys = sorted({i.ds for i in legend_insts})
+    for k in keys:
+        SE(dss, "datasource", caption=DS[k]["caption"], name=DS[k]["name"])
+    if params:
+        pdep = SE(db, "datasource-dependencies", datasource="Parameters")
+        for p in params:
+            param_column_el(pdep, p)
+    for k in keys:
+        deps_el(db, k, [i for i in legend_insts if i.ds == k])
     zones = SE(db, "zones")
-    root = Z("root", children=[layout])
     place(layout, 0, 0, W, H)
     ids = iter(range(3, 1000))
-    top = SE(zones, "zone", {"h": "100000", "id": "2", "type-v2": "layout-basic", "w": "100000", "x": "0",
-                             "y": "0"})
+    top = SE(zones, "zone", {"h": "100000", "id": "2", "type": "layout-basic", "w": "100000", "x": "0", "y": "0"})
     emit(top, layout, W, H, ids)
+    zs = SE(top, "zone-style")
+    SE(zs, "format", attr="border-color", value="#000000")
+    SE(zs, "format", attr="border-style", value="none")
+    SE(zs, "format", attr="border-width", value="0")
+    SE(zs, "format", attr="margin", value="8")
     SE(db, "simple-id", uuid=guid("db-" + name))
     return db
 
@@ -633,14 +662,9 @@ def text_runs(title, sub):
 
 
 def build_dashboards(parent):
-    dl = DS["deliveries"]["name"]
     per = Inst("deliveries", "period")
-    role = Inst("deliveries", "sender_role")
     comm = Inst("network", "community")
-    tie = Inst("network", "tie_type")
-    ncomm = Inst("network", "community")
-
-    W1, H1 = 1300, 820
+    W, H = 1300, 820
     overview = Z("vert", children=[
         Z("text", 66, runs=text_runs(
             "Enron's email network, 1999-2002: how communication changed as the company collapsed",
@@ -653,15 +677,14 @@ def build_dashboards(parent):
                                 Z("horz", children=[Z("sheet", name="Communication Flow by Role"),
                                                     Z("sheet", name="Locality Test by Month")])]),
             Z("vert", 300, children=[
-                Z("filter", 64, name="Email Volume Timeline", param=per.qual),
-                Z("filter", 64, name="Email Volume Timeline", param=role.qual),
+                Z("param", 60, param="Parameter 2"),
+                Z("param", 60, param="Parameter 3"),
                 Z("color", 92, name="Email Volume Timeline", param=per.qual),
                 Z("sheet", name="Key Events")]),
         ]),
     ])
-    dashboard_el(parent, "1 Overview", W1, H1, overview, [per, role])
+    dashboard_el(parent, "1 Overview", W, H, overview, ["Parameter 2", "Parameter 3"], [per])
 
-    W2, H2 = 1300, 820
     network = Z("vert", children=[
         Z("text", 66, runs=text_runs(
             "Who holds the network together? Communities and brokers",
@@ -670,32 +693,27 @@ def build_dashboards(parent):
         Z("horz", children=[
             Z("vert", children=[Z("sheet", name="Network Graph")]),
             Z("vert", 470, children=[
-                Z("horz", 60, children=[Z("param"), Z("filter", name="Network Graph", param=comm.qual),
-                                        Z("filter", name="Network Graph", param=tie.qual)]),
+                Z("horz", 60, children=[Z("param", param="Parameter 1"), Z("param", param="Parameter 5"),
+                                        Z("param", param="Parameter 4")]),
                 Z("sheet", 400, name="Top People"),
                 Z("sheet", name="Community Composition")]),
         ]),
-        Z("color", 46, name="Network Graph", param=ncomm.qual, pane="2"),
+        Z("color", 46, name="Network Graph", param=comm.qual, pane="2"),
     ])
-    dashboard_el(parent, "2 Network", W2, H2, network, ["PARAM", comm, tie])
+    dashboard_el(parent, "2 Network", W, H, network, ["Parameter 1", "Parameter 4", "Parameter 5"], [comm])
 
 
 def actions_el(parent):
     acts = SE(parent, "actions")
-    a = SE(acts, "action", caption="Highlight person", name="[Action1_" + stable_id("act1", 32,
-                                                                                   "0123456789ABCDEF") + "]")
-    SE(a, "activation", {"auto-clear": "true", "type": "on-select"})
-    SE(a, "source", dashboard="2 Network", type="sheet")
-    cmd = SE(a, "command", command="tsc:brush")
-    SE(cmd, "param", name="field-captions", value="Person")
-    SE(cmd, "param", name="target", value="2 Network")
-    b = SE(acts, "action", caption="Highlight period", name="[Action2_" + stable_id("act2", 32,
-                                                                                   "0123456789ABCDEF") + "]")
-    SE(b, "activation", {"auto-clear": "true", "type": "on-select"})
-    SE(b, "source", dashboard="1 Overview", type="sheet")
-    cmd = SE(b, "command", command="tsc:brush")
-    SE(cmd, "param", name="field-captions", value="Period")
-    SE(cmd, "param", name="target", value="1 Overview")
+    for n, (caption, dashboard, field) in enumerate((("Highlight person", "2 Network", "Person"),
+                                                     ("Highlight period", "1 Overview", "Period")), 1):
+        a = SE(acts, "action", caption=caption,
+               name=f"[Action{n}_" + stable_id(f"act{n}", 32, "0123456789ABCDEF") + "]")
+        SE(a, "activation", {"auto-clear": "true", "type": "on-select"})
+        SE(a, "source", dashboard=dashboard, type="sheet")
+        cmd = SE(a, "command", command="tsc:brush")
+        SE(cmd, "param", name="field-captions", value=field)
+        SE(cmd, "param", name="target", value=dashboard)
 
 
 def windows_el(parent, sheets):
@@ -704,8 +722,11 @@ def windows_el(parent, sheets):
                                         "Email Volume Timeline", "Communication Flow by Role", "Key Events",
                                         "Locality Test by Month"]),
                         ("2 Network", ["Network Graph", "Top People", "Community Composition"])):
-        w = SE(wins, "window", {"class": "dashboard", "name": name, **({"maximized": "true"}
-                                                                       if name == "1 Overview" else {})})
+        a = {"class": "dashboard"}
+        if name == "1 Overview":
+            a["maximized"] = "true"
+        a["name"] = name
+        w = SE(wins, "window", a)
         vps = SE(w, "viewpoints")
         for v in views:
             SE(vps, "viewpoint", name=v)
@@ -726,10 +747,14 @@ def windows_el(parent, sheets):
 
 
 def build():
-    root = ET.Element("workbook", {"original-version": VERSION, "source-build": "0.0.0 (0000.0.0.0)",
+    root = ET.Element("workbook", {"original-version": VERSION, "source-build": SOURCE_BUILD,
                                    "source-platform": "win", "version": VERSION}, nsmap={"user": USER})
     man = SE(root, "document-format-change-manifest")
-    SE(man, "ManifestByVersion")
+    for feat in ("_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy",
+                 "_.fcp.ObjectModelTableType.true...ObjectModelTableType",
+                 "_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel",
+                 "SheetIdentifierTracking", "WindowsPersistSimpleIdentifiers"):
+        SE(man, feat)
     prefs = SE(root, "preferences")
     SE(prefs, "preference", name="ui.encoding.shelf.height", value="24")
     SE(prefs, "preference", name="ui.shelf.height", value="26")
@@ -745,18 +770,10 @@ def build():
     dbs = SE(root, "dashboards")
     build_dashboards(dbs)
     windows_el(root, sheets)
-    ex = SE(root, "explain-data", enabled__for__viewer="true", extreme__values__enabled__for__all="true")
-    types = SE(ex, "explanation-types")
-    for t in ("number-of-records", "average-of-records", "extreme-values", "distribution-of-records",
-              "aggregated-dimensions", "unvisualized-measures", "null-value"):
-        SE(types, "explanation-type", type=t, enabled="true")
     return ET.ElementTree(root)
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--xsd", help="validate against Tableau's official TWB schema (twb_2026.1.0.xsd)")
-    args = ap.parse_args()
     tree = build()
     twb = HERE / f"{NAME}.twb"
     tree.write(str(twb), xml_declaration=True, encoding="utf-8", pretty_print=True)
@@ -764,14 +781,6 @@ def main():
     data.mkdir(parents=True, exist_ok=True)
     for d in DS.values():
         shutil.copy(SRC / d["file"], data / d["file"])
-    if args.xsd:
-        schema = ET.XMLSchema(ET.parse(args.xsd))
-        ok = schema.validate(ET.parse(str(twb)))
-        print("XSD validation:", "PASS" if ok else "FAIL")
-        for e in list(schema.error_log)[:40]:
-            print(f"  line {e.line}: {e.message}")
-        if not ok:
-            raise SystemExit(1)
     twbx = HERE / f"{NAME}.twbx"
     with zipfile.ZipFile(twbx, "w", zipfile.ZIP_DEFLATED) as z:
         z.write(twb, twb.name)

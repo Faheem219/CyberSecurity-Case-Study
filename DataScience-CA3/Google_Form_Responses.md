@@ -29,7 +29,7 @@ Enron Email Network Analytics: An Interactive Tableau Dashboard of Communication
 8. **Tableau dashboard:** exported 5 tidy CSV data sources and built a workbook with 11 sheets and 2 dashboards.
    - **Overview dashboard:** KPI tiles, a weekly area chart coloured by period, a sender-role × recipient-role heat-map, a monthly locality line chart and a key-events table.
    - **Network dashboard:** a node-link graph drawn with a dual axis (ties as lines, people as circles sized by betweenness), a Top-15 bar chart switched by a parameter, and a community composition chart.
-   - **Interactivity:** shared filters, a parameter, highlight actions and tooltips.
+   - **Interactivity:** parameter drop-downs (period, sender role, ranking metric, community, tie type) that filter the views, highlight actions and tooltips.
    - **Design principles:** overview first, then filter, then detail (Shneiderman); a Z-pattern layout; one meaning per colour with a colour-blind-checked palette; sorted bars; no pie charts; less non-data ink.
 9. **Licence comparison:** compared the licences using Tableau's official site-role and licensing documentation and its published price list (Tableau Cloud, per user per month, billed yearly).
    - **Creator (US$75 Standard / US$115 Enterprise):** Tableau Desktop, Prep Builder and web authoring; can connect to data, build and publish.
