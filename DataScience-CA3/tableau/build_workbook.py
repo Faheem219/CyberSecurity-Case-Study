@@ -146,6 +146,10 @@ DS = {
              'WHEN "Emails sent" THEN [rank_emails_sent] END'),
         Calc("Calculation_2000000000000000003", "Rank", "string", "dimension", "nominal",
              'RIGHT("0" + STR([Calculation_2000000000000000002]), 2) + ". " + [display_name]'),
+        keep("Calculation_2000000000000000004", "Keep row (community)",
+             f'[Parameters].[Parameter 5] = "{ALL_COMMS}" OR [community] = [Parameters].[Parameter 5]'),
+        Calc("Calculation_2000000000000000005", "Broker label", "string", "dimension", "nominal",
+             'IF [rank_betweenness] <= 6 THEN [display_name] ELSE "" END'),
     ]),
     "network": dict(caption="Network paths (node-link layout)", file="network_paths.csv", cols=[
         dim("path_id", "Path ID"), dim("path_order", "Path order", "integer", "ordinal"), dim("row_type", "Row type"),
@@ -338,10 +342,10 @@ def datasource_el(parent, key):
     return ds
 
 
-def parameters_el(parent):
+def parameters_el(parent, names):
     ds = SE(parent, "datasource", hasconnection="false", inline="true", name="Parameters", version=VERSION)
     SE(ds, "aliases", enabled="yes")
-    for p in PARAMS:
+    for p in names:
         param_column_el(ds, p)
     return ds
 
@@ -513,12 +517,15 @@ def build_sheets():
     deliveries_filter(s)
     s.panes.append(dict(mark="Square", enc=[("color", n), ("text", n)]))
     s.rows, s.cols = sr.qual, rr.qual
+    s.extra_style.append(("header", [{"attr": "width", "field": sr.qual, "value": "150"}]))
     sheets.append(s)
 
     s = Sheet("Key Events", "events", "Key events in the Enron collapse")
-    no, when, ev = s.inst("event_no"), s.inst("date_label"), s.inst("event")
-    s.panes.append(dict(mark="Text", enc=[("text", ev)]))
-    s.rows = f"({no.qual} / {when.qual})"
+    no, when, ev, cat = s.inst("event_no"), s.inst("date_label"), s.inst("event"), s.inst("category")
+    s.panes.append(dict(mark="Text", enc=[("text", cat)]))
+    s.rows = f"(({no.qual} / {when.qual}) / {ev.qual})"
+    s.extra_style.append(("header", [{"attr": "width", "field": ev.qual, "value": "250"},
+                                     {"attr": "width", "field": when.qual, "value": "84"}]))
     sheets.append(s)
 
     s = Sheet("Locality Test by Month", "monthly", "Unit-5 locality test: is this a social network?",
@@ -532,7 +539,68 @@ def build_sheets():
     s.axis_rules = [{"_tag": "format", "attr": "title", "class": "0", "field": mon.qual, "scope": "cols", "value": "Month"}]
     sheets.append(s)
 
-    s = Sheet("Network Graph", "network", "Email network (Girvan-Newman communities)",
+    s = Sheet("People Map", "employees", "Who sits where in the email network",
+              "Each circle is a person, placed by a force-directed layout of their email ties (people who email "
+              "each other sit close). Size = betweenness, colour = community; top brokers labelled.")
+    x, y, person = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("display_name")
+    comm, btw, role = s.inst("community"), s.inst("betweenness", "Avg"), s.inst("role_group")
+    contacts, lab = s.inst("contacts", "Avg"), s.inst("Calculation_2000000000000000005")
+    k = s.inst("Calculation_2000000000000000004")
+    s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
+    s.slices.append(k)
+    s.panes.append(dict(mark="Circle", enc=[("color", comm), ("size", btw), ("text", lab), ("tooltip", role),
+                                            ("tooltip", contacts), ("lod", person)],
+                        formats=[("mark-labels-show", "true"), ("mark-transparency", "225")]))
+    s.rows, s.cols = y.qual, x.qual
+    s.axis_rules = hidden_fixed_axes([x], y)
+    s.extra_style += no_gridlines()
+    sheets.append(s)
+
+    s = Sheet("Top People", "employees", "Top 15 people by the selected metric",
+              "Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.")
+    label, metric, rank = (s.inst("Calculation_2000000000000000003"), s.inst("Calculation_2000000000000000001", "Sum"),
+                           s.inst("Calculation_2000000000000000002"))
+    role, person = s.inst("role_group"), s.inst("display_name")
+    s.filters.append(lambda v, i=rank: range_filter(v, i, 1, 15))
+    s.slices.append(rank)
+    s.panes.append(dict(mark="Bar", enc=[("color", role), ("lod", person)],
+                        formats=[("mark-labels-show", "true")]))
+    s.rows, s.cols = label.qual, metric.qual
+    sheets.append(s)
+
+    s = Sheet("Community Composition", "employees", "Who is in each community",
+              "People per Girvan-Newman community, coloured by role group.")
+    comm, cnt, role = s.inst("community"), s.inst("employee_key", "Count", "quantitative"), s.inst("role_group")
+    s.panes.append(dict(mark="Bar", enc=[("color", role)]))
+    s.rows, s.cols = comm.qual, cnt.qual
+    sheets.append(s)
+    return sheets
+
+
+def hidden_fixed_axes(xs, y):
+    """Layout coordinates run 0-100: fix both axes to that range and hide them (axes carry no meaning)."""
+    rules = [{"attr": "space", "class": "0", "field": xs[0].qual, "field-type": "quantitative", "max": "104",
+              "min": "-4", "range-type": "fixed", "scope": "cols", "type": "space"},
+             {"attr": "space", "class": "0", "field": y.qual, "field-type": "quantitative", "max": "104", "min": "-4",
+              "range-type": "fixed", "scope": "rows", "type": "space"}]
+    rules += [{"_tag": "format", "attr": "display", "class": "0", "field": x.qual, "scope": "cols", "value": "false"}
+              for x in xs]
+    rules.append({"_tag": "format", "attr": "display", "class": "0", "field": y.qual, "scope": "rows",
+                  "value": "false"})
+    return rules
+
+
+def no_gridlines():
+    return [(el, [{"attr": "line-visibility", "scope": "cols", "value": "off"},
+                  {"attr": "line-visibility", "scope": "rows", "value": "off"}]) for el in ("gridline", "zeroline")]
+
+
+def build_ties_sheets():
+    """Optional test workbook: the full node-link graph (ties + people) on network_paths.csv, plus two
+    single-layer variants, so whichever construct Tableau rejects can be identified without touching the
+    main dashboards."""
+    sheets = []
+    s = Sheet("A Ties + People (dual axis)", "network", "Email network: ties and people",
               "Node = person (size = betweenness, colour = community); line = email tie.")
     x, x2, y = s.inst("x", "Avg"), s.inst("Calculation_3000000000000000001", "Avg"), s.inst("y", "Avg")
     pid, order, person = s.inst("path_id"), s.inst("path_order"), s.inst("display_name")
@@ -564,23 +632,24 @@ def build_sheets():
                                        {"attr": "line-visibility", "scope": "rows", "value": "off"}]))
     sheets.append(s)
 
-    s = Sheet("Top People", "employees", "Top 15 people by the selected metric",
-              "Change the metric with 'Rank people by'. Executives keep real names; others are pseudonyms.")
-    label, metric, rank = (s.inst("Calculation_2000000000000000003"), s.inst("Calculation_2000000000000000001", "Sum"),
-                           s.inst("Calculation_2000000000000000002"))
-    role, person = s.inst("role_group"), s.inst("display_name")
-    s.filters.append(lambda v, i=rank: range_filter(v, i, 1, 15))
-    s.slices.append(rank)
-    s.panes.append(dict(mark="Bar", enc=[("color", role), ("lod", person)],
-                        formats=[("mark-labels-show", "true")]))
-    s.rows, s.cols = label.qual, metric.qual
+
+    s = Sheet("B Ties only", "network", "Email ties only (line + path)")
+    x, y, pid, order = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("path_id"), s.inst("path_order")
+    tie, k = s.inst("tie_type"), s.inst("Calculation_3000000000000000002")
+    s.filters.append(lambda v, i=k: members_filter(v, i, ["Keep"]))
+    s.slices.append(k)
+    s.panes.append(dict(mark="Line", enc=[("color", tie), ("lod", pid), ("path", order)]))
+    s.rows, s.cols = y.qual, x.qual
+    s.axis_rules = hidden_fixed_axes([x], y)
+    s.extra_style += no_gridlines()
     sheets.append(s)
 
-    s = Sheet("Community Composition", "employees", "Who is in each community",
-              "People per Girvan-Newman community, coloured by role group.")
-    comm, cnt, role = s.inst("community"), s.inst("employee_key", "Count", "quantitative"), s.inst("role_group")
-    s.panes.append(dict(mark="Bar", enc=[("color", role)]))
-    s.rows, s.cols = comm.qual, cnt.qual
+    s = Sheet("C People only", "network", "People only (circles, network_paths.csv)")
+    x, y, person, comm = s.inst("x", "Avg"), s.inst("y", "Avg"), s.inst("display_name"), s.inst("community")
+    btw = s.inst("betweenness", "Avg")
+    s.panes.append(dict(mark="Circle", enc=[("color", comm), ("size", btw), ("lod", person)]))
+    s.rows, s.cols = y.qual, x.qual
+    s.axis_rules = hidden_fixed_axes([x], y)
     sheets.append(s)
     return sheets
 
@@ -672,7 +741,7 @@ def text_runs(title, sub):
 
 def build_dashboards(parent):
     per = Inst("deliveries", "period")
-    comm = Inst("network", "community")
+    comm = Inst("employees", "community")
     W, H = 1300, 820
     overview = Z("vert", children=[
         Z("text", 66, runs=text_runs(
@@ -698,18 +767,17 @@ def build_dashboards(parent):
         Z("text", 66, runs=text_runs(
             "Who holds the network together? Communities and brokers",
             "Girvan-Newman communities on two-way (strong) ties; brokers = high betweenness. "
-            "Click a bar to highlight that person in the graph.")),
+            "Click a bar to highlight that person on the map.")),
         Z("horz", children=[
-            Z("vert", children=[Z("sheet", name="Network Graph")]),
+            Z("vert", children=[Z("sheet", name="People Map")]),
             Z("vert", 470, children=[
-                Z("horz", 60, children=[Z("param", param="Parameter 1"), Z("param", param="Parameter 5"),
-                                        Z("param", param="Parameter 4")]),
+                Z("horz", 60, children=[Z("param", param="Parameter 1"), Z("param", param="Parameter 5")]),
                 Z("sheet", 400, name="Top People"),
                 Z("sheet", name="Community Composition")]),
         ]),
-        Z("color", 46, name="Network Graph", param=comm.qual, pane="2"),
+        Z("color", 46, name="People Map", param=comm.qual),
     ])
-    dashboard_el(parent, "2 Network", W, H, network, ["Parameter 1", "Parameter 4", "Parameter 5"], [comm])
+    dashboard_el(parent, "2 Network", W, H, network, ["Parameter 1", "Parameter 5"], [comm])
 
 
 def actions_el(parent):
@@ -725,12 +793,12 @@ def actions_el(parent):
         SE(cmd, "param", name="target", value=dashboard)
 
 
-def windows_el(parent, sheets):
+def windows_el(parent, sheets, dashboards=True):
     wins = SE(parent, "windows", source__height="30")
-    for name, views in (("1 Overview", ["KPI Deliveries", "KPI Messages", "KPI Senders", "KPI Cross-community",
+    for name, views in () if not dashboards else (("1 Overview", ["KPI Deliveries", "KPI Messages", "KPI Senders", "KPI Cross-community",
                                         "Email Volume Timeline", "Communication Flow by Role", "Key Events",
                                         "Locality Test by Month"]),
-                        ("2 Network", ["Network Graph", "Top People", "Community Composition"])):
+                        ("2 Network", ["People Map", "Top People", "Community Composition"])):
         a = {"class": "dashboard"}
         if name == "1 Overview":
             a["maximized"] = "true"
@@ -755,7 +823,11 @@ def windows_el(parent, sheets):
         SE(w, "simple-id", uuid=guid("win-" + s.name))
 
 
-def build():
+MAIN_DS = ["deliveries", "employees", "monthly", "events"]
+MAIN_PARAMS = ["Parameter 1", "Parameter 2", "Parameter 3", "Parameter 5"]
+
+
+def build(ds_keys, param_names, sheets, with_dashboards):
     root = ET.Element("workbook", {"original-version": VERSION, "source-build": SOURCE_BUILD,
                                    "source-platform": "win", "version": VERSION}, nsmap={"user": USER})
     man = SE(root, "document-format-change-manifest")
@@ -768,34 +840,39 @@ def build():
     SE(prefs, "preference", name="ui.encoding.shelf.height", value="24")
     SE(prefs, "preference", name="ui.shelf.height", value="26")
     dss = SE(root, "datasources")
-    parameters_el(dss)
-    for k in DS:
+    parameters_el(dss, param_names)
+    for k in ds_keys:
         datasource_el(dss, k)
-    actions_el(root)
-    sheets = build_sheets()
+    if with_dashboards:
+        actions_el(root)
     wss = SE(root, "worksheets")
-    for s in sheets:
-        s.xml(wss)
-    dbs = SE(root, "dashboards")
-    build_dashboards(dbs)
-    windows_el(root, sheets)
+    for sh in sheets:
+        sh.xml(wss)
+    if with_dashboards:
+        build_dashboards(SE(root, "dashboards"))
+    windows_el(root, sheets, with_dashboards)
     return ET.ElementTree(root)
 
 
-def main():
-    tree = build()
-    twb = HERE / f"{NAME}.twb"
+def package(tree, name, ds_keys):
+    twb = HERE / f"{name}.twb"
     tree.write(str(twb), xml_declaration=True, encoding="utf-8", pretty_print=True)
     data = HERE / DATA_DIR
     data.mkdir(parents=True, exist_ok=True)
-    for d in DS.values():
-        shutil.copy(SRC / d["file"], data / d["file"])
-    twbx = HERE / f"{NAME}.twbx"
+    for k in ds_keys:
+        shutil.copy(SRC / DS[k]["file"], data / DS[k]["file"])
+    twbx = HERE / f"{name}.twbx"
     with zipfile.ZipFile(twbx, "w", zipfile.ZIP_DEFLATED) as z:
         z.write(twb, twb.name)
-        for d in DS.values():
-            z.write(data / d["file"], f"{DATA_DIR}/{d['file']}")
+        for k in ds_keys:
+            z.write(data / DS[k]["file"], f"{DATA_DIR}/{DS[k]['file']}")
     print("wrote", twb.relative_to(ROOT), "and", twbx.relative_to(ROOT), f"({twbx.stat().st_size / 1e6:.1f} MB)")
+
+
+def main():
+    package(build(MAIN_DS, MAIN_PARAMS, build_sheets(), True), NAME, MAIN_DS)
+    package(build(["network"], ["Parameter 4", "Parameter 5"], build_ties_sheets(), False),
+            "Enron_Network_Ties_test", ["network"])
 
 
 if __name__ == "__main__":

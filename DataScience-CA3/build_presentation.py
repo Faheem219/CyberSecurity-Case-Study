@@ -178,9 +178,9 @@ def network_panel():
     if "network" in SHOT:
         return f'<img class="shot" src="{SHOT["network"]}" alt="Tableau dashboard 2: Network">'
     return """<div class="wf" style="grid-template-columns:3fr 2fr;grid-template-rows:auto auto 1.4fr 1fr auto">
- <div class="t" style="grid-column:1/3"><b>Title + how to use</b>click a bar to highlight that person</div>
- <div style="grid-row:2/5"><b>Node-link network graph</b>dual axis: ties (lines) + people (circles);<br>size = betweenness, colour = community</div>
- <div><b>Controls</b>Rank people by [parameter] · Community · Tie type</div>
+ <div class="t" style="grid-column:1/3"><b>Title + how to use</b>click a bar to highlight that person on the map</div>
+ <div style="grid-row:2/5"><b>People map</b>force-directed layout positions of all 148 people;<br>size = betweenness, colour = community</div>
+ <div><b>Controls</b>Rank people by · Community</div>
  <div><b>Top 15 people</b>bar chart, metric chosen by the parameter</div>
  <div><b>Community composition</b>stacked bar by role group</div>
  <div style="grid-column:1/3"><b>Community colour legend</b></div>
@@ -327,10 +327,10 @@ SLIDES = [
 <div class="grid2" style="grid-template-columns:1.55fr 1fr;align-items:stretch;height:600px">
  {network_panel()}
  <ul style="align-self:center">
-  <li><b>Node-link graph</b> drawn in Tableau with a dual axis (lines + circles).</li>
+  <li><b>People map</b>: everyone placed by a force-directed layout of their email ties, so communities form visible clusters.</li>
   <li><b>Parameter</b> switches the ranking: betweenness, PageRank, contacts, emails sent.</li>
-  <li><b>Highlight action</b>: click a person in the bar chart to find them in the graph.</li>
-  <li>Community and tie-type drop-downs (weak ties hidden by default to avoid a hairball).</li>
+  <li><b>Highlight action</b>: click a person in the bar chart to find them on the map.</li>
+  <li>Community drop-down filters the map; top brokers are labelled.</li>
  </ul>
 </div>{SHOT_NOTE}"""),
 
@@ -344,7 +344,7 @@ SLIDES = [
  <div class="card tint"><h3>Colour has one job</h3><p>Same period colours everywhere; one-hue scale for amounts;
  colour-blind-checked palette for communities.</p></div>
  <div class="card tint"><h3>Right chart for the task</h3><p>Lines for time, sorted bars for ranking, heat-map for a
- matrix, node-link for structure; no pie charts.</p></div>
+ matrix, a positional map for network structure; no pie charts.</p></div>
  <div class="card tint"><h3>Less non-data ink</h3><p>Meaningless graph axes and gridlines hidden; titles state what
  the chart shows.</p></div>
  <div class="card tint"><h3>Context &amp; honesty</h3><p>Key-events table for context; months with too few people
