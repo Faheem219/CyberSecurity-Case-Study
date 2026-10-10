@@ -80,7 +80,18 @@ re-add it.
     github.com/tomohiro-ono-works/tabsdk (verified against real workbooks; it ships a sample saved by Tableau
     2026.2.1, which is version 18.1 with the same manifest style as ours). Next step: ask the user whether a
     "Network Graph" tab exists and what warning appears.
-- **Status:** awaiting the user's fourth test plus the Network Graph diagnosis.
+- **Fourth test (2026-10-10):** colours and KPI tiles are fixed. The Network Graph is still missing, and the user
+  reported no warning text.
+- **Decision:** dashboard 2 now shows a **"People Map"** instead: a single-pane Circle scatter on employees.csv
+  (x/y layout positions, size = betweenness, colour = community, broker labels, Community parameter filter).
+  It is built only from constructs found in genuine files; the dialect lint finds 0 unmatched pairs in the main
+  workbook. The network data source, the "Ties shown" parameter and the dual-axis sheet moved to the optional
+  `tableau/Enron_Network_Ties_test.twbx`, which has sheets A dual-axis, B ties only and C people only. That lets
+  the user report which ones survive, without risking the main dashboards.
+- Event categories were shortened ("Leadership" became "Leaders"), the event and heat-map row headers widened
+  (header width style), and the README, deck, form answers and viva notes now describe the People Map.
+- **Status:** awaiting the user's fifth test and final screenshots, which go into the deck (`screenshots/overview.png`,
+  `screenshots/network.png`) for slides 8–9.
 
 **`build_presentation.py`.** Builds a 16-slide deck. If `screenshots/overview.png` and `screenshots/network.png`
 exist they are embedded; otherwise slides 8 and 9 show HTML wireframes. All slides were screenshot-checked with

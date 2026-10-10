@@ -35,7 +35,7 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 2. Double-click `tableau/Enron_Email_Network.twbx`. You should see two dashboards, **1 Overview** and **2 Network**, plus 11 sheets.
 3. Quick check:
    - **1 Overview:** the *Period* and *Sender role* drop-downs (parameter controls) change the KPIs, the volume chart and the heat-map.
-   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* and *Ties shown* change the graph. Clicking a bar highlights that person in the graph.
+   - **2 Network:** the *Rank people by* drop-down switches the Top-15 chart; *Community* filters the People Map. Clicking a bar highlights that person on the map.
 4. If Tableau ever says it cannot find a data file, point it to the matching CSV in `data/processed/`. The file names are the same.
 
 ### Publish to Tableau Public and take screenshots
@@ -46,6 +46,13 @@ Git LFS was **not** needed: the raw dataset is 0.2 MB, and all processed CSVs to
 3. Take a full-window screenshot of each dashboard. Save them as `screenshots/overview.png` and
    `screenshots/network.png`, then run `python3 build_presentation.py`. Slides 8 and 9 then show the real
    dashboards instead of the layout wireframes. You can also just send the two screenshots to Claude.
+
+### Optional: the full node-link graph (ties + people)
+
+`tableau/Enron_Network_Ties_test.twbx` is a small separate workbook with the email *ties* drawn as lines: a
+dual-axis "ties + people" sheet and two single-layer variants. Tableau 2026.2.3 dropped the ties sheet from the
+main workbook without a visible reason, so it was moved out to keep the main dashboards safe. If you open it, note
+which of the three tabs survive. The full node-link figure is also on slide 12 of the deck.
 
 ### If the generated workbook does not open (fallback, ~30 min by hand)
 
@@ -58,7 +65,7 @@ Connect each CSV in `data/processed/` as a separate data source (Connect ▸ Tex
 | Communication Flow by Role | deliveries | Rows: sender_role. Columns: recipient_role. Square mark. Colour and Label: SUM(Deliveries). |
 | Locality Test by Month | monthly_locality_long | Columns: continuous MONTH(month). Rows: SUM(value). Colour: metric. Filter: reliable = Yes. |
 | Key Events | events | Rows: event_no, date_label, event. Text: category. |
-| Network Graph | network_paths | Columns: AVG(x) twice → *Dual Axis* → *Synchronize*. Rows: AVG(y). Pane 1: Line mark, Detail = path_id, Path = path_order, Colour = tie_type. Pane 2: Circle mark, Detail = display_name, Colour = community, Size = AVG(betweenness). Filter tie_type to Strong (two-way) + None. Hide the axes. |
+| People Map | employees | Columns: AVG(x). Rows: AVG(y). Circle mark. Detail = display_name, Colour = community, Size = AVG(betweenness), Label = *Broker label* (`IF [rank_betweenness] <= 6 THEN [display_name] ELSE "" END`). Fix both axes to -4…104 and hide them. |
 | Top People | employees | Parameter *Rank people by* (Betweenness, PageRank, Contacts, Emails sent). *Selected metric* = CASE on the parameter. Rows: display_name, sorted descending by the metric. Columns: SUM(Selected metric). Colour: role_group. Filter *Selected rank* ≤ 15. |
 | Community Composition | employees | Rows: community. Columns: CNT(employee_key). Colour: role_group. |
 
