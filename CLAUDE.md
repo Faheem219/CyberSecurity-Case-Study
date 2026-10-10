@@ -225,3 +225,5 @@ spoken numbers are hand-written — update them if results change).
 ## 10. Second task in this repo (separate)
 - 2026-10-09: **Data Science CA-3** (Tableau dashboard on the Enron email network, 2 members, guided by Dr. Deepak Dharrao)
   lives in `DataScience-CA3/`. Its own handoff file is `DataScience-CA3/CLAUDE.md` — read that for anything CA-3.
+- 2026-10-10: **HCI CA-3** (Raktdaan blood donation app, Group 06, Dr. Sudhanshu Gonge) lives in `HCI-CA3/`.
+  Its own handoff file is `HCI-CA3/CLAUDE.md`.
