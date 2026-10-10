@@ -350,7 +350,7 @@
       <column caption="Keep row (period, role)" datatype="string" name="[Calculation_1000000000000000003]" role="dimension" type="nominal">
         <calculation class="tableau" formula="IF ([Parameters].[Parameter 2] = &quot;All periods&quot; OR [period] = [Parameters].[Parameter 2]) AND ([Parameters].[Parameter 3] = &quot;All roles&quot; OR [sender_role] = [Parameters].[Parameter 3]) THEN &quot;Keep&quot; ELSE &quot;Drop&quot; END"/>
       </column>
-      <_.fcp.ObjectModelTableType.true...column caption="deliveries.csv" datatype="table" name="[__tableau_internal_object_id__].[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]" role="measure" type="quantitative"/>
+      <_.fcp.ObjectModelTableType.true...column caption="deliveries" datatype="table" name="[__tableau_internal_object_id__].[deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF]" role="measure" type="quantitative"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -370,9 +370,33 @@
       <semantic-values>
         <semantic-value key="[Country].[Name]" value="&quot;United States&quot;"/>
       </semantic-values>
+      <datasource-dependencies datasource="Parameters">
+        <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
+          <calculation class="tableau" formula="&quot;All periods&quot;"/>
+          <members>
+            <member value="&quot;All periods&quot;"/>
+            <member value="&quot;1 Pre-crisis&quot;"/>
+            <member value="&quot;2 Crisis (Aug-Dec 2001)&quot;"/>
+            <member value="&quot;3 Post-bankruptcy&quot;"/>
+          </members>
+        </column>
+        <column caption="Sender role" datatype="string" name="[Parameter 3]" param-domain-type="list" role="measure" type="nominal" value="&quot;All roles&quot;">
+          <calculation class="tableau" formula="&quot;All roles&quot;"/>
+          <members>
+            <member value="&quot;All roles&quot;"/>
+            <member value="&quot;1 Executive&quot;"/>
+            <member value="&quot;2 Vice President&quot;"/>
+            <member value="&quot;3 Director / MD&quot;"/>
+            <member value="&quot;4 Manager&quot;"/>
+            <member value="&quot;5 Trader&quot;"/>
+            <member value="&quot;6 Employee / Specialist&quot;"/>
+            <member value="&quot;7 Unknown role&quot;"/>
+          </members>
+        </column>
+      </datasource-dependencies>
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption="deliveries.csv" id="deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF">
+          <object caption="deliveries" id="deliveries.csv_6FC31B6B9CD717CC0DCB81152308F8AF">
             <properties context="">
               <relation connection="textscan.hqfcnbprd71u1vxkb5a7e3g5zs9k" name="deliveries.csv" table="[deliveries#csv]" type="table">
                 <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
@@ -819,7 +843,7 @@
       <column caption="Rank" datatype="string" name="[Calculation_2000000000000000003]" role="dimension" type="nominal">
         <calculation class="tableau" formula="RIGHT(&quot;0&quot; + STR([Calculation_2000000000000000002]), 2) + &quot;. &quot; + [display_name]"/>
       </column>
-      <_.fcp.ObjectModelTableType.true...column caption="employees.csv" datatype="table" name="[__tableau_internal_object_id__].[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]" role="measure" type="quantitative"/>
+      <_.fcp.ObjectModelTableType.true...column caption="employees" datatype="table" name="[__tableau_internal_object_id__].[employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503]" role="measure" type="quantitative"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -874,9 +898,20 @@
       <semantic-values>
         <semantic-value key="[Country].[Name]" value="&quot;United States&quot;"/>
       </semantic-values>
+      <datasource-dependencies datasource="Parameters">
+        <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
+          <calculation class="tableau" formula="&quot;Betweenness&quot;"/>
+          <members>
+            <member value="&quot;Betweenness&quot;"/>
+            <member value="&quot;PageRank&quot;"/>
+            <member value="&quot;Contacts&quot;"/>
+            <member value="&quot;Emails sent&quot;"/>
+          </members>
+        </column>
+      </datasource-dependencies>
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption="employees.csv" id="employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503">
+          <object caption="employees" id="employees.csv_582CA3F7CBAF4EDCC1B445F8EA90B503">
             <properties context="">
               <relation connection="textscan.0y5cdhxdcnrfzxuffwtezutkxlg7" name="employees.csv" table="[employees#csv]" type="table">
                 <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
@@ -1168,7 +1203,7 @@
       <column caption="Keep row (ties, community)" datatype="string" name="[Calculation_3000000000000000002]" role="dimension" type="nominal">
         <calculation class="tableau" formula="IF ([row_type] = &quot;Person&quot; OR [Parameters].[Parameter 4] = &quot;All ties&quot; OR [tie_type] = &quot;Strong (two-way)&quot;) AND ([Parameters].[Parameter 5] = &quot;All communities&quot; OR [community] = [Parameters].[Parameter 5]) THEN &quot;Keep&quot; ELSE &quot;Drop&quot; END"/>
       </column>
-      <_.fcp.ObjectModelTableType.true...column caption="network_paths.csv" datatype="table" name="[__tableau_internal_object_id__].[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]" role="measure" type="quantitative"/>
+      <_.fcp.ObjectModelTableType.true...column caption="network_paths" datatype="table" name="[__tableau_internal_object_id__].[network_paths.csv_91E02CD2B8621D0C05197F645668C5C4]" role="measure" type="quantitative"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -1234,9 +1269,31 @@
       <semantic-values>
         <semantic-value key="[Country].[Name]" value="&quot;United States&quot;"/>
       </semantic-values>
+      <datasource-dependencies datasource="Parameters">
+        <column caption="Ties shown" datatype="string" name="[Parameter 4]" param-domain-type="list" role="measure" type="nominal" value="&quot;Strong ties only&quot;">
+          <calculation class="tableau" formula="&quot;Strong ties only&quot;"/>
+          <members>
+            <member value="&quot;Strong ties only&quot;"/>
+            <member value="&quot;All ties&quot;"/>
+          </members>
+        </column>
+        <column caption="Community" datatype="string" name="[Parameter 5]" param-domain-type="list" role="measure" type="nominal" value="&quot;All communities&quot;">
+          <calculation class="tableau" formula="&quot;All communities&quot;"/>
+          <members>
+            <member value="&quot;All communities&quot;"/>
+            <member value="&quot;C1 Leadership core&quot;"/>
+            <member value="&quot;C2 Staff cluster around DIR-01&quot;"/>
+            <member value="&quot;C3 Trading &amp; logistics desk&quot;"/>
+            <member value="&quot;C4 Real-time trading desk&quot;"/>
+            <member value="&quot;C5 Gas pipeline &amp; regulatory&quot;"/>
+            <member value="&quot;C6 Trading &amp; logistics desk (TRD-02)&quot;"/>
+            <member value="&quot;C7 Staff cluster around UNK-12&quot;"/>
+          </members>
+        </column>
+      </datasource-dependencies>
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption="network_paths.csv" id="network_paths.csv_91E02CD2B8621D0C05197F645668C5C4">
+          <object caption="network_paths" id="network_paths.csv_91E02CD2B8621D0C05197F645668C5C4">
             <properties context="">
               <relation connection="textscan.r86lum8rs0we51exvlrvvgqdr69p" name="network_paths.csv" table="[network_paths#csv]" type="table">
                 <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
@@ -1376,7 +1433,7 @@
       <column caption="Active people" datatype="integer" name="[active_people]" role="measure" type="quantitative"/>
       <column caption="Metric" datatype="string" name="[metric]" role="dimension" type="nominal"/>
       <column caption="Probability" datatype="real" name="[value]" role="measure" type="quantitative"/>
-      <_.fcp.ObjectModelTableType.true...column caption="monthly_locality_long.csv" datatype="table" name="[__tableau_internal_object_id__].[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]" role="measure" type="quantitative"/>
+      <_.fcp.ObjectModelTableType.true...column caption="monthly_locality_long" datatype="table" name="[__tableau_internal_object_id__].[monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811]" role="measure" type="quantitative"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <style>
         <style-rule element="mark">
@@ -1395,7 +1452,7 @@
       </semantic-values>
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption="monthly_locality_long.csv" id="monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811">
+          <object caption="monthly_locality_long" id="monthly_locality_long.csv_708638881F3BAC9D9C8C742C79502811">
             <properties context="">
               <relation connection="textscan.yp2pbd8jvvsaakte39b6utx5lc4e" name="monthly_locality_long.csv" table="[monthly_locality_long#csv]" type="table">
                 <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
@@ -1530,14 +1587,14 @@
       <column caption="Event" datatype="string" name="[event]" role="dimension" type="nominal"/>
       <column caption="Category" datatype="string" name="[category]" role="dimension" type="nominal"/>
       <column caption="When" datatype="string" name="[date_label]" role="dimension" type="nominal"/>
-      <_.fcp.ObjectModelTableType.true...column caption="events.csv" datatype="table" name="[__tableau_internal_object_id__].[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]" role="measure" type="quantitative"/>
+      <_.fcp.ObjectModelTableType.true...column caption="events" datatype="table" name="[__tableau_internal_object_id__].[events.csv_16908B0605F2645DFCB4C3A8D248CEF3]" role="measure" type="quantitative"/>
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage="0.5" _.fcp.SchemaViewerObjectModel.false...measure-percentage="0.4" dim-ordering="alphabetic" measure-ordering="alphabetic" show-structure="true"/>
       <semantic-values>
         <semantic-value key="[Country].[Name]" value="&quot;United States&quot;"/>
       </semantic-values>
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption="events.csv" id="events.csv_16908B0605F2645DFCB4C3A8D248CEF3">
+          <object caption="events" id="events.csv_16908B0605F2645DFCB4C3A8D248CEF3">
             <properties context="">
               <relation connection="textscan.rl43b99og703vpiecjyfc7ungo37" name="events.csv" table="[events#csv]" type="table">
                 <columns character-set="UTF-8" header="yes" locale="en_US" separator=",">
@@ -1584,8 +1641,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -1667,8 +1724,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -1748,8 +1805,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -1829,8 +1886,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -1919,8 +1976,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -2000,8 +2057,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -2175,8 +2232,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Ties shown" datatype="string" name="[Parameter 4]" param-domain-type="list" role="measure" type="nominal" value="&quot;Strong ties only&quot;">
@@ -2286,9 +2343,9 @@
             <encodings>
               <color column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:community:nk]"/>
               <size column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:betweenness:qk]"/>
-              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
               <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:role_group:nk]"/>
               <tooltip column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[avg:contacts:qk]"/>
+              <lod column="[federated.crvs3hlt29jl5d0i4lxzrqy415b1].[none:display_name:nk]"/>
             </encodings>
             <style>
               <style-rule element="mark">
@@ -2316,8 +2373,8 @@
       <table>
         <view>
           <datasources>
-            <datasource name="Parameters"/>
             <datasource caption="People (network metrics)" name="federated.s2c8zq20erd9zeegb9aikl2nd62g"/>
+            <datasource name="Parameters"/>
           </datasources>
           <datasource-dependencies datasource="Parameters">
             <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
@@ -2438,7 +2495,6 @@
       <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
       <datasources>
         <datasource name="Parameters"/>
-        <datasource caption="Email deliveries" name="federated.vwi0hgtr7e75loby7dimk7pq3a7n"/>
       </datasources>
       <datasource-dependencies datasource="Parameters">
         <column caption="Period" datatype="string" name="[Parameter 2]" param-domain-type="list" role="measure" type="nominal" value="&quot;All periods&quot;">
@@ -2463,10 +2519,6 @@
             <member value="&quot;7 Unknown role&quot;"/>
           </members>
         </column>
-      </datasource-dependencies>
-      <datasource-dependencies datasource="federated.vwi0hgtr7e75loby7dimk7pq3a7n">
-        <column caption="Period" datatype="string" name="[period]" role="dimension" type="nominal"/>
-        <column-instance column="[period]" derivation="None" name="[none:period:nk]" pivot="key" type="nominal"/>
       </datasource-dependencies>
       <zones>
         <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">
@@ -2635,7 +2687,6 @@
       <size maxheight="820" maxwidth="1300" minheight="820" minwidth="1300"/>
       <datasources>
         <datasource name="Parameters"/>
-        <datasource caption="Network paths (node-link layout)" name="federated.crvs3hlt29jl5d0i4lxzrqy415b1"/>
       </datasources>
       <datasource-dependencies datasource="Parameters">
         <column caption="Rank people by" datatype="string" name="[Parameter 1]" param-domain-type="list" role="measure" type="nominal" value="&quot;Betweenness&quot;">
@@ -2667,10 +2718,6 @@
             <member value="&quot;C7 Staff cluster around UNK-12&quot;"/>
           </members>
         </column>
-      </datasource-dependencies>
-      <datasource-dependencies datasource="federated.crvs3hlt29jl5d0i4lxzrqy415b1">
-        <column caption="Community" datatype="string" name="[community]" role="dimension" type="nominal"/>
-        <column-instance column="[community]" derivation="None" name="[none:community:nk]" pivot="key" type="nominal"/>
       </datasource-dependencies>
       <zones>
         <zone h="100000" id="2" type="layout-basic" w="100000" x="0" y="0">

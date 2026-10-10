@@ -297,7 +297,7 @@ def datasource_el(parent, key):
     SE(ds, "aliases", enabled="yes")
     for c in d["cols"] + d["calcs"]:
         column_el(ds, c)
-    SE(ds, TT_T + "column", caption=d["file"], datatype="table",
+    SE(ds, TT_T + "column", caption=d["stem"], datatype="table",
        name=f"[__tableau_internal_object_id__].[{d['object_id']}]", role="measure", type="quantitative")
     SE(ds, "layout", {SV_F + "dim-percentage": "0.5", SV_F + "measure-percentage": "0.4",
                       "dim-ordering": "alphabetic", "measure-ordering": "alphabetic", "show-structure": "true"})
@@ -319,9 +319,14 @@ def datasource_el(parent, key):
             colour_map(rule, f"[none:{field}:nk]", mapping)
     sv = SE(ds, "semantic-values")
     SE(sv, "semantic-value", key="[Country].[Name]", value=q("United States"))
+    used = sorted({p for c in d["calcs"] for p in params_in(c.formula)})
+    if used:                                   # calculations that read parameters declare them here, as Tableau does
+        pdep = SE(ds, "datasource-dependencies", datasource="Parameters")
+        for p in used:
+            param_column_el(pdep, p)
     og = SE(ds, OM_T + "object-graph")
     objs = SE(og, "objects")
-    obj = SE(objs, "object", caption=d["file"], id=d["object_id"])
+    obj = SE(objs, "object", caption=d["stem"], id=d["object_id"])
     props = SE(obj, "properties", context="")
     relation_el(props, d)
     return ds
@@ -406,9 +411,9 @@ class Sheet:
         _, fields = deps_el(tmp, self.ds, self.insts)
         used = sorted({p for f in fields if isinstance(DS[self.ds]["fields"][f], Calc)
                        for p in params_in(DS[self.ds]["fields"][f].formula)})
+        SE(dss, "datasource", caption=DS[self.ds]["caption"], name=DS[self.ds]["name"])   # primary first
         if used:
             SE(dss, "datasource", name="Parameters")
-        SE(dss, "datasource", caption=DS[self.ds]["caption"], name=DS[self.ds]["name"])
         if used:
             pdep = SE(view, "datasource-dependencies", datasource="Parameters")
             for p in used:
@@ -530,7 +535,7 @@ def build_sheets():
                 {"id": "1", "x-axis-name": x.qual, "mark": "Line",
                  "enc": [("color", tie), ("lod", pid), ("path", order)], "formats": [("size", "0.2")]},
                 {"id": "2", "x-axis-name": x2.qual, "mark": "Circle",
-                 "enc": [("color", comm), ("size", btw), ("lod", person), ("tooltip", role), ("tooltip", contacts)],
+                 "enc": [("color", comm), ("size", btw), ("tooltip", role), ("tooltip", contacts), ("lod", person)],
                  "formats": [("mark-transparency", "235")]}]
     s.rows, s.cols = y.qual, f"({x.qual} + {x2.qual})"
     s.axis_rules = [
@@ -631,17 +636,10 @@ def dashboard_el(parent, name, W, H, layout, params, legend_insts):
     SE(db, "style")
     SE(db, "size", maxheight=H, maxwidth=W, minheight=H, minwidth=W)
     dss = SE(db, "datasources")
-    if params:
-        SE(dss, "datasource", name="Parameters")
-    keys = sorted({i.ds for i in legend_insts})
-    for k in keys:
-        SE(dss, "datasource", caption=DS[k]["caption"], name=DS[k]["name"])
-    if params:
-        pdep = SE(db, "datasource-dependencies", datasource="Parameters")
-        for p in params:
-            param_column_el(pdep, p)
-    for k in keys:
-        deps_el(db, k, [i for i in legend_insts if i.ds == k])
+    SE(dss, "datasource", name="Parameters")
+    pdep = SE(db, "datasource-dependencies", datasource="Parameters")
+    for p in params:
+        param_column_el(pdep, p)
     zones = SE(db, "zones")
     place(layout, 0, 0, W, H)
     ids = iter(range(3, 1000))
